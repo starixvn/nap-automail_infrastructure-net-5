@@ -1,0 +1,16 @@
+{
+  "Version": 1,
+  "ProjectMap": {
+    "5c20effd-3143-4566-aa36-f25ebae3e445": {
+      "ProjectGuid": "5c20effd-3143-4566-aa36-f25ebae3e445",
+      "DisplayName": "Fanex.Bitcoin.Business",
+      "ColorIndex": 0
+    },
+    "e6df34ac-276e-4d99-84b9-0ea4e280a27d": {
+      "ProjectGuid": "e6df34ac-276e-4d99-84b9-0ea4e280a27d",
+      "DisplayName": "Fanex.Bitcoin.Service",
+      "ColorIndex": 1
+    }
+  },
+  "NextColorIndex": 2
+}

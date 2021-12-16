@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+https://go.microsoft.com/fwlink/?LinkID=208121. 
+-->
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <_PublishTargetUrl>S:\Docker</_PublishTargetUrl>
+    <History>True|2021-06-01T03:51:17.5646800Z;True|2021-06-01T10:39:19.8804718+07:00;True|2021-06-01T10:38:38.5286781+07:00;True|2021-06-01T10:35:47.8318947+07:00;True|2021-06-01T10:34:10.8811336+07:00;True|2021-06-01T08:47:09.9298441+07:00;True|2021-06-01T08:46:41.2719299+07:00;</History>
+  </PropertyGroup>
+</Project>
