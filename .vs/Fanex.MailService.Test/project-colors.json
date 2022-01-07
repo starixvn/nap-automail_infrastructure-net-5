@@ -1,0 +1,51 @@
+{
+  "Version": 1,
+  "ProjectMap": {
+    "530feb32-3231-4c75-9991-a2b2ea238e65": {
+      "ProjectGuid": "530feb32-3231-4c75-9991-a2b2ea238e65",
+      "DisplayName": "Fanex.MailService.Test",
+      "ColorIndex": 0
+    },
+    "8f16f8cb-ea20-4aed-89c3-87992310b3d9": {
+      "ProjectGuid": "8f16f8cb-ea20-4aed-89c3-87992310b3d9",
+      "DisplayName": "Fanex.MailDeliver.MailClient",
+      "ColorIndex": 1
+    },
+    "a2fe74e1-b743-11d0-ae1a-00a0c90fffc3": {
+      "ProjectGuid": "a2fe74e1-b743-11d0-ae1a-00a0c90fffc3",
+      "DisplayName": "Miscellaneous Files",
+      "ColorIndex": -1
+    },
+    "ef793138-55ec-4650-969e-b962f16b090c": {
+      "ProjectGuid": "ef793138-55ec-4650-969e-b962f16b090c",
+      "DisplayName": "Fanex.Messages",
+      "ColorIndex": 2
+    },
+    "15a6f367-34d5-4c13-b6d1-5074a3780d8e": {
+      "ProjectGuid": "15a6f367-34d5-4c13-b6d1-5074a3780d8e",
+      "DisplayName": "Fanex.Messages",
+      "ColorIndex": 3
+    },
+    "4e164036-6aee-4a87-b52f-64c13ef33f0f": {
+      "ProjectGuid": "4e164036-6aee-4a87-b52f-64c13ef33f0f",
+      "DisplayName": "Fanex.Publisher",
+      "ColorIndex": 4
+    },
+    "36bddd49-b167-41cb-bc1b-6645f82ad3db": {
+      "ProjectGuid": "36bddd49-b167-41cb-bc1b-6645f82ad3db",
+      "DisplayName": "Fanex.Subscriber",
+      "ColorIndex": 5
+    },
+    "73377731-4998-40a4-bd1a-a51b14f5cc7d": {
+      "ProjectGuid": "73377731-4998-40a4-bd1a-a51b14f5cc7d",
+      "DisplayName": "Fanex.Publisher.Person",
+      "ColorIndex": 6
+    },
+    "9dcb3c62-fc40-4a02-8062-853e5bcaef14": {
+      "ProjectGuid": "9dcb3c62-fc40-4a02-8062-853e5bcaef14",
+      "DisplayName": "Fanex.Subscriber2",
+      "ColorIndex": 7
+    }
+  },
+  "NextColorIndex": 8
+}

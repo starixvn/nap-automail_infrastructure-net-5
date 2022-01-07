@@ -1,0 +1,43 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31912.275
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fanex.MailDeliver.Service", "Fanex.MailDeliver.Service\Fanex.MailDeliver.Service\Fanex.MailDeliver.Service.csproj", "{7E88AD00-51F8-4D7A-AF34-A00586DF66BF}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fanex.MailDeliver.Core", "Fanex.MailDeliver.Service\Fanex.MailDeliver.Core\Fanex.MailDeliver.Core.csproj", "{31B87358-D19D-4916-8A64-EA2FB31B255A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fanex.MailDeliver.MailClient", "Fanex.MailDeliver.Service\Fanex.MailDeliver.MailClient\Fanex.MailDeliver.MailClient.csproj", "{09D5D91A-843A-45A4-B91B-5239734D0311}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fanex.Mail.Test", "Fanex.MailDeliver.Service\Fanex.Mail.Test\Fanex.Mail.Test.csproj", "{BD008BFB-6313-4721-95A6-CEA65EEE15E2}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7E88AD00-51F8-4D7A-AF34-A00586DF66BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7E88AD00-51F8-4D7A-AF34-A00586DF66BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7E88AD00-51F8-4D7A-AF34-A00586DF66BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7E88AD00-51F8-4D7A-AF34-A00586DF66BF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{31B87358-D19D-4916-8A64-EA2FB31B255A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{31B87358-D19D-4916-8A64-EA2FB31B255A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{31B87358-D19D-4916-8A64-EA2FB31B255A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{31B87358-D19D-4916-8A64-EA2FB31B255A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{09D5D91A-843A-45A4-B91B-5239734D0311}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{09D5D91A-843A-45A4-B91B-5239734D0311}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{09D5D91A-843A-45A4-B91B-5239734D0311}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{09D5D91A-843A-45A4-B91B-5239734D0311}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BD008BFB-6313-4721-95A6-CEA65EEE15E2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BD008BFB-6313-4721-95A6-CEA65EEE15E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BD008BFB-6313-4721-95A6-CEA65EEE15E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BD008BFB-6313-4721-95A6-CEA65EEE15E2}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {9C3C03FE-0095-4BBB-9B79-5338AF6BEE13}
+	EndGlobalSection
+EndGlobal
