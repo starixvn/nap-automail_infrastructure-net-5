@@ -15,7 +15,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fanex.Subscriber", "Fanex.M
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fanex.Publisher.Person", "Fanex.MailService.Test\Fanex.Publisher.Person\Fanex.Publisher.Person.csproj", "{73377731-4998-40A4-BD1A-A51B14F5CC7D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fanex.Subscriber2", "Fanex.MailService.Test\Fanex.Subscriber2\Fanex.Subscriber2.csproj", "{9DCB3C62-FC40-4A02-8062-853E5BCAEF14}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fanex.Subscriber2", "Fanex.MailService.Test\Fanex.Subscriber2\Fanex.Subscriber2.csproj", "{9DCB3C62-FC40-4A02-8062-853E5BCAEF14}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppNetFW", "Fanex.MailService.Test\AppNetFW\AppNetFW.csproj", "{402A5879-AF7A-4E2A-BB86-47FD7573F977}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +53,10 @@ Global
 		{9DCB3C62-FC40-4A02-8062-853E5BCAEF14}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9DCB3C62-FC40-4A02-8062-853E5BCAEF14}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9DCB3C62-FC40-4A02-8062-853E5BCAEF14}.Release|Any CPU.Build.0 = Release|Any CPU
+		{402A5879-AF7A-4E2A-BB86-47FD7573F977}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{402A5879-AF7A-4E2A-BB86-47FD7573F977}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{402A5879-AF7A-4E2A-BB86-47FD7573F977}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{402A5879-AF7A-4E2A-BB86-47FD7573F977}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

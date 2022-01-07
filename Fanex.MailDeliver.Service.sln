@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fanex.MailDeliver.Core", "F
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fanex.MailDeliver.MailClient", "Fanex.MailDeliver.Service\Fanex.MailDeliver.MailClient\Fanex.MailDeliver.MailClient.csproj", "{09D5D91A-843A-45A4-B91B-5239734D0311}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fanex.Mail.Test", "Fanex.MailDeliver.Service\Fanex.Mail.Test\Fanex.Mail.Test.csproj", "{BD008BFB-6313-4721-95A6-CEA65EEE15E2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fanex.MailDeliver.Utility", "Fanex.MailDeliver.Service\Fanex.MailDeliver.Utility\Fanex.MailDeliver.Utility.csproj", "{E5670549-0481-4391-8FF4-07C2B9144F90}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,10 +29,10 @@ Global
 		{09D5D91A-843A-45A4-B91B-5239734D0311}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{09D5D91A-843A-45A4-B91B-5239734D0311}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{09D5D91A-843A-45A4-B91B-5239734D0311}.Release|Any CPU.Build.0 = Release|Any CPU
-		{BD008BFB-6313-4721-95A6-CEA65EEE15E2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{BD008BFB-6313-4721-95A6-CEA65EEE15E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{BD008BFB-6313-4721-95A6-CEA65EEE15E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{BD008BFB-6313-4721-95A6-CEA65EEE15E2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E5670549-0481-4391-8FF4-07C2B9144F90}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E5670549-0481-4391-8FF4-07C2B9144F90}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E5670549-0481-4391-8FF4-07C2B9144F90}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E5670549-0481-4391-8FF4-07C2B9144F90}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

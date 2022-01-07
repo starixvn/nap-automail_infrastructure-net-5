@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <None Remove="App_Data\DBMA.bodb_Maintenance.bodbAdminNet.xml" />
+    <None Remove="index.html" />
   </ItemGroup>
 
   <ItemGroup>
@@ -35,10 +36,12 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Fanex.MailDeliver.Core\Fanex.MailDeliver.Core.csproj" />
-    <ProjectReference Include="..\Fanex.MailDeliver.MailClient\Fanex.MailDeliver.MailClient.csproj" />
   </ItemGroup>
 
   <ItemGroup>
+    <Content Update="appsettings.SIT.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Update="appsettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -49,6 +52,18 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Update="appsettings.UAT.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="wwwroot\default.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="wwwroot\default.htm">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="wwwroot\index.htm">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="wwwroot\index.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

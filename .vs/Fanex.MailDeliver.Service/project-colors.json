@@ -40,7 +40,17 @@
       "ProjectGuid": "c8e7247d-e5cd-419a-98f9-b94ff639159f",
       "DisplayName": "Fanex.WebAPITest",
       "ColorIndex": 6
+    },
+    "01e1b9e5-9a77-475e-8b8c-250493196c87": {
+      "ProjectGuid": "01e1b9e5-9a77-475e-8b8c-250493196c87",
+      "DisplayName": "Fanex.MailDeliver.Utility",
+      "ColorIndex": 7
+    },
+    "e5670549-0481-4391-8ff4-07c2b9144f90": {
+      "ProjectGuid": "e5670549-0481-4391-8ff4-07c2b9144f90",
+      "DisplayName": "Fanex.MailDeliver.Utility",
+      "ColorIndex": 8
     }
   },
-  "NextColorIndex": 7
+  "NextColorIndex": 9
 }

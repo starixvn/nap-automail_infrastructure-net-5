@@ -1,15 +1,16 @@
 FROM registry.nexdev.net:5050/docker/dotnet/core/sdk:5.0.102-ca-patch-buster-slim AS builder
 WORKDIR /src
 
-COPY ./Fanex.Bitcoin.Service/Fanex.Bitcoin.Business ./Fanex.Bitcoin.Business
-COPY ./Fanex.Bitcoin.Service/Fanex.Bitcoin.Service/Fanex.Bitcoin.Service.csproj ./Fanex.Bitcoin.Service/Fanex.Bitcoin.Service.csproj
+COPY ./Fanex.MailDeliver.Service/Fanex.MailDeliver.MailClient ./Fanex.MailDeliver.MailClient
+COPY ./Fanex.MailDeliver.Service/Fanex.MailDeliver.Core ./Fanex.MailDeliver.Core
+COPY ./Fanex.MailDeliver.Service/Fanex.MailDeliver.Service/Fanex.MailDeliver.Service.csproj ./Fanex.MailDeliver.Service/Fanex.MailDeliver.Service.csproj
 
 RUN ls /src -l
-WORKDIR /src/Fanex.Bitcoin.Service
+WORKDIR /src/Fanex.MailDeliver.Service
 RUN dotnet nuget add source http://nuget.nexdev.net/api/v2
 RUN dotnet restore -v n
 
-COPY ./Fanex.Bitcoin.Service/Fanex.Bitcoin.Service .
+COPY ./Fanex.MailDeliver.Service/Fanex.MailDeliver.Service .
 
 RUN dotnet publish -r linux-x64 --self-contained false -c Release -o /app
 
@@ -31,4 +32,4 @@ ENV TZ="America/La_Paz"
 WORKDIR /app
 COPY --from=builder /app .
 
-ENTRYPOINT ["dotnet", "Fanex.Bitcoin.Service.dll"]
+ENTRYPOINT ["dotnet", "Fanex.MailDeliver.Service.dll"]

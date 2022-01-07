@@ -9,7 +9,6 @@ using Fanex.MailDeliver.Business.Interface;
 using Fanex.MailDeliver.Business.Worker;
 using Fanex.MailDeliver.Core.Business;
 using Fanex.MailDeliver.Core.Business.Worker;
-using Fanex.MailDeliver.Core.Infrastructure.Logging;
 using Fanex.MailDeliver.Core.Infrastructure.Models;
 using Fanex.MailDeliver.Core.Infrastructure.Services;
 using Fanex.MailDeliver.DataAccess.Implement;

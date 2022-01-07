@@ -45,7 +45,12 @@
       "ProjectGuid": "9dcb3c62-fc40-4a02-8062-853e5bcaef14",
       "DisplayName": "Fanex.Subscriber2",
       "ColorIndex": 7
+    },
+    "402a5879-af7a-4e2a-bb86-47fd7573f977": {
+      "ProjectGuid": "402a5879-af7a-4e2a-bb86-47fd7573f977",
+      "DisplayName": "AppNetFW",
+      "ColorIndex": 8
     }
   },
-  "NextColorIndex": 8
+  "NextColorIndex": 9
 }

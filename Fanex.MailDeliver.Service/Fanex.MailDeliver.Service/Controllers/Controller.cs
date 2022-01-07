@@ -7,9 +7,9 @@ namespace Fanex.MailDeliver.Service.Controllers
     public class Controller : ControllerBase
     {
         [HttpGet]
-        public string Index()
+        public IActionResult Index()
         {
-            return "OK";
+            return new OkResult();
         }
     }
 }
