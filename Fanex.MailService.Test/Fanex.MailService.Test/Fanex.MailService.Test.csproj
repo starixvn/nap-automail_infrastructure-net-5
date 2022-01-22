@@ -11,6 +11,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Fanex.MailDeliver.Service\Fanex.MailDeliver.MailClient\Fanex.MailDeliver.MailClient.csproj" />
+    <ProjectReference Include="..\..\Fanex.MailDeliver.Service\Fanex.MailDeliver.Utility\Fanex.MailDeliver.Utility.csproj" />
   </ItemGroup>
 
 </Project>

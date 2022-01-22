@@ -50,7 +50,12 @@
       "ProjectGuid": "402a5879-af7a-4e2a-bb86-47fd7573f977",
       "DisplayName": "AppNetFW",
       "ColorIndex": 8
+    },
+    "e5670549-0481-4391-8ff4-07c2b9144f90": {
+      "ProjectGuid": "e5670549-0481-4391-8ff4-07c2b9144f90",
+      "DisplayName": "Fanex.MailDeliver.Utility",
+      "ColorIndex": 9
     }
   },
-  "NextColorIndex": 9
+  "NextColorIndex": 10
 }

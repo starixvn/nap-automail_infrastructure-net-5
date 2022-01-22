@@ -23,13 +23,13 @@ namespace Fanex.MailDeliver.Utility
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(media);
 
-            using (var content = new StringContent(JsonConvert.SerializeObject(inputParams), Encoding.UTF8, "application/json"))
+            using (var content = new StringContent(JsonConvert.SerializeObject(inputParams, Formatting.Indented, new MemoryStreamJsonConverter()), Encoding.UTF8, "application/json"))
             {
                 var responseResult = client.PostAsync(action, content).Result;
                 if (responseResult.IsSuccessStatusCode)
                 {
                     var data = responseResult.Content.ReadAsStringAsync();
-                    return JsonConvert.DeserializeObject<T>(data.Result);
+                    return JsonConvert.DeserializeObject<T>(data.Result, new MemoryStreamJsonConverter());
                 }
             }
 

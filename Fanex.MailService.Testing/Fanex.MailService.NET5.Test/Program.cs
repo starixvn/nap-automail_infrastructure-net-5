@@ -27,7 +27,7 @@ namespace Fanex.MailService.NET5.Test
                     MailTo = "robert.tran@starixvn.com",
                     Title = "Robert Test at Local",
                     Subject = $"Robert Test NEW lib, run on App NET5 at Local - {DateTime.Now}",
-                    Body = "Robert Test at Local",
+                    Body = "Robert Test at Local"
                 };
 
                 mailService.SendMail(mail);

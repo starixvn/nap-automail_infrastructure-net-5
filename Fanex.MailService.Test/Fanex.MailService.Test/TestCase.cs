@@ -1,5 +1,4 @@
-﻿using Fanex.MailDeliver.MailClient.Util;
-using Fanex.MailDeliver.Model;
+﻿using Fanex.MailDeliver.Model;
 using Newtonsoft.Json;
 using System;
 
@@ -7,19 +6,6 @@ namespace Fanex.MailService.Test
 {
     public class TestCase
     {
-        public void Test1_ReturnFullName()
-        {
-            var person = new Person
-            {
-                FirstName = "Robert",
-                LastName = "Tran"
-            };
-
-            var action = "MailService/SendFullName";
-            var result = WebApiClientServiceImp.PostAsync<Person, Person>(action, person);
-            Console.WriteLine(JsonConvert.SerializeObject(result, Formatting.Indented));
-        }
-
         public void Test3_SendMail()
         {
             using var mailService = new MailDeliver.MailClient.API.MailDeliver();
@@ -29,6 +15,13 @@ namespace Fanex.MailService.Test
                 Title = "Robert Test at Local",
                 Subject = $"Robert Test at Local - {DateTime.Now}",
                 Body = "Robert Test at Local",
+                Attachments = new System.Collections.Generic.List<MailAttachment>
+                 {
+                    new MailAttachment
+                    {
+                        FileName = @"D:\tmp-Data\Xtest-Bet_Builder_Monthly_Cross_Check_Report_20211201_20211231.xlsx",
+                    }
+                 }
             };
 
             mailService.SendMail(mail);

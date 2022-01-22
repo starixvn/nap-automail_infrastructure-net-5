@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Fanex.MailService.MailClient" Version="1.0.6" />
+    <PackageReference Include="Fanex.MailDeliver.MailClient" Version="2.0.0" />
   </ItemGroup>
 
 </Project>
