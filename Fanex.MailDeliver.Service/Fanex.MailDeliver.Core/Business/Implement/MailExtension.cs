@@ -19,6 +19,7 @@ namespace Fanex.MailDeliver.Business
     using Fanex.MailDeliver.Core.Infrastructure.Services;
     using Fanex.MailDeliver.DataAccess.Implement;
     using Fanex.MailDeliver.Model;
+    using Fanex.MailDeliver.Utility;
     using System;
     using System.Diagnostics.CodeAnalysis;
     using System.IO;
@@ -122,9 +123,25 @@ namespace Fanex.MailDeliver.Business
                     {
                         foreach (var attachFile in attachments)
                         {
-                            var contType = attInfo.Extensions.FirstOrDefault(s => s.Type == attachFile.ContentType.ToString()).Type;
-                            attachFile.Content.Seek(0, SeekOrigin.Begin);
-                            var attachment = new System.Net.Mail.Attachment(attachFile.Content, attachFile.FileName, contType);
+                            var contType = attInfo.Extensions.FirstOrDefault(s => s.Name == attachFile.ContentType.ToString()).Type;
+                            var path = AppConfigService.Config.Path;
+                            Directory.CreateDirectory(path);
+                            var fileName = $"{path}/{Path.GetFileName(attachFile.FileName)}";
+                            if (attachFile.Bytes.Length > 0)
+                            {
+                                attachFile.FileName = Path.GetFileName(attachFile.FileName);
+                                FileBinaryService.ConvertBinaryToFile(fileName, attachFile.Bytes);
+                            }
+
+                            var stream = System.IO.File.Open(fileName, FileMode.Open);
+                            var buffer = new byte[stream.Length];
+                            stream.Read(buffer, 0, buffer.Length);
+                            stream.Flush();
+                            stream.Close();
+
+                            var content = new MemoryStream(buffer);
+                            content.Seek(0, SeekOrigin.Begin);
+                            var attachment = new System.Net.Mail.Attachment(content, attachFile.FileName, contType);
                             msg.Attachments.Add(attachment);
                         }
                     }
@@ -135,8 +152,26 @@ namespace Fanex.MailDeliver.Business
                         AlternateView altView = AlternateView.CreateAlternateViewFromString(msg.Body, Encoding.UTF8, MediaTypeNames.Text.Html);
                         foreach (var resoure in alternateView)
                         {
-                            var imageType = attInfo.Extensions.FirstOrDefault(s => s.Type == resoure.ImageType.ToString()).Type;
-                            LinkedResource linkedImage = new LinkedResource(resoure.StreamContent, imageType);
+                            var contType = attInfo.Extensions.FirstOrDefault(s => s.Name == resoure.ImageType.ToString()).Type;
+                            var path = AppConfigService.Config.Path;
+                            Directory.CreateDirectory(path);
+                            var fileName = $"{path}/{Path.GetFileName(resoure.FileName)}";
+                            if (resoure.Bytes.Length > 0)
+                            {
+                                resoure.FileName = Path.GetFileName(resoure.FileName);
+                                FileBinaryService.ConvertBinaryToFile(fileName, resoure.Bytes);
+                            }
+
+                            var stream = System.IO.File.Open(fileName, FileMode.Open);
+                            var buffer = new byte[stream.Length];
+                            stream.Read(buffer, 0, buffer.Length);
+                            stream.Flush();
+                            stream.Close();
+
+                            var content = new MemoryStream(buffer);
+                            content.Seek(0, SeekOrigin.Begin);
+
+                            LinkedResource linkedImage = new LinkedResource(content, contType);
                             linkedImage.ContentId = resoure.ContentCID;
                             linkedImage.ContentStream.Seek(0, SeekOrigin.Begin);
                             altView.LinkedResources.Add(linkedImage);
@@ -200,7 +235,7 @@ namespace Fanex.MailDeliver.Business
                 try
                 {
                     LogExtension.LogMessage(string.Format("\r\nRecieved Email from RabbitMQ: {0}", mailRecord.Subject));
-                    AppConfigService.Bus.PubSub.Publish(mailRecord);
+                    AppConfigService.Bus.Publish(mailRecord);
                 }
                 catch (Exception ex)
                 {

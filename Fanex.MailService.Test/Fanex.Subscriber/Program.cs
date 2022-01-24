@@ -13,10 +13,10 @@ namespace Fanex.Subscriber
             {
                 Console.WriteLine("Listening for messages. Hit <return> to quit.");
 
-                bus.PubSub.Subscribe<TextMessage>("Test", msg => HandleTextMessage(msg, bus));
-                bus.PubSub.Subscribe<TextMessage2>("Test2", msg => HandleTextMessage2(msg, bus));
-                bus.PubSub.Subscribe<MailRecord>("MailRecord", mail => HandleMailRecord(mail, bus));
-
+                bus.Subscribe<TextMessage>("Test", msg => HandleTextMessage(msg, bus));
+                bus.Subscribe<TextMessage2>("Test2", msg => HandleTextMessage2(msg, bus));
+                bus.Subscribe<MailRecord>("MailRecord", mail => HandleMailRecord(mail, bus));
+                Console.WriteLine("Start Hitting ... ");
                 Console.ReadKey();
                 bus.Dispose();
             }

@@ -55,7 +55,12 @@
       "ProjectGuid": "e5670549-0481-4391-8ff4-07c2b9144f90",
       "DisplayName": "Fanex.MailDeliver.Utility",
       "ColorIndex": 9
+    },
+    "86d4bdda-607e-45e9-9f9c-c0193491035a": {
+      "ProjectGuid": "86d4bdda-607e-45e9-9f9c-c0193491035a",
+      "DisplayName": "FW.MailService.Old",
+      "ColorIndex": 10
     }
   },
-  "NextColorIndex": 10
+  "NextColorIndex": 11
 }

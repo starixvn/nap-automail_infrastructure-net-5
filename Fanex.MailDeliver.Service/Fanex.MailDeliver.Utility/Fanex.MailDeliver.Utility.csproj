@@ -44,6 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FileBinaryService.cs" />
     <Compile Include="MailFormatter.cs" />
     <Compile Include="MemoryStreamJsonConverter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

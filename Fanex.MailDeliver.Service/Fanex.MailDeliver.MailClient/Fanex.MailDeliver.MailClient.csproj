@@ -6,11 +6,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Fanex.MailDeliver.Utility" Version="1.0.3" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Fanex.MailDeliver.Utility\Fanex.MailDeliver.Utility.csproj" />
   </ItemGroup>
 
 </Project>

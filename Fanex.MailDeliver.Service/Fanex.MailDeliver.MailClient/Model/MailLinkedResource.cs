@@ -17,28 +17,19 @@ namespace Fanex.MailDeliver.Model
         private string __fileName = string.Empty;
         private FileExtentions __imageType;
         private string __contentID = string.Empty;
-        private System.IO.MemoryStream __streamContent;
 
         public MailLinkedResource()
         {
-            ////TODO
         }
 
         public MailLinkedResource(string fileName, FileExtentions imageType, string contentID)
         {
-            ////TODO
             __fileName = fileName;
             __imageType = imageType;
             __contentID = contentID;
         }
 
-        public MailLinkedResource(System.IO.MemoryStream streamContent, FileExtentions imageType, string contentID)
-        {
-            ////TODO
-            __streamContent = streamContent;
-            __imageType = imageType;
-            __contentID = contentID;
-        }
+        public byte[] Bytes { get; set; } = { };
 
         public int LinkedID
         {
@@ -88,19 +79,6 @@ namespace Fanex.MailDeliver.Model
             set
             {
                 __contentID = value;
-            }
-        }
-
-        public System.IO.MemoryStream StreamContent
-        {
-            get
-            {
-                return __streamContent;
-            }
-
-            set
-            {
-                __streamContent = value;
             }
         }
     }

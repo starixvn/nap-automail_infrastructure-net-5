@@ -100,7 +100,7 @@ namespace Fanex.MailDeliver.Service
         private static void SubcriberMailService()
         {
             AppConfigService.Bus = ServiceProvider.GetRequiredService<IBus>();
-            AppConfigService.Bus.PubSub.Subscribe<MailRecord>("MailRecord", mail => HandlerMailRecord(mail));
+            AppConfigService.Bus.Subscribe<MailRecord>("MailRecord", mail => HandlerMailRecord(mail));
         }
 
         private static void HandlerMailRecord(MailRecord mailRecord)

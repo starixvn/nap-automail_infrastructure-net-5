@@ -1,6 +1,8 @@
 ﻿using Fanex.MailDeliver.Model;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
+using System.IO;
 
 namespace Fanex.MailService.Test
 {
@@ -19,10 +21,24 @@ namespace Fanex.MailService.Test
                  {
                     new MailAttachment
                     {
-                        FileName = @"D:\tmp-Data\Xtest-Bet_Builder_Monthly_Cross_Check_Report_20211201_20211231.xlsx",
-                    }
+                        FileName = "Template/Book1.xlsx"
+                    },
+                    //new MailAttachment
+                    //{
+                    //    FileName = "Template/xuan.jpg",
+                    //    ContentType = FileExtentions.IMG_JPG
+                    //},
                  }
             };
+
+            #region send mail with AlternateView
+
+            mail.Body += "Image AlternateView <img cid=\"1a2s3d4f5g\" />";
+            mail.AlternateView = new List<MailLinkedResource>();
+            var resource = new Fanex.MailDeliver.Model.MailLinkedResource(@"Template/xuan.jpg", FileExtentions.IMG_PNG, "1a2s3d4f5g");
+            mail.AlternateView.Add(resource);
+
+            #endregion send mail with AlternateView
 
             mailService.SendMail(mail);
         }

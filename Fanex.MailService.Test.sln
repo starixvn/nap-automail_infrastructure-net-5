@@ -21,6 +21,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppNetFW", "Fanex.MailServi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fanex.MailDeliver.Utility", "Fanex.MailDeliver.Service\Fanex.MailDeliver.Utility\Fanex.MailDeliver.Utility.csproj", "{E5670549-0481-4391-8FF4-07C2B9144F90}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FW.MailService.Old", "Fanex.MailService.Test\FW.MailService.Old\FW.MailService.Old.csproj", "{86D4BDDA-607E-45E9-9F9C-C0193491035A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -63,6 +65,10 @@ Global
 		{E5670549-0481-4391-8FF4-07C2B9144F90}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E5670549-0481-4391-8FF4-07C2B9144F90}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E5670549-0481-4391-8FF4-07C2B9144F90}.Release|Any CPU.Build.0 = Release|Any CPU
+		{86D4BDDA-607E-45E9-9F9C-C0193491035A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{86D4BDDA-607E-45E9-9F9C-C0193491035A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{86D4BDDA-607E-45E9-9F9C-C0193491035A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{86D4BDDA-607E-45E9-9F9C-C0193491035A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

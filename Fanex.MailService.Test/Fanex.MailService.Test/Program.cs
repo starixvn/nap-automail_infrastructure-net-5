@@ -1,5 +1,6 @@
 ﻿using Fanex.MailDeliver.MailClient;
 using System;
+using System.IO;
 
 namespace Fanex.MailService.Test
 {
@@ -7,6 +8,7 @@ namespace Fanex.MailService.Test
     {
         private static void Main(string[] args)
         {
+            Directory.SetCurrentDirectory(AppDomain.CurrentDomain.BaseDirectory);
             Console.WriteLine("Fanex.MailService.Test!");
 
             AppSettings.AppMailId = "1";
