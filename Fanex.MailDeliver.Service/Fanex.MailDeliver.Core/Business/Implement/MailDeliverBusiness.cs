@@ -9,6 +9,7 @@
     using Fanex.MailDeliver.DataAccess.Interface;
     using Fanex.MailDeliver.MailClient.Util;
     using Fanex.MailDeliver.Model;
+    using Fanex.MailDeliver.Utility;
     using System;
     using System.Collections.Generic;
     using System.Linq;

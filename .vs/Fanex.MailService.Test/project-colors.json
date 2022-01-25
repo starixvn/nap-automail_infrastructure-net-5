@@ -45,7 +45,22 @@
       "ProjectGuid": "9dcb3c62-fc40-4a02-8062-853e5bcaef14",
       "DisplayName": "Fanex.Subscriber2",
       "ColorIndex": 7
+    },
+    "402a5879-af7a-4e2a-bb86-47fd7573f977": {
+      "ProjectGuid": "402a5879-af7a-4e2a-bb86-47fd7573f977",
+      "DisplayName": "AppNetFW",
+      "ColorIndex": 8
+    },
+    "e5670549-0481-4391-8ff4-07c2b9144f90": {
+      "ProjectGuid": "e5670549-0481-4391-8ff4-07c2b9144f90",
+      "DisplayName": "Fanex.MailDeliver.Utility",
+      "ColorIndex": 9
+    },
+    "86d4bdda-607e-45e9-9f9c-c0193491035a": {
+      "ProjectGuid": "86d4bdda-607e-45e9-9f9c-c0193491035a",
+      "DisplayName": "FW.MailService.Old",
+      "ColorIndex": 10
     }
   },
-  "NextColorIndex": 8
+  "NextColorIndex": 11
 }

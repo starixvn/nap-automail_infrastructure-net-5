@@ -12,8 +12,8 @@ namespace Fanex.Subscriber2
             {
                 Console.WriteLine("Subscriber2: Listening for messages. Hit <return> to quit.");
 
-                bus.PubSub.Subscribe<TextMessage>("Test", msg => HandleTextMessage(msg, bus));
-                bus.PubSub.Subscribe<TextMessage2>("Test2", msg => HandleTextMessage2(msg, bus));
+                bus.Subscribe<TextMessage>("Test", msg => HandleTextMessage(msg, bus));
+                bus.Subscribe<TextMessage2>("Test2", msg => HandleTextMessage2(msg, bus));
 
                 Console.ReadKey();
                 bus.Dispose();

@@ -9,7 +9,6 @@ using Fanex.MailDeliver.Business.Interface;
 using Fanex.MailDeliver.Business.Worker;
 using Fanex.MailDeliver.Core.Business;
 using Fanex.MailDeliver.Core.Business.Worker;
-using Fanex.MailDeliver.Core.Infrastructure.Logging;
 using Fanex.MailDeliver.Core.Infrastructure.Models;
 using Fanex.MailDeliver.Core.Infrastructure.Services;
 using Fanex.MailDeliver.DataAccess.Implement;
@@ -101,7 +100,7 @@ namespace Fanex.MailDeliver.Service
         private static void SubcriberMailService()
         {
             AppConfigService.Bus = ServiceProvider.GetRequiredService<IBus>();
-            AppConfigService.Bus.PubSub.Subscribe<MailRecord>("MailRecord", mail => HandlerMailRecord(mail));
+            AppConfigService.Bus.Subscribe<MailRecord>("MailRecord", mail => HandlerMailRecord(mail));
         }
 
         private static void HandlerMailRecord(MailRecord mailRecord)

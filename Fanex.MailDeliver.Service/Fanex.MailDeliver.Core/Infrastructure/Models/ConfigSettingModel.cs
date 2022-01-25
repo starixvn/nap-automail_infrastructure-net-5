@@ -15,5 +15,7 @@
         public string RabbitMQConnectionString { get; set; }
 
         public MailSection MailSection { get; set; }
+
+        public string Path { get; set; }
     }
 }

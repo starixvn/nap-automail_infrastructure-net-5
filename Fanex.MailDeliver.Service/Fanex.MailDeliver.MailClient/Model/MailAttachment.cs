@@ -10,7 +10,6 @@
 namespace Fanex.MailDeliver.Model
 {
     using System;
-    using System.Runtime.Serialization;
 
     [Serializable]
     public enum FileExtentions
@@ -56,11 +55,9 @@ namespace Fanex.MailDeliver.Model
     {
         private string _fileName = "noname";
         private FileExtentions __contentType;
-        private System.IO.MemoryStream __content;
 
         public MailAttachment()
         {
-            ////TODO
         }
 
         public MailAttachment(string fileName, FileExtentions contentType)
@@ -69,11 +66,7 @@ namespace Fanex.MailDeliver.Model
             __contentType = contentType;
         }
 
-        public MailAttachment(System.IO.MemoryStream content, FileExtentions contentType)
-        {
-            __content = content;
-            __contentType = contentType;
-        }
+        public byte[] Bytes { get; set; } = { };
 
         public int AttachmentID
         {
@@ -110,19 +103,6 @@ namespace Fanex.MailDeliver.Model
             set
             {
                 __contentType = value;
-            }
-        }
-
-        public System.IO.MemoryStream Content
-        {
-            get
-            {
-                return __content;
-            }
-
-            set
-            {
-                __content = value;
             }
         }
     }

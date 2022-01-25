@@ -2,8 +2,8 @@
 {
     using Fanex.MailDeliver.MailClient.API.WCF;
     using Fanex.MailDeliver.MailClient.ParamModel;
-    using Fanex.MailDeliver.MailClient.Util;
     using Fanex.MailDeliver.Model;
+    using Fanex.MailDeliver.Utility;
     using System;
     using System.Collections.Generic;
 

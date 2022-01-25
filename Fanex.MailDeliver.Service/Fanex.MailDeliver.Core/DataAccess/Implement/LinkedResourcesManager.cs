@@ -97,18 +97,18 @@ namespace Fanex.MailDeliver.DataAccess.Implement
             long mailID,
             IEnumerable<MailLinkedResource> resources)
         {
-            if (mailID > 0 && resources.Count() > 0)
+            if (mailID > 0 && resources.Any())
             {
                 foreach (var resource in resources)
                 {
-                    if (resource.StreamContent != null)
+                    if (resource.Bytes != null)
                     {
                         var param = new Hashtable();
                         param.Add("mailid", mailID);
                         param.Add("filename", resource.FileName);
                         param.Add("imagetype", resource.ImageType);
                         param.Add("contentcid", resource.ContentCID);
-                        param.Add("streamcontent", resource.StreamContent.ToArray());
+                        param.Add("streamcontent", resource.Bytes);
                         using (ObjectDb objDb = new ObjectDb("StoreLinkedResource"))
                         {
                             objDb.ExecuteNonQuery(param);
@@ -147,9 +147,10 @@ namespace Fanex.MailDeliver.DataAccess.Implement
                                 ContentCID = Convert.ToString(row["contentcid"]),
                                 ImageType = (FileExtentions)Enum.Parse(typeof(FileExtentions), Convert.ToString(row["imagetype"]), true)
                             };
-                            ////byte[] binary = (byte[])row["content"];
+
                             byte[] binary = row["streamcontent"] as byte[];
-                            item.StreamContent = new MemoryStream(binary);
+
+                            item.Bytes = binary;
                             resources.Add(item);
                         }
                     }

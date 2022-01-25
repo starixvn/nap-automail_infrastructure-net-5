@@ -47,10 +47,6 @@ namespace Fanex.MailDeliver.DataAccess.Implement
                         StoreMailAttchmentsToDatabase(mailID, attachments);
                         break;
 
-                    case AttachmentStoreMode.File:
-                        StoreMailAttachmentsToFiles(mailInfo, attachments);
-                        break;
-
                     default:
                         break;
                 }
@@ -77,9 +73,6 @@ namespace Fanex.MailDeliver.DataAccess.Implement
                 var mailInfo = AppConfigService.Config.MailSection;
                 switch (mailInfo.Attachment.StoreMode)
                 {
-                    case AttachmentStoreMode.File:
-                        return GetMailAttachmentsFromFiles(mailInfo, attInfo);
-
                     case AttachmentStoreMode.Binary:
                         return GetMailAttachmentsFromDatabase(mailInfo, mailID);
 
@@ -96,28 +89,6 @@ namespace Fanex.MailDeliver.DataAccess.Implement
         }
 
         /// <summary>
-        /// Store attachment to files.
-        /// </summary>
-        /// <param name="mailSection">Mail contains information.</param>
-        /// <param name="attachments">List attachment files.</param>
-        private void StoreMailAttachmentsToFiles(
-            MailSection mailSection,
-            IEnumerable<MailAttachment> attachments)
-        {
-            if (attachments.Count() > 0)
-            {
-                foreach (var attachment in attachments)
-                {
-                    var fileName = string.Format("{0}{1}", mailSection.Attachment.Path, attachment.FileName);
-                    var stream = File.OpenWrite(fileName);
-                    attachment.Content.WriteTo(stream);
-                    stream.Flush();
-                    stream.Close();
-                }
-            }
-        }
-
-        /// <summary>
         /// Store attachment to Database.
         /// </summary>
         /// <param name="mailID">Mail record id.</param>
@@ -130,59 +101,20 @@ namespace Fanex.MailDeliver.DataAccess.Implement
             {
                 foreach (var attachment in attachments)
                 {
-                    if (attachment.Content != null)
+                    if (attachment.Bytes.Length > 0)
                     {
                         var param = new Hashtable();
                         param.Add("mailid", mailID);
                         param.Add("filename", attachment.FileName);
                         param.Add("contenttype", attachment.ContentType);
-                        param.Add("content", attachment.Content.ToArray());
+                        param.Add("content", attachment.Bytes);
                         using (ObjectDb objDb = new ObjectDb("StoreMailAttachement"))
                         {
-                            ////DbHelper.Execute(spElement.Name, param, spElement.Db);
                             objDb.ExecuteNonQuery(param);
                         }
                     }
                 }
             }
-        }
-
-        /// <summary>
-        /// Get Attachments from files.
-        /// </summary>
-        /// <param name="mailInfo">Mail information.</param>
-        /// <param name="info">Information string.</param>
-        /// <returns>List attachments.</returns>
-        private IEnumerable<MailAttachment> GetMailAttachmentsFromFiles(
-            MailSection mailInfo,
-            string info)
-        {
-            var attachments = new List<MailAttachment>();
-            string[] fileNames = info.Split(',');
-            if (fileNames.Length > 0)
-            {
-                foreach (var fileName in fileNames)
-                {
-                    var attachment = new MailAttachment
-                    {
-                        MailID = _mailID,
-                        FileName = fileName
-                    };
-                    string fullPath = string.Format("{0}{1}", mailInfo.Attachment.Path, fileName);
-                    if (File.Exists(fullPath))
-                    {
-                        var fileStream = File.Open(fullPath, FileMode.Open);
-                        var buffer = new byte[fileStream.Length];
-                        fileStream.Read(buffer, 0, buffer.Length);
-                        var stream = new MemoryStream(buffer);
-                        attachment.Content = stream;
-                    }
-
-                    attachments.Add(attachment);
-                }
-            }
-
-            return attachments;
         }
 
         /// <summary>
@@ -215,7 +147,7 @@ namespace Fanex.MailDeliver.DataAccess.Implement
                                 ContentType = (FileExtentions)Enum.Parse(typeof(FileExtentions), Convert.ToString(row["contenttype"]), true)
                             };
                             byte[] binary = row["content"] as byte[];
-                            item.Content = new MemoryStream(binary);
+                            item.Bytes = binary;
                             attachments.Add(item);
                         }
                     }

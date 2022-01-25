@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -6,11 +6,26 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Template\Book1.xlsx" />
+    <None Remove="Template\xuan.jpg" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Template\Book1.xlsx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Template\xuan.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="EasyNetQ" Version="6.3.1" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\Fanex.MailDeliver.Service\Fanex.MailDeliver.MailClient\Fanex.MailDeliver.MailClient.csproj" />
+    <ProjectReference Include="..\..\Fanex.MailDeliver.Service\Fanex.MailDeliver.Utility\Fanex.MailDeliver.Utility.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,25 +1,13 @@
-﻿using Fanex.MailDeliver.MailClient.Util;
-using Fanex.MailDeliver.Model;
+﻿using Fanex.MailDeliver.Model;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
+using System.IO;
 
 namespace Fanex.MailService.Test
 {
     public class TestCase
     {
-        public void Test1_ReturnFullName()
-        {
-            var person = new Person
-            {
-                FirstName = "Robert",
-                LastName = "Tran"
-            };
-
-            var action = "MailService/SendFullName";
-            var result = WebApiClientServiceImp.PostAsync<Person, Person>(action, person);
-            Console.WriteLine(JsonConvert.SerializeObject(result, Formatting.Indented));
-        }
-
         public void Test3_SendMail()
         {
             using var mailService = new MailDeliver.MailClient.API.MailDeliver();
@@ -29,7 +17,28 @@ namespace Fanex.MailService.Test
                 Title = "Robert Test at Local",
                 Subject = $"Robert Test at Local - {DateTime.Now}",
                 Body = "Robert Test at Local",
+                Attachments = new System.Collections.Generic.List<MailAttachment>
+                 {
+                    new MailAttachment
+                    {
+                        FileName = "Template/Book1.xlsx"
+                    },
+                    //new MailAttachment
+                    //{
+                    //    FileName = "Template/xuan.jpg",
+                    //    ContentType = FileExtentions.IMG_JPG
+                    //},
+                 }
             };
+
+            #region send mail with AlternateView
+
+            mail.Body += "Image AlternateView <img cid=\"1a2s3d4f5g\" />";
+            mail.AlternateView = new List<MailLinkedResource>();
+            var resource = new Fanex.MailDeliver.Model.MailLinkedResource(@"Template/xuan.jpg", FileExtentions.IMG_PNG, "1a2s3d4f5g");
+            mail.AlternateView.Add(resource);
+
+            #endregion send mail with AlternateView
 
             mailService.SendMail(mail);
         }
