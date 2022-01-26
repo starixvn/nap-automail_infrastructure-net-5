@@ -199,7 +199,14 @@ namespace Fanex.MailDeliver.DataAccess.Implement
                 var rows = result.Tables[0].Rows;
                 foreach (DataRow mailRecordRow in rows)
                 {
-                    records.Add(GetMailRecordFromDataRow(mailRecordRow));
+                    try
+                    {
+                        records.Add(GetMailRecordFromDataRow(mailRecordRow));
+                    }
+                    catch (Exception ex)
+                    {
+                        var s = ex.Message;
+                    }
                 }
             }
 
@@ -503,12 +510,12 @@ namespace Fanex.MailDeliver.DataAccess.Implement
                 MailCc = Convert.ToString(mailRecordDataRow["mailcc"]),
                 MailBcc = Convert.ToString(mailRecordDataRow["mailbcc"]),
                 MailDate = Convert.ToString(mailRecordDataRow["maildate"]),
-                MailUpdatedDate = Convert.ToString(mailRecordDataRow["mailupdateddate"]),
+                MailUpdatedDate = mailRecordDataRow["mailupdateddate"] == DBNull.Value ? Convert.ToString(mailRecordDataRow["mailupdateddate"]) : DateTime.Now.ToString(),
                 Body = isGetMailBody ? Convert.ToString(mailRecordDataRow["body"]) : string.Empty,
                 FileAttachments = Convert.ToString(mailRecordDataRow["attachments"]),
                 CountSend = Convert.ToInt32(mailRecordDataRow["CountSend"]),
-                SentSuccess = Convert.ToInt32(mailRecordDataRow["SentSuccess"]),
-                SentFail = Convert.ToInt32(mailRecordDataRow["SentFail"]),
+                SentSuccess = mailRecordDataRow["SentSuccess"] != DBNull.Value ? Convert.ToInt32(mailRecordDataRow["SentSuccess"]) : 0,
+                SentFail = mailRecordDataRow["SentFail"] != DBNull.Value ? Convert.ToInt32(mailRecordDataRow["SentFail"]) : 1,
                 IsEncrypt = Convert.ToBoolean(mailRecordDataRow["IsEncrypt"])
             };
         }

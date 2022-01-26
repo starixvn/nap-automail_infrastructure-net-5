@@ -2,6 +2,7 @@
 using Fanex.MailDeliver.MailClient.API;
 using Fanex.MailDeliver.Model;
 using System;
+using System.Collections.Generic;
 
 namespace AppNetFW
 {
@@ -10,7 +11,6 @@ namespace AppNetFW
         private static void Main(string[] args)
         {
             AppSettings.AppMailId = "1";
-            //AppSettings.AppMailAddress =  "http://localhost:31599/";
             AppSettings.AppMailAddress = "http://10.18.200.131:8787/";
 
             try
@@ -23,18 +23,18 @@ namespace AppNetFW
                         Title = "Robert Test at Local",
                         Subject = $"Robert Test at Local - {DateTime.Now}",
                         Body = "Robert Test at Local",
-                        Attachments = new System.Collections.Generic.List<MailAttachment>
-                 {
-                    new MailAttachment
-                    {
-                        FileName = "Template/Book1.xlsx"
-                    },
-                    new MailAttachment
-                    {
-                        FileName = "Template/xuan.jpg",
-                        ContentType = FileExtentions.IMG_JPG
-                    },
-                 }
+                        Attachments = new List<MailAttachment>
+                        {
+                            new MailAttachment
+                            {
+                                FileName = "Template/Book1.xlsx"
+                            },
+                            new MailAttachment
+                            {
+                                FileName = "Template/xuan.jpg",
+                                ContentType = FileExtentions.IMG_JPG
+                            },
+                        }
                     };
 
                     mailService.SendMail(mail);
