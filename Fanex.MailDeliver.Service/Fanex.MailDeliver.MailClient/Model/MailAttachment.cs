@@ -66,6 +66,12 @@ namespace Fanex.MailDeliver.Model
             __contentType = contentType;
         }
 
+        public MailAttachment(System.IO.MemoryStream content, FileExtentions contentType)
+        {
+            __contentType = contentType;
+            Bytes = content.ToArray();
+        }
+
         public byte[] Bytes { get; set; } = { };
 
         public int AttachmentID

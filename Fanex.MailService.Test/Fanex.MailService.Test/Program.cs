@@ -18,7 +18,7 @@ namespace Fanex.MailService.Test
             try
             {
                 var testMailService = new TestCase();
-                testMailService.Test6_GetListMailByDate();
+                testMailService.Test3_SendMail();
             }
             catch (Exception ex)
             {

@@ -10,6 +10,12 @@ namespace Fanex.MailService.Test
     {
         public void Test3_SendMail()
         {
+            var fileName = "Template/xuan.jpg";
+            var stream = File.Open(fileName, FileMode.Open);
+            var buffer = new byte[stream.Length];
+            stream.Read(buffer, 0, buffer.Length);
+            stream.Close();
+
             using var mailService = new MailDeliver.MailClient.API.MailDeliver();
             var mail = new MailRecord
             {
@@ -17,28 +23,24 @@ namespace Fanex.MailService.Test
                 Title = "Robert Test at Local",
                 Subject = $"Robert Test at Local - {DateTime.Now}",
                 Body = "Robert Test at Local",
+                //Attachments = new System.Collections.Generic.List<MailAttachment>
+                // {
+                //    new MailAttachment
+                //    {
+                //        FileName = "Template/Book1.xlsx"
+                //    },
+                //    new MailAttachment
+                //    {
+                //        FileName = "Template/xuan.jpg",
+                //        ContentType = FileExtentions.IMG_JPG
+                //    },
+                // }
+
                 Attachments = new System.Collections.Generic.List<MailAttachment>
                  {
-                    new MailAttachment
-                    {
-                        FileName = "Template/Book1.xlsx"
-                    },
-                    //new MailAttachment
-                    //{
-                    //    FileName = "Template/xuan.jpg",
-                    //    ContentType = FileExtentions.IMG_JPG
-                    //},
+                    new MailAttachment(new MemoryStream(buffer), FileExtentions.IMG_JPG){ FileName= "xuan.jpg"}
                  }
             };
-
-            #region send mail with AlternateView
-
-            mail.Body += "Image AlternateView <img cid=\"1a2s3d4f5g\" />";
-            mail.AlternateView = new List<MailLinkedResource>();
-            var resource = new Fanex.MailDeliver.Model.MailLinkedResource(@"Template/xuan.jpg", FileExtentions.IMG_PNG, "1a2s3d4f5g");
-            mail.AlternateView.Add(resource);
-
-            #endregion send mail with AlternateView
 
             mailService.SendMail(mail);
         }
