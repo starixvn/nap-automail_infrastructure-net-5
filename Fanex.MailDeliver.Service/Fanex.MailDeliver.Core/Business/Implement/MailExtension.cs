@@ -124,22 +124,7 @@ namespace Fanex.MailDeliver.Business
                         foreach (var attachFile in attachments)
                         {
                             var contType = attInfo.Extensions.FirstOrDefault(s => s.Name == attachFile.ContentType.ToString()).Type;
-                            var path = AppConfigService.Config.Path;
-                            Directory.CreateDirectory(path);
-                            var fileName = $"{path}/{Path.GetFileName(attachFile.FileName)}";
-                            if (attachFile.Bytes.Length > 0)
-                            {
-                                attachFile.FileName = Path.GetFileName(attachFile.FileName);
-                                FileBinaryService.ConvertBinaryToFile(fileName, attachFile.Bytes);
-                            }
-
-                            var stream = System.IO.File.Open(fileName, FileMode.Open);
-                            var buffer = new byte[stream.Length];
-                            stream.Read(buffer, 0, buffer.Length);
-                            stream.Flush();
-                            stream.Close();
-
-                            var content = new MemoryStream(buffer);
+                            var content = new MemoryStream(attachFile.Bytes);
                             content.Seek(0, SeekOrigin.Begin);
                             var attachment = new System.Net.Mail.Attachment(content, attachFile.FileName, contType);
                             msg.Attachments.Add(attachment);
@@ -153,25 +138,10 @@ namespace Fanex.MailDeliver.Business
                         foreach (var resoure in alternateView)
                         {
                             var contType = attInfo.Extensions.FirstOrDefault(s => s.Name == resoure.ImageType.ToString()).Type;
-                            var path = AppConfigService.Config.Path;
-                            Directory.CreateDirectory(path);
-                            var fileName = $"{path}/{Path.GetFileName(resoure.FileName)}";
-                            if (resoure.Bytes.Length > 0)
-                            {
-                                resoure.FileName = Path.GetFileName(resoure.FileName);
-                                FileBinaryService.ConvertBinaryToFile(fileName, resoure.Bytes);
-                            }
-
-                            var stream = System.IO.File.Open(fileName, FileMode.Open);
-                            var buffer = new byte[stream.Length];
-                            stream.Read(buffer, 0, buffer.Length);
-                            stream.Flush();
-                            stream.Close();
-
-                            var content = new MemoryStream(buffer);
+                            var content = new MemoryStream(resoure.Bytes);
                             content.Seek(0, SeekOrigin.Begin);
 
-                            LinkedResource linkedImage = new LinkedResource(content, contType);
+                            var linkedImage = new LinkedResource(content, contType);
                             linkedImage.ContentId = resoure.ContentCID;
                             linkedImage.ContentStream.Seek(0, SeekOrigin.Begin);
                             altView.LinkedResources.Add(linkedImage);

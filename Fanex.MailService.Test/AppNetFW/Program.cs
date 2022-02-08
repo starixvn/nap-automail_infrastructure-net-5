@@ -3,6 +3,7 @@ using Fanex.MailDeliver.MailClient.API;
 using Fanex.MailDeliver.Model;
 using System;
 using System.Collections.Generic;
+using System.IO;
 
 namespace AppNetFW
 {
@@ -12,9 +13,16 @@ namespace AppNetFW
         {
             AppSettings.AppMailId = "1";
             AppSettings.AppMailAddress = "http://10.18.200.131:8787/";
+            //AppSettings.AppMailAddress = "http://localhost:31599/";
 
             try
             {
+                var fileName = "Template/xuan.jpg";
+                var stream = File.Open(fileName, FileMode.Open);
+                var buffer = new byte[stream.Length];
+                stream.Read(buffer, 0, buffer.Length);
+                stream.Close();
+
                 using (var mailService = new MailDeliver())
                 {
                     var mail = new MailRecord
@@ -23,18 +31,23 @@ namespace AppNetFW
                         Title = "Robert Test at Local",
                         Subject = $"Robert Test at Local - {DateTime.Now}",
                         Body = "Robert Test at Local",
+                        //Attachments = new List<MailAttachment>
+                        //{
+                        //    //new MailAttachment
+                        //    //{
+                        //    //    FileName = "Template/Book1.xlsx"
+                        //    //},
+                        //    //new MailAttachment
+                        //    //{
+                        //    //    FileName = "Template/xuan.jpg",
+                        //    //    ContentType = FileExtentions.IMG_JPG
+                        //    //},
+                        //}
+
                         Attachments = new List<MailAttachment>
-                        {
-                            new MailAttachment
-                            {
-                                FileName = "Template/Book1.xlsx"
-                            },
-                            new MailAttachment
-                            {
-                                FileName = "Template/xuan.jpg",
-                                ContentType = FileExtentions.IMG_JPG
-                            },
-                        }
+                         {
+                            new MailAttachment(new MemoryStream(buffer), FileExtentions.IMG_JPG){ FileName= "xuan.jpg"}
+                         }
                     };
 
                     mailService.SendMail(mail);
