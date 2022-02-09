@@ -21,7 +21,7 @@ namespace Fanex.MailDeliver.Service
 
         public void ConfigureServices(IServiceCollection services)
         {
-            Directory.SetCurrentDirectory(AppDomain.CurrentDomain.BaseDirectory);
+            services.LoadConfig();
             services.AddControllers();
             services.AddRazorPages().AddRazorRuntimeCompilation();
             services.AddSwaggerGen(c =>
@@ -29,7 +29,11 @@ namespace Fanex.MailDeliver.Service
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Fanex.MailDeliver.Service", Version = "v1" });
             });
 
-            RegisterService.RegisterServices(Configuration, services);
+            services.RegisterSentry();
+            services.RegisterFanexData(Configuration);
+            services.RegisterInternalServices();
+            services.SubcriberMailService();
+            services.StartScheduler();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

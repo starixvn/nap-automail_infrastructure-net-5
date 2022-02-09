@@ -10,8 +10,6 @@
 namespace Fanex.MailDeliver.Business
 {
     using EASendMail;
-    using EasyNetQ;
-    using Fanex.MailDeliver.Business.Interface;
     using Fanex.MailDeliver.Core.Business;
     using Fanex.MailDeliver.Core.Criterias;
     using Fanex.MailDeliver.Core.Infrastructure;
@@ -19,7 +17,6 @@ namespace Fanex.MailDeliver.Business
     using Fanex.MailDeliver.Core.Infrastructure.Services;
     using Fanex.MailDeliver.DataAccess.Implement;
     using Fanex.MailDeliver.Model;
-    using Fanex.MailDeliver.Utility;
     using System;
     using System.Diagnostics.CodeAnalysis;
     using System.IO;
