@@ -11,9 +11,9 @@ namespace Fanex.MailService.Test
             Directory.SetCurrentDirectory(AppDomain.CurrentDomain.BaseDirectory);
             Console.WriteLine("Fanex.MailService.Test!");
 
-            AppSettings.AppMailId = "69";
-            //AppSettings.AppMailAddress = "http://localhost:31599/";
-            AppSettings.AppMailAddress = "http://10.18.200.131:8787/";
+            AppSettings.AppMailId = "1";
+            AppSettings.AppMailAddress = "http://localhost:31599/";
+            //AppSettings.AppMailAddress = "http://10.18.200.131:8787/";
 
             try
             {
