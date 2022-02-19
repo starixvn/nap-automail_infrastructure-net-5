@@ -38,6 +38,7 @@
                     if (mail.Config == null || mail.Config.AppID == 0)
                     {
                         var appid = Convert.ToInt32(AppSettings.AppMailId);
+                        appid = mail.AppID > 0 ? mail.AppID : appid;
                         mail.Config = new MailConfig
                         {
                             AppID = appid
