@@ -102,7 +102,7 @@ namespace Fanex.MailDeliver.Service.Controllers
         }
 
         [HttpPost("GetListConfig")]
-        public IActionResult GetListConfig(string serverIp)
+        public IActionResult GetListConfig([FromBody] string serverIp)
         {
             var result = mailService.GetListConfig(serverIp);
             return new JsonResult(result);
@@ -116,7 +116,7 @@ namespace Fanex.MailDeliver.Service.Controllers
         }
 
         [HttpPost("GetListError")]
-        public IActionResult GetListError(long mailId)
+        public IActionResult GetListError([FromBody] long mailId)
         {
             var result = mailService.GetListError(mailId);
             return new JsonResult(result);

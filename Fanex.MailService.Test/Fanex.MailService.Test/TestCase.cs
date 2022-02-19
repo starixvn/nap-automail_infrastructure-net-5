@@ -20,9 +20,10 @@ namespace Fanex.MailService.Test
             var mail = new MailRecord
             {
                 MailTo = "robert.tran@starixvn.com",
-                Title = "Robert Test at Local",
-                Subject = $"Robert Test at Local - {DateTime.Now}",
-                Body = "Robert Test at Local",
+                MailBcc = "robert.tran@starixvn.com",
+                Title = "test mail automail ",
+                Subject = $"test mail automail  - {DateTime.Now}",
+                Body = "test mail automail ",
                 //Attachments = new System.Collections.Generic.List<MailAttachment>
                 // {
                 //    new MailAttachment
@@ -36,10 +37,10 @@ namespace Fanex.MailService.Test
                 //    },
                 // }
 
-                Attachments = new System.Collections.Generic.List<MailAttachment>
-                 {
-                    new MailAttachment(new MemoryStream(buffer), FileExtentions.IMG_JPG){ FileName= "xuan.jpg"}
-                 }
+                //Attachments = new System.Collections.Generic.List<MailAttachment>
+                // {
+                //    new MailAttachment(new MemoryStream(buffer), FileExtentions.IMG_JPG){ FileName= "xuan.jpg"}
+                // }
             };
 
             mailService.SendMail(mail);
@@ -156,7 +157,7 @@ namespace Fanex.MailService.Test
         public void Test17_GetListError()
         {
             using var mailService = new MailDeliver.MailClient.API.MailDeliver();
-            var rs = mailService.GetListError(0);
+            var rs = mailService.GetListError(1855677);
         }
     }
 }

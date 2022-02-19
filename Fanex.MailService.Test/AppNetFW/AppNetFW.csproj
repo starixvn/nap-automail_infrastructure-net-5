@@ -34,7 +34,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Fanex.MailDeliver.MailClient, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Fanex.MailDeliver.MailClient.2.0.4-beta-1\lib\net461\Fanex.MailDeliver.MailClient.dll</HintPath>
+      <HintPath>..\..\packages\Fanex.MailDeliver.MailClient.2.0.5\lib\net461\Fanex.MailDeliver.MailClient.dll</HintPath>
     </Reference>
     <Reference Include="Fanex.MailDeliver.Utility, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Fanex.MailDeliver.Utility.1.0.3\lib\net461\Fanex.MailDeliver.Utility.dll</HintPath>

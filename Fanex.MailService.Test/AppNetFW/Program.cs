@@ -11,9 +11,9 @@ namespace AppNetFW
     {
         private static void Main(string[] args)
         {
-            AppSettings.AppMailId = "1";
-            AppSettings.AppMailAddress = "http://10.18.200.131:8787/";
-            //AppSettings.AppMailAddress = "http://localhost:31599/";
+            AppSettings.AppMailId = "34";
+            //AppSettings.AppMailAddress = "http://10.18.200.131:8787/";
+            AppSettings.AppMailAddress = "http://localhost:31599/";
 
             try
             {
