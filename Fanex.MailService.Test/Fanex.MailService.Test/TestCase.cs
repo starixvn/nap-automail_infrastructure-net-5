@@ -37,10 +37,10 @@ namespace Fanex.MailService.Test
                 //    },
                 // }
 
-                //Attachments = new System.Collections.Generic.List<MailAttachment>
-                // {
-                //    new MailAttachment(new MemoryStream(buffer), FileExtentions.IMG_JPG){ FileName= "xuan.jpg"}
-                // }
+                Attachments = new System.Collections.Generic.List<MailAttachment>
+                 {
+                    new MailAttachment(new MemoryStream(buffer), FileExtentions.IMG_JPG){ FileName= "xuan.jpg"}
+                 }
             };
 
             mailService.SendMail(mail);
