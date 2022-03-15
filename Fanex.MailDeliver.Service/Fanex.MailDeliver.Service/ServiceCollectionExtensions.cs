@@ -8,6 +8,7 @@ using Fanex.MailDeliver.Business.Implement;
 using Fanex.MailDeliver.Business.Interface;
 using Fanex.MailDeliver.Business.Worker;
 using Fanex.MailDeliver.Core.Business;
+using Fanex.MailDeliver.Core.Business.Implement;
 using Fanex.MailDeliver.Core.Business.Worker;
 using Fanex.MailDeliver.Core.Infrastructure.Models;
 using Fanex.MailDeliver.Core.Infrastructure.Services;
@@ -82,6 +83,7 @@ namespace Fanex.MailDeliver.Service
             services.AddSingleton<DataService, DataServiceImp>();
             services.AddSingleton<MailExtension, MailExtensionImp>();
             services.AddSingleton<IMailDeliverDataAccess, MailDeliverDataAccess>();
+            services.AddSingleton<MailKitService, MailKitServiceImp>();
             services.AddSingleton<MailResendJob>();
 
             services.AddSingleton<IBus>(RabbitHutch.CreateBus(AppConfigService.Config.RabbitMQConnectionString));
