@@ -31,18 +31,6 @@ namespace AppNetFW
                         Title = "Robert Test at Local",
                         Subject = $"Robert Test at Local - {DateTime.Now}",
                         Body = "Robert Test at Local",
-                        //Attachments = new List<MailAttachment>
-                        //{
-                        //    //new MailAttachment
-                        //    //{
-                        //    //    FileName = "Template/Book1.xlsx"
-                        //    //},
-                        //    //new MailAttachment
-                        //    //{
-                        //    //    FileName = "Template/xuan.jpg",
-                        //    //    ContentType = FileExtentions.IMG_JPG
-                        //    //},
-                        //}
 
                         Attachments = new List<MailAttachment>
                          {

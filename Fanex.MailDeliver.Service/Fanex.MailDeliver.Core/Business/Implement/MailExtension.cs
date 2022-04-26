@@ -11,6 +11,7 @@ namespace Fanex.MailDeliver.Business
 {
     using EASendMail;
     using Fanex.MailDeliver.Core.Business;
+    using Fanex.MailDeliver.Core.Business.Implement;
     using Fanex.MailDeliver.Core.Criterias;
     using Fanex.MailDeliver.Core.Infrastructure;
     using Fanex.MailDeliver.Core.Infrastructure.Logging;
@@ -35,10 +36,12 @@ namespace Fanex.MailDeliver.Business
     public class MailExtensionImp : MailExtension
     {
         private readonly DataService dataService;
+        private readonly MailKitService mailKitService;
 
-        public MailExtensionImp(DataService dataService)
+        public MailExtensionImp(DataService dataService, MailKitService mailKitService)
         {
             this.dataService = dataService;
+            this.mailKitService = mailKitService;
         }
 
         public void SendMail(MailRecord mailSend, out string message)
@@ -160,7 +163,7 @@ namespace Fanex.MailDeliver.Business
 
                     System.Net.ServicePointManager.ServerCertificateValidationCallback += (s, cert, chain, sslPolicyErrors) => true;
 
-                    SafeSmtpClientSendMessage(client, msg, mailSend);
+                    SafeSmtpClientSendMessage(client, msg, mailSend, mailSetting, mailFrom);
                 }
             }
             catch (Exception ex)
@@ -169,7 +172,7 @@ namespace Fanex.MailDeliver.Business
             }
         }
 
-        private void SafeSmtpClientSendMessage(System.Net.Mail.SmtpClient smtpClient, MailMessage msg, MailRecord mailRecord)
+        private void SafeSmtpClientSendMessage(System.Net.Mail.SmtpClient smtpClient, MailMessage msg, MailRecord mailRecord, MailSetting mailSetting, string mailFrom)
         {
             try
             {
@@ -178,8 +181,19 @@ namespace Fanex.MailDeliver.Business
             }
             catch (Exception e)
             {
-                LogExtension.LogError(e);
-                UpdateMailStatus(mailRecord, false, e);
+                try
+                {
+                    mailKitService.Send(mailRecord, mailSetting, mailFrom);
+                    UpdateMailStatus(mailRecord, true, null);
+                }
+                catch (Exception ex)
+                {
+                    LogExtension.LogMessage("Maik kit ex..");
+                    LogExtension.LogError(ex);
+
+                    LogExtension.LogError(e);
+                    UpdateMailStatus(mailRecord, false, e);
+                }
             }
             finally
             {

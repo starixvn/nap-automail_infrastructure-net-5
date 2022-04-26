@@ -24,23 +24,11 @@ namespace Fanex.MailService.Test
                 Title = "test mail automail ",
                 Subject = $"test mail automail  - {DateTime.Now}",
                 Body = "test mail automail ",
-                //Attachments = new System.Collections.Generic.List<MailAttachment>
-                // {
-                //    new MailAttachment
-                //    {
-                //        FileName = "Template/Book1.xlsx"
-                //    },
-                //    new MailAttachment
-                //    {
-                //        FileName = "Template/xuan.jpg",
-                //        ContentType = FileExtentions.IMG_JPG
-                //    },
-                // }
 
-                //Attachments = new System.Collections.Generic.List<MailAttachment>
-                // {
-                //    new MailAttachment(new MemoryStream(buffer), FileExtentions.IMG_JPG){ FileName= "xuan.jpg"}
-                // }
+                Attachments = new System.Collections.Generic.List<MailAttachment>
+                 {
+                    new MailAttachment(new MemoryStream(buffer), FileExtentions.IMG_JPG){ FileName= "xuan.jpg"}
+                 }
             };
 
             mailService.SendMail(mail);
