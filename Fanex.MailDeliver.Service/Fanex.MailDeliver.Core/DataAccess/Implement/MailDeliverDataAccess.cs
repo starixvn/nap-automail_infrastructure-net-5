@@ -113,6 +113,7 @@ namespace Fanex.MailDeliver.DataAccess.Implement
             param.Add("settingid", config.Setting != null ? config.Setting.SettingID : config.SettingID);
             param.Add("mailfrom", config.MailFrom ?? string.Empty);
             param.Add("isencrypt", config.IsEncrypt);
+            param.Add("userid", config.UserId);
             using (ObjectDb objDb = new ObjectDb("StoreConfig"))
             {
                 objDb.ExecuteNonQuery(param);
