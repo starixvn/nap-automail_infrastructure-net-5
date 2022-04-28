@@ -55,5 +55,7 @@ namespace Fanex.MailDeliver.Model
             get;
             set;
         }
+
+        public int UserId { get; set; }
     }
 }
