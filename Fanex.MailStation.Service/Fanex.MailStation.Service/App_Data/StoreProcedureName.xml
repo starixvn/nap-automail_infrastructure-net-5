@@ -1,0 +1,91 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Functions>
+	<Function Name="Mail Station">
+		<Setting Key="StoreConfig" SpName="MailRecorder_InsConfig" DbName="DBMA.bodb_Maintenance.bodbAdminNet" />
+		<Setting Key="Mail_MailManagement_GetScheduleByMailId" SpName="Mail_MailManagement_GetScheduleByMailId" DbName="DBMMS.bodb_MMS.bodbAdminNet">
+			<Mapping DataField="MailID" ObjectProperty="Id" />
+			<Mapping DataField="SiteId" ObjectProperty="SiteId" />
+			<Mapping DataField="MailName" ObjectProperty="Name" />
+			<Mapping DataField="CronExpression" ObjectProperty="RepeatExpression" />
+			<Mapping DataField="StartOn" ObjectProperty="StartTime" />
+			<Mapping DataField="EndOn" ObjectProperty="EndTime" />
+			<Mapping DataField="IsActive" ObjectProperty="Active" />
+			<Mapping DataField="Interval" ObjectProperty="RetryInterval" />
+			<Mapping DataField="Attempt" ObjectProperty="MaxRetryTimes" />
+		</Setting>
+		<Setting Key="Mail_Core_InsertMailTask" SpName="Mail_Core_InsertMailTask" DbName="DBMMS.bodb_MMS.bodbAdminNet" />
+		<Setting Key="Mail_Core_UpdateMailStatus" SpName="Mail_Core_UpdateMailStatus" DbName="DBMMS.bodb_MMS.bodbAdminNet" />
+		<Setting Key="Mail_Core_UpdateRetry" SpName="Mail_Core_UpdateRetry" DbName="DBMMS.bodb_MMS.bodbAdminNet" />
+		<Setting Key="Mail_Core_InsertMailLogs" SpName="Mail_Core_InsertMailLogs" DbName="DBMMS.bodb_MMS.bodbAdminNet" />
+		<Setting Key="Mail_MailManagement_GetMailWithEmailAddressByMailID" SpName="Mail_MailManagement_GetMailWithEmailAddressByMailID" DbName="DBMMS.bodb_MMS.bodbAdminNet" />
+		<Setting Key="Mail_Core_GetMailTask" SpName="Mail_Core_GetMailTask" DbName="DBMMS.bodb_MMS.bodbAdminNet">
+			<Mapping DataField="TaskID" ObjectProperty="MailTaskId" />
+			<Mapping DataField="MailID" ObjectProperty="MailId" />
+			<Mapping DataField="SiteID" ObjectProperty="SiteId" />
+			<Mapping DataField="MSiteMailID" ObjectProperty="MSiteMailId" />
+		</Setting>
+		<Setting Key="Mail_Core_UpdateMailTaskMSiteMailID" SpName="Mail_Core_UpdateMailTaskMSiteMailID" DbName="DBMMS.bodb_MMS.bodbAdminNet" />
+		<Setting Key="Mail_Core_ClientActiveTimeUpdate" SpName="Mail_Core_ClientActiveTimeUpdate" DbName="DBMMS.bodb_MMS.bodbAdminNet" />
+		<Setting Key="Mail_Core_GetAllScheduleMail" SpName="Mail_Core_GetAllScheduleMail" DbName="DBMMS.bodb_MMS.bodbAdminNet">
+			<Mapping DataField="MailID" ObjectProperty="MailId" />
+			<Mapping DataField="MailName" ObjectProperty="MailName" />
+			<Mapping DataField="CronExpression" ObjectProperty="CronExpression" />
+			<Mapping DataField="LastActive" ObjectProperty="LastActive" />
+		</Setting>
+		<Setting Key="Mail_Core_UpdateFailedForLongRunningTasks" SpName="Mail_Core_UpdateFailedForLongRunningTasks" DbName="DBMMS.bodb_MMS.bodbAdminNet" />
+	</Function>
+
+	<Function Name="MailDeliver">
+		<Setting Key="StoreConfig" SpName="MailRecorder_InsConfig" DbName="DBMA.bodb_Maintenance.bodbAdminNet" />
+		<Setting Key="GetConfig" SpName="MailRecorder_GetConfig" DbName="DBMA.bodb_Maintenance.bodbAdminNet" />
+		<Setting Key="StoreMail" SpName="MailRecorder_InsRecord" DbName="DBMA.bodb_Maintenance.bodbAdminNet" />
+		<Setting Key="GetMail" SpName="MailRecorder_GetMail" DbName="DBMA.bodb_Maintenance.bodbAdminNet" />
+		<Setting Key="GetMailList" SpName="MailRecorder_GetMailList" DbName="DBMA.bodb_Maintenance.bodbAdminNet" />
+		<Setting Key="GetMailListByDate" SpName="MailRecorder_GetMailListByDate" DbName="DBMA.bodb_Maintenance.bodbAdminNet" />
+		<Setting Key="StoreMailAttachement" SpName="MailRecorder_InsMailAttachement" DbName="DBMA.bodb_Maintenance.bodbAdminNet" />
+		<Setting Key="GetMailAttachement" SpName="MailRecorder_GetMailAttachement" DbName="DBMA.bodb_Maintenance.bodbAdminNet" />
+		<Setting Key="StoreSetting" SpName="MailRecorder_InsSetting" DbName="DBMA.bodb_Maintenance.bodbAdminNet" />
+		<Setting Key="GetSetting" SpName="MailRecorder_GetSetting" DbName="DBMA.bodb_Maintenance.bodbAdminNet" />
+		<Setting Key="StoreLinkedResource" SpName="MailRecorder_InsMailLinkedResource" DbName="DBMA.bodb_Maintenance.bodbAdminNet" />
+		<Setting Key="GetMailLinkedResource" SpName="MailRecorder_GetMailLinkedResource" DbName="DBMA.bodb_Maintenance.bodbAdminNet" />
+		<Setting Key="StoreFunction" SpName="MailRecorder_InsFunction" DbName="DBMA.bodb_Maintenance.bodbAdminNet" />
+		<Setting Key="GetFunction" SpName="MailRecorder_GetFucntion" DbName="DBMA.bodb_Maintenance.bodbAdminNet" />
+		<Setting Key="UpdateCountSent" SpName="MailRecorder_UpdateCountSent" DbName="DBMA.bodb_Maintenance.bodbAdminNet" />
+		<Setting Key="GetListSetting" SpName="MailRecorder_GetListSetting" DbName="DBMA.bodb_Maintenance.bodbAdminNet" />
+		<Setting Key="GetListConfig" SpName="MailRecorder_GetListConfig" DbName="DBMA.bodb_Maintenance.bodbAdminNet" />
+		<Setting Key="GetListFunction" SpName="MailRecorder_GetListFuntion" DbName="DBMA.bodb_Maintenance.bodbAdminNet" />
+		<Setting Key="UpdateMailStatus" SpName="MailRecorder_UpdateMailStatus" DbName="DBMA.bodb_Maintenance.bodbAdminNet" />
+		<Setting Key="MailRecorder_GetError" SpName="MailRecorder_GetError" DbName="DBMA.bodb_Maintenance.bodbAdminNet" />
+		<Setting Key="MailRecorder_InsError" SpName="MailRecorder_InsError" DbName="DBMA.bodb_Maintenance.bodbAdminNet" />
+	</Function>
+
+	<Function Name="Manage Mail">
+		<Setting Key="MailStation_GetMailList" SpName="Mail_MailManagement_GetMailList" DbName="DBMMS.bodb_MMS.bodbAdminNet" />
+		<Setting Key="MailStation_GetMailByID" SpName="Mail_MailManagement_GetMailByID" DbName="DBMMS.bodb_MMS.bodbAdminNet" />
+		<Setting Key="MailStation_CreateMail" SpName="Mail_MailManagement_InsertMail" DbName="DBMMS.bodb_MMS.bodbAdminNet" />
+		<Setting Key="MailStation_EditMail" SpName="Mail_MailManagement_UpdateMail" DbName="DBMMS.bodb_MMS.bodbAdminNet" />
+		<Setting Key="MailStation_DeleteMail" SpName="Mail_MailManagement_DeleteMail" DbName="DBMMS.bodb_MMS.bodbAdminNet" />
+	</Function>
+
+	<Function Name="Manage Recipient">
+		<Setting Key="MailStation_MailReport_GetRecipientById" SpName="Mail_ManageRecipient_GetRecipientByID" DbName="DBMMS.bodb_MMS.bodbAdminNet" />
+		<Setting Key="MailStation_MailReport_GetRecipientList" SpName="Mail_ManageRecipient_GetRecipientList" DbName="DBMMS.bodb_MMS.bodbAdminNet" />
+		<Setting Key="MailStation_MailReport_UpdateRecipient" SpName="Mail_ManageRecipient_UpdateRecipient" DbName="DBMMS.bodb_MMS.bodbAdminNet" />
+		<Setting Key="MailStation_MailReport_InsertRecipient" SpName="Mail_ManageRecipient_InsertRecipient" DbName="DBMMS.bodb_MMS.bodbAdminNet" />
+		<Setting Key="MailStation_MailReport_DeleteRecipient" SpName="Mail_ManageRecipient_DeleteRecipient" DbName="DBMMS.bodb_MMS.bodbAdminNet" />
+	</Function>
+
+	<Function Name="Manage Group">
+		<Setting Key="MailStation_Group_GetMailGroup" SpName="Mail_Group_GetMailGroup" DbName="DBMMS.bodb_MMS.bodbAdminNet" />
+
+		<Setting Key="MailStation_Group_CreateMailGroup" SpName="Mail_Group_InsertGroup" DbName="DBMMS.bodb_MMS.bodbAdminNet" />
+		<Setting Key="MailStation_Group_UpdateMailGroup" SpName="Mail_Group_UpdateGroup" DbName="DBMMS.bodb_MMS.bodbAdminNet" />
+		<Setting Key="MailStation_Group_DeleteMailGroup" SpName="Mail_Group_DeleteGroup" DbName="DBMMS.bodb_MMS.bodbAdminNet" />
+		<Setting Key="MailStation_Group_GetMailGroupByID" SpName="Mail_Group_GetMailGroupByID" DbName="DBMMS.bodb_MMS.bodbAdminNet" />
+	</Function>
+
+	<Function Name="Mail Report">
+		<Setting Key="MailStation_MailReport_GetMailTaskList" SpName="Mail_Report_GetMailTaskList" DbName="DBMMS.bodb_MMS.bodbAdminNet" />
+		<Setting Key="Mail_Report_GetAllSchedule" SpName="Mail_Report_GetAllSchedule" DbName="DBMMS.bodb_MMS.bodbAdminNet" />
+	</Function>
+</Functions>
