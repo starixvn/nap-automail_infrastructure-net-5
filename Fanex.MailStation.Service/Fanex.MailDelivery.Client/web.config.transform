@@ -1,0 +1,13 @@
+﻿<configuration>
+  <configSections>
+    <section name="Fanex.MailDelivery.Client" type="Fanex.MailDelivery.Client.Configurations.MailClientSection, Fanex.MailDelivery.Client" />
+  </configSections>
+  <Fanex.MailDelivery.Client applicationSendMailId="1" siteId="1" rabbitMQConnectionString="host=ha.nexdev.net:5672;virtualHost=/MailStationHost;username=rabbitclient;timeout=120">
+    <Functions>
+      <!--<add id="1" name="YourFunction" />-->
+    </Functions>
+    <Schedules>
+      <!--<Schedule id="2" name="YourSchedule" job="YourProject.Namespace.Job, YourProject" />-->
+    </Schedules>
+  </Fanex.MailDelivery.Client>
+</configuration>

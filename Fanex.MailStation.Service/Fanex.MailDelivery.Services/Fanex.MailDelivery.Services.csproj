@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Fanex.Data" Version="3.0.0" />
+    <PackageReference Include="Fanex.Data.Repository" Version="3.0.0" />
+    <PackageReference Include="Fanex.Logging" Version="2.0.1" />
+    <PackageReference Include="Fanex.Logging.Extensions" Version="1.0.6" />
+    <PackageReference Include="Fanex.Logging.Sentry.RavenClient" Version="1.0.1" />
+    <PackageReference Include="Fanex.MailDeliver.MailClient" Version="2.0.7" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Fanex.MailDelivery.Core\Fanex.MailDelivery.Core.csproj" />
+  </ItemGroup>
+
+</Project>

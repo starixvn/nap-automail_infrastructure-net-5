@@ -1,0 +1,43 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31912.275
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fanex.MailStation.Service", "Fanex.MailStation.Service\Fanex.MailStation.Service\Fanex.MailStation.Service.csproj", "{C80B7686-E769-495C-8F63-EDB433B1831A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fanex.MailDelivery.Core", "Fanex.MailStation.Service\Fanex.MailDelivery.Core\Fanex.MailDelivery.Core.csproj", "{B5346CB2-4BAE-46C6-B680-96CEBF3FD916}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fanex.MailDelivery.Client", "Fanex.MailStation.Service\Fanex.MailDelivery.Client\Fanex.MailDelivery.Client.csproj", "{D9953DF6-9920-401D-BD46-4ADA56620BAA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fanex.MailDelivery.Services", "Fanex.MailStation.Service\Fanex.MailDelivery.Services\Fanex.MailDelivery.Services.csproj", "{5592CABC-8EB6-48B2-9EC5-D8287DCF89CA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C80B7686-E769-495C-8F63-EDB433B1831A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C80B7686-E769-495C-8F63-EDB433B1831A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C80B7686-E769-495C-8F63-EDB433B1831A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C80B7686-E769-495C-8F63-EDB433B1831A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B5346CB2-4BAE-46C6-B680-96CEBF3FD916}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B5346CB2-4BAE-46C6-B680-96CEBF3FD916}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B5346CB2-4BAE-46C6-B680-96CEBF3FD916}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B5346CB2-4BAE-46C6-B680-96CEBF3FD916}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D9953DF6-9920-401D-BD46-4ADA56620BAA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D9953DF6-9920-401D-BD46-4ADA56620BAA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D9953DF6-9920-401D-BD46-4ADA56620BAA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D9953DF6-9920-401D-BD46-4ADA56620BAA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5592CABC-8EB6-48B2-9EC5-D8287DCF89CA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5592CABC-8EB6-48B2-9EC5-D8287DCF89CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5592CABC-8EB6-48B2-9EC5-D8287DCF89CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5592CABC-8EB6-48B2-9EC5-D8287DCF89CA}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {DC538F26-3B83-473D-9657-7719E3E2AA15}
+	EndGlobalSection
+EndGlobal
