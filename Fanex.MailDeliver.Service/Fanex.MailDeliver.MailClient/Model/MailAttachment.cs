@@ -70,6 +70,7 @@ namespace Fanex.MailDeliver.Model
         {
             __contentType = contentType;
             Bytes = content.ToArray();
+            content.Dispose();
         }
 
         public byte[] Bytes { get; set; } = { };
