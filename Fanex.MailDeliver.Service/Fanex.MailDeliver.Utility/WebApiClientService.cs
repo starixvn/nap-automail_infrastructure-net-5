@@ -14,7 +14,7 @@ namespace Fanex.MailDeliver.Utility
 
         public static T PostAsync<T, P>(string action, P inputParams)
         {
-            string rootUrl = NormalizeBaseUrl(AppMailAddress);
+            var rootUrl = NormalizeBaseUrl(AppMailAddress);
             if (client.BaseAddress == null)
             {
                 client.BaseAddress = new Uri(rootUrl);
@@ -25,15 +25,16 @@ namespace Fanex.MailDeliver.Utility
 
             using (var content = new StringContent(JsonConvert.SerializeObject(inputParams, Formatting.Indented, new MemoryStreamJsonConverter()), Encoding.UTF8, "application/json"))
             {
-                var responseResult = client.PostAsync(action, content).Result;
+                var responseResult = client.PostAsync(action, content).GetAwaiter().GetResult();
                 if (responseResult.IsSuccessStatusCode)
                 {
                     var data = responseResult.Content.ReadAsStringAsync();
                     return JsonConvert.DeserializeObject<T>(data.Result, new MemoryStreamJsonConverter());
                 }
-            }
 
-            return default(T);
+                var message = $"{responseResult.StatusCode} - {responseResult.ReasonPhrase} - {rootUrl}";
+                throw new Exception(message);
+            }
         }
 
         private static string NormalizeBaseUrl(string url)
