@@ -14,18 +14,12 @@ COPY ./Fanex.MailDeliver.Service/Fanex.MailDeliver.Service .
 
 RUN dotnet publish -r linux-x64 --self-contained false -c Release -o /app
 
-FROM hub.nexdev.net/base/dotnet/core/aspnet:5.0-buster-slim AS base
+FROM hub.nexdev.net/rebuild-baseimage/dotnetcore/aspnet:5.0-nap-mail-core
 
 RUN sed -i 's/DEFAULT@SECLEVEL=2/DEFAULT@SECLEVEL=1/g' /etc/ssl/openssl.cnf
 RUN sed -i 's/MinProtocol = TLSv1.2/MinProtocol = TLSv1/g' /etc/ssl/openssl.cnf
 RUN sed -i 's/DEFAULT@SECLEVEL=2/DEFAULT@SECLEVEL=1/g' /usr/lib/ssl/openssl.cnf
 RUN sed -i 's/MinProtocol = TLSv1.2/MinProtocol = TLSv1/g' /usr/lib/ssl/openssl.cnf
-RUN apt-get update --allow-releaseinfo-change
-RUN apt-get update && apt-get install -y libgdiplus
-RUN apt-get update && apt install fonts-indic -y
-RUN apt-get update && apt-get install -y libfontconfig1
-RUN apt-get install smbclient -y
-RUN apt update && apt install fonts-indic -y
 
 ENV TZ="America/La_Paz" 
 
