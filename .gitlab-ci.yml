@@ -1,8 +1,4 @@
 include:
-  - project: "ci/repos-ci/olympus_nap_mail_mail_service"
-    ref: master
-    file: "gitlab-ci.yml"
-
-  - project: "ci/repos-ci/olympus_nap_mail_mail_station"
-    ref: master
-    file: "gitlab-ci-mixing.yml"  
+  - project: ci/core-cicd
+    ref: main
+    file: nexcel.gitlab-ci.yml
