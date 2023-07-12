@@ -7,6 +7,8 @@
 //   <change who="Ricky.Nguyen" date="2012.9.20">Created</change>
 // </history>
 
+using Newtonsoft.Json;
+
 namespace Fanex.MailDeliver.Business.Worker
 {
     using Fanex.MailDeliver.Business;
@@ -87,7 +89,8 @@ namespace Fanex.MailDeliver.Business.Worker
                                     }
                                     else
                                     {
-                                        LogExtension.LogMessage("Store mail failed.");
+                                        var mailJson = JsonConvert.SerializeObject(mailRecord, Formatting.Indented);
+                                        LogExtension.LogMessage($"Store mail failed - {mailJson}");
                                     }
                                 }
                                 catch (Exception ex)
@@ -125,6 +128,11 @@ namespace Fanex.MailDeliver.Business.Worker
                 string error = string.Empty;
                 mailExtension.SendMail(record, out error);
                 LogExtension.LogMessage(string.Format("Sending mail: {0}.", record.MailID));
+            }
+            else
+            {
+                var jsonMail = JsonConvert.SerializeObject(record, Formatting.Indented);
+                LogExtension.LogMessage($"Mail can't be sent because it's null or not ready. {jsonMail}");
             }
         }
     }
