@@ -7,6 +7,8 @@
 //   <change who="Ricky.Nguyen" date="2012.9.20">Created</change>
 // </history>
 
+using Newtonsoft.Json;
+
 namespace Fanex.MailDeliver.Business
 {
     using EASendMail;
@@ -19,12 +21,14 @@ namespace Fanex.MailDeliver.Business
     using Fanex.MailDeliver.DataAccess.Implement;
     using Fanex.MailDeliver.Model;
     using System;
+    using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using System.IO;
     using System.Linq;
     using System.Net.Mail;
     using System.Net.Mime;
     using System.Text;
+    using System.Threading;
 
     public interface MailExtension
     {
@@ -37,6 +41,8 @@ namespace Fanex.MailDeliver.Business
     {
         private readonly DataService dataService;
         private readonly MailKitService mailKitService;
+        private const int ThresholdCounter = 14;
+        private const int ThresholdSecond = 1;
 
         public MailExtensionImp(DataService dataService, MailKitService mailKitService)
         {
@@ -176,6 +182,7 @@ namespace Fanex.MailDeliver.Business
         {
             try
             {
+                CheckTimeCounter();
                 smtpClient.Send(msg);
                 UpdateMailStatus(mailRecord, true, null);
             }
@@ -206,6 +213,34 @@ namespace Fanex.MailDeliver.Business
                 {
                     LogExtension.LogError(e);
                 }
+            }
+        }
+
+        private static void CheckTimeCounter()
+        {
+            var now = DateTime.Now;
+            var timeToRemove = new List<DateTime>();
+
+            foreach (DateTime time in AppConfigService.TimeCounter)
+            {
+                var timeDiff = now.Subtract(time).Seconds;
+                if (timeDiff > ThresholdSecond)
+                {
+                    timeToRemove.Add(time);
+                }
+            }
+
+            foreach (var time in timeToRemove)
+            {
+                AppConfigService.TimeCounter.Remove(time);
+            }
+
+            AppConfigService.TimeCounter.Add(now);
+            var count = AppConfigService.TimeCounter.Count;
+            if (count > ThresholdCounter)
+            {
+                Thread.Sleep(2000);
+                LogExtension.LogMessage(string.Format($"Delay in 2 seconds, {JsonConvert.SerializeObject(AppConfigService.TimeCounter, Formatting.Indented)}"));
             }
         }
 
