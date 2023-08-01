@@ -1,13 +1,21 @@
 ﻿using Fanex.MailDeliver.Model;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.IO;
 
 namespace Fanex.MailService.Test
 {
     public class TestCase
     {
+        private static String BODY_HTML = "<html>"
+                                          + "<head></head>"
+                                          + "<body>"
+                                          + "<h1>Hello!</h1>"
+                                          + "<p>Please see the attached file for a "
+                                          + "list of customers to contact.</p>"
+                                          + "</body>"
+                                          + "</html>";
+
         public void Test3_SendMail()
         {
             var fileName = "Template/xuan.jpg";
@@ -23,7 +31,7 @@ namespace Fanex.MailService.Test
                 MailBcc = "robert.tran@starixvn.com",
                 Title = "test mail automail ",
                 Subject = $"test mail automail  - {DateTime.Now}",
-                Body = "test mail automail ",
+                Body = BODY_HTML,
 
                 Attachments = new System.Collections.Generic.List<MailAttachment>
                  {

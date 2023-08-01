@@ -1,7 +1,9 @@
 ﻿using Fanex.MailDeliver.Model;
-using MailKit.Net.Smtp;
 using MimeKit;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using SmtpClient = MailKit.Net.Smtp.SmtpClient;
 
 namespace Fanex.MailDeliver.Core.Business.Implement
 {
@@ -49,23 +51,46 @@ namespace Fanex.MailDeliver.Core.Business.Implement
             });
 
             message.Subject = mailRecord.Subject;
+            var attachments = new List<MimePart>();
+            if (mailRecord.Attachments != null)
+            {
+                mailRecord.Attachments.ForEach(att =>
+                {
+                    var attachment = new MimePart
+                    {
+                        Content = new MimeContent(new MemoryStream(att.Bytes)),
+                        ContentDisposition = new ContentDisposition(ContentDisposition.Attachment),
+                        ContentTransferEncoding = ContentEncoding.Base64,
+                        FileName = att.FileName
+                    };
+                    attachments.Add(attachment);
+                });
+            }
 
             var builder = new BodyBuilder
             {
                 HtmlBody = mailRecord.Body
             };
-            message.Body = builder.ToMessageBody();
 
-            using var mailclient = new SmtpClient();
+            var multipart = new Multipart("mixed");
+            multipart.Add(builder.ToMessageBody());
+            attachments.ForEach(att =>
+            {
+                multipart.Add(att);
+            });
+            message.Body = multipart;
 
-            mailclient.ServerCertificateValidationCallback += (sender, certificate, chain, errors) => true;
-            mailclient.CheckCertificateRevocation = false;
-            mailclient.Connect(mailSetting.Server, mailSetting.Port, mailSetting.IsAuth);
-            mailclient.Authenticate(mailSetting.Username, mailSetting.Password);
+            using var mailClient = new SmtpClient();
 
-            mailclient.Send(message);
+            mailClient.ServerCertificateValidationCallback += (sender, certificate, chain, errors) => true;
+            mailClient.CheckCertificateRevocation = false;
 
-            mailclient.Disconnect(true);
+            mailClient.Connect(mailSetting.Server, mailSetting.Port, mailSetting.IsAuth);
+            mailClient.Authenticate(mailSetting.Username, mailSetting.Password);
+
+            mailClient.Send(message);
+
+            mailClient.Disconnect(true);
         }
     }
 }
