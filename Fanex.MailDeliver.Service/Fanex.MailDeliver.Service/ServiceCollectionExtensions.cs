@@ -10,6 +10,7 @@ using Fanex.MailDeliver.Business.Worker;
 using Fanex.MailDeliver.Core.Business;
 using Fanex.MailDeliver.Core.Business.Implement;
 using Fanex.MailDeliver.Core.Business.Worker;
+using Fanex.MailDeliver.Core.Infrastructure.Logging;
 using Fanex.MailDeliver.Core.Infrastructure.Models;
 using Fanex.MailDeliver.Core.Infrastructure.Services;
 using Fanex.MailDeliver.DataAccess.Implement;
@@ -42,17 +43,17 @@ namespace Fanex.MailDeliver.Service
 
         public static void RegisterSentry(this IServiceCollection services)
         {
-            var sentry = new SentryLogging(new SentryEngineOptions
-            {
-                Dsn = new Dsn(AppConfigService.Config.SentryClientKey)
-            });
-
             LogManager
-               .SetDefaultLogCategory(AppConfigService.Config.CategorySentryLog)
-               .Use(new List<ILogEngine>
-               {
-                    sentry
-               });
+                .SetDefaultLogCategory(AppConfigService.Config.CategorySentryLog)
+                .Use(new List<ILogEngine>
+                {
+                    new SentryLogging(new SentryEngineOptions
+                    {
+                        Dsn = new Dsn(AppConfigService.Config.SentryClientKey)
+                    })
+                });
+
+            LogExtension.LogMessage($"Fanex.MailDeliver.Service start at {DateTime.Now}");
         }
 
         public static void RegisterFanexData(this IServiceCollection services, IConfiguration Configuration)

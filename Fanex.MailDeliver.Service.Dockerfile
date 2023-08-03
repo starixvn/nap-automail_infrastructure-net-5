@@ -16,8 +16,8 @@ RUN dotnet publish -r linux-x64 --self-contained false -c Release -o /app
 
 FROM hub.nexdev.net/base/dotnet/core/aspnet:5.0-nap-mail-core
 
-ENV HTTP_PROXY="http://10.2.252.100:8801"
-ENV HTTPS_PROXY="http://10.2.252.100:8801"
+ENV HTTP_PROXY="http://10.40.40.245:3128"
+ENV HTTPS_PROXY="http://10.40.40.245:3128"
 
 ENV TZ="America/La_Paz" 
 
