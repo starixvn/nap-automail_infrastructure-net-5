@@ -16,6 +16,6 @@
 
         public MailSection MailSection { get; set; }
 
-        public string Path { get; set; }
+        public bool IsAllowWritingLog { get; set; }
     }
 }

@@ -12,6 +12,7 @@ namespace Fanex.MailDeliver.Core.Infrastructure.Logging
     using Fanex.Logging;
     using Fanex.Logging.Extensions;
     using Fanex.Logging.Extensions.Database;
+    using Fanex.MailDeliver.Core.Infrastructure.Services;
     using System;
 
     public enum LoggingMode
@@ -60,7 +61,10 @@ namespace Fanex.MailDeliver.Core.Infrastructure.Logging
             }
             else
             {
-                LogService.Info(message);
+                if (AppConfigService.Config.IsAllowWritingLog)
+                {
+                    LogService.Info(message);
+                }
             }
         }
     }

@@ -7,7 +7,7 @@ COPY ./Fanex.MailDeliver.Service/Fanex.MailDeliver.Service/Fanex.MailDeliver.Ser
 
 RUN ls /src -l
 WORKDIR /src/Fanex.MailDeliver.Service
-RUN dotnet nuget add source http://nuget.nexdev.net/api/v2
+RUN dotnet nuget add source https://nuget.nexdev.net/api/v2
 RUN dotnet restore -v n
 
 COPY ./Fanex.MailDeliver.Service/Fanex.MailDeliver.Service .

@@ -23,5 +23,7 @@ namespace Fanex.MailDelivery.Core.Models
         public int UpdateFailedForLongRunningTaskIntervalInMinutes { get; set; }
 
         public int UMInfoCachingTimeoutInSeconds { get; set; }
+
+        public bool IsAllowWritingLog { get; set; }
     }
 }
