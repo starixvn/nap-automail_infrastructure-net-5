@@ -1,5 +1,6 @@
 ﻿using Fanex.Logging;
 using Fanex.Logging.Extensions;
+using Fanex.MailDelivery.Core;
 using Fanex.MailDelivery.Core.Models;
 using System;
 using System.Collections.Generic;
@@ -40,7 +41,10 @@ namespace Fanex.MailDelivery.Services.Services
 
         public void LogInfo(string logMessage)
         {
-            logger.Info(logMessage);
+            if (AppConfigService.AppConfig.IsAllowWritingLog)
+            {
+                logger.Info(logMessage);
+            }
         }
 
         public void LogError(string message)
