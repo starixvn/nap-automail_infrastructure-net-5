@@ -1,5 +1,6 @@
 ﻿using Fanex.Logging;
 using Fanex.Logging.Extensions;
+using Fanex.MailDelivery.Core;
 using Fanex.MailDelivery.Core.Models;
 using System;
 
@@ -9,7 +10,10 @@ namespace Fanex.MailDelivery.Client.Logging
     {
         public static void LogInfo(string logMessage)
         {
-            Logger.Log.Info(logMessage);
+            if (AppConfigService.AppConfig.IsAllowWritingLog)
+            {
+                Logger.Log.Info(logMessage);
+            }
         }
 
         public static void LogError(Exception exception)
@@ -62,9 +66,9 @@ namespace Fanex.MailDelivery.Client.Logging
         }
 
         public static void LogError(string message)
-        {           
+        {
             var logMessage = new LogMessage(message)
-                        .AddSection("Server Info", CommonInfoGetters.GetServerInfo())                        
+                        .AddSection("Server Info", CommonInfoGetters.GetServerInfo())
                         .ToString();
 
             Logger.Log.Error(logMessage);
