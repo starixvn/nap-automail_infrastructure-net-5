@@ -8,27 +8,26 @@ COPY ./Fanex.MailStation.Service/Fanex.MailStation.Service/Fanex.MailStation.Ser
 RUN ls /src -l
 WORKDIR /src/Fanex.MailStation.Service
 RUN dotnet nuget add source https://nuget.nexdev.net/api/v2
+RUN --mount=type=cache,target=/root/.nuget/packages
 RUN dotnet restore -v n
 
 COPY ./Fanex.MailStation.Service/Fanex.MailStation.Service .
 
+RUN --mount=type=cache,target=/root/.nuget/packages
 RUN dotnet publish -r linux-x64 --self-contained false -c Release -o /app
 
 FROM hub.nexdev.net/base/dotnet/core/aspnet:5.0-nap-mail-core
 
-RUN sed -i 's/DEFAULT@SECLEVEL=2/DEFAULT@SECLEVEL=1/g' /etc/ssl/openssl.cnf
-RUN sed -i 's/MinProtocol = TLSv1.2/MinProtocol = TLSv1/g' /etc/ssl/openssl.cnf
-RUN sed -i 's/DEFAULT@SECLEVEL=2/DEFAULT@SECLEVEL=1/g' /usr/lib/ssl/openssl.cnf
-RUN sed -i 's/MinProtocol = TLSv1.2/MinProtocol = TLSv1/g' /usr/lib/ssl/openssl.cnf
 
 # Don’t run as root
 RUN adduser --disabled-password \
   --home /app \
-  --gecos '' dotnetuser && chown -R dotnetuser /app
+  --gecos '' dotnetuser && chown -R dotnetuser /app && chown -R dotnetuser /tmp
 USER dotnetuser
 #
 
-ENV TZ="America/La_Paz" 
+ENV TZ="America/La_Paz"
+ENV COMPlus_EnableDiagnostics=0
 
 WORKDIR /app
 COPY --from=builder /app .
