@@ -17,5 +17,7 @@
         public MailSection MailSection { get; set; }
 
         public bool IsAllowWritingLog { get; set; }
+
+        public bool IsIgnoredRabbitMq { get; set; }
     }
 }
