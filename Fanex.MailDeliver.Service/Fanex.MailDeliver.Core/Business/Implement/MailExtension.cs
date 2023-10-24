@@ -250,12 +250,19 @@ namespace Fanex.MailDeliver.Business
             {
                 try
                 {
-                    LogExtension.LogMessage(string.Format("\r\nRecieved Email from RabbitMQ: {0}", mailRecord.Subject));
+                    LogExtension.LogMessage(string.Format("\r\nPublish Email into RabbitMQ: {0}", mailRecord.Subject));
                     AppConfigService.Bus.Publish(mailRecord);
+                    if (AppConfigService.Config.IsIgnoredRabbitMq)
+                    {
+                        mailRecord.MailID = dataService.InsertMailRecord(mailRecord);
+                        mailRecord.IsReady = true;
+                        var outputMessage = string.Empty;
+                        SendMail(mailRecord, out outputMessage);
+                    }
                 }
                 catch (Exception ex)
                 {
-                    LogExtension.LogMessage(ex.Message + "\nMail Subject: " + mailRecord.Subject);
+                    LogExtension.LogMessage(ex.Message + "\n[Exception from RabbitMQ]Mail Subject: " + mailRecord.Subject);
                     mailRecord.MailID = dataService.InsertMailRecord(mailRecord);
                     mailRecord.IsReady = true;
                     var outputMessage = string.Empty;
