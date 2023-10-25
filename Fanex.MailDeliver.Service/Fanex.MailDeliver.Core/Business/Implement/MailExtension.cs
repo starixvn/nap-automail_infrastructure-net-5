@@ -252,7 +252,7 @@ namespace Fanex.MailDeliver.Business
                 {
                     LogExtension.LogMessage(string.Format("\r\nPublish Email into RabbitMQ: {0}", mailRecord.Subject));
                     AppConfigService.Bus.Publish(mailRecord);
-                    if (AppConfigService.Config.IsIgnoredRabbitMq)
+                    if (AppConfigService.Config.IsUsingRabbitMq)
                     {
                         mailRecord.MailID = dataService.InsertMailRecord(mailRecord);
                         mailRecord.IsReady = true;

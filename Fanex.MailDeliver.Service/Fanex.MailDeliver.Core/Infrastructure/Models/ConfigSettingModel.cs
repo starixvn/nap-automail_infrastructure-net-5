@@ -18,6 +18,6 @@
 
         public bool IsAllowWritingLog { get; set; }
 
-        public bool IsIgnoredRabbitMq { get; set; }
+        public bool IsUsingRabbitMq { get; set; }
     }
 }
