@@ -1,21 +1,18 @@
 ﻿using EasyNetQ;
 using Fanex.Data;
 using Fanex.Data.Repository;
+using Fanex.Data.SqlServer;
 using Fanex.Logging;
 using Fanex.Logging.Sentry.RavenClient;
-using Fanex.MailDeliver.Business;
-using Fanex.MailDeliver.Business.Implement;
-using Fanex.MailDeliver.Business.Interface;
-using Fanex.MailDeliver.Business.Worker;
 using Fanex.MailDeliver.Core.Business;
 using Fanex.MailDeliver.Core.Business.Implement;
+using Fanex.MailDeliver.Core.Business.Interface;
 using Fanex.MailDeliver.Core.Business.Worker;
-using Fanex.MailDeliver.Core.Infrastructure.Logging;
+using Fanex.MailDeliver.Core.DataAccess.Implement;
+using Fanex.MailDeliver.Core.DataAccess.Interface;
 using Fanex.MailDeliver.Core.Infrastructure.Models;
 using Fanex.MailDeliver.Core.Infrastructure.Services;
-using Fanex.MailDeliver.DataAccess.Implement;
-using Fanex.MailDeliver.DataAccess.Interface;
-using Fanex.MailDeliver.Model;
+using Fanex.MailDeliver.MailClient.Model;
 using Fanex.MailDeliver.Service.Service;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -27,54 +24,54 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading;
+using ConnectionConfiguration = Fanex.Data.ConnectionConfiguration;
 
 namespace Fanex.MailDeliver.Service
 {
     public static class ServiceCollectionExtensions
     {
-        public static void LoadConfig(this IServiceCollection services)
+        public static IServiceCollection Services { get; set; }
+
+        public static void LoadConfiguration(this IServiceCollection services)
         {
             Directory.SetCurrentDirectory(AppDomain.CurrentDomain.BaseDirectory);
-
             var text = File.ReadAllText("appsettings.json");
             AppConfigService.Config = JsonConvert.DeserializeObject<ConfigSettingModel>(text);
         }
 
-        public static void RegisterSentry(this IServiceCollection services)
+        public static void SentryRegister(this IServiceCollection services)
         {
+            var sentry = new SentryLogging(new SentryEngineOptions
+            {
+                Dsn = new Dsn(AppConfigService.Config.SentryClientKey)
+            });
+
             LogManager
                 .SetDefaultLogCategory(AppConfigService.Config.CategorySentryLog)
                 .Use(new List<ILogEngine>
                 {
-                    new SentryLogging(new SentryEngineOptions
-                    {
-                        Dsn = new Dsn(AppConfigService.Config.SentryClientKey)
-                    })
+                    sentry
                 });
-
-            LogExtension.LogMessage($"Fanex.MailDeliver.Service start at {DateTime.Now}");
         }
 
-        public static void RegisterFanexData(this IServiceCollection services, IConfiguration Configuration)
+        public static void FanexDataRegister(this IServiceCollection services, IConfiguration config)
         {
-            var connections = Configuration.GetSection("ConnectionStrings")
+            var connections = config.GetSection("ConnectionStrings")
                 .GetChildren()
-                .AsEnumerable()
-                .ToDictionary
-                (
-                     x => x.Key,
-                     y => y.Value
+                .ToDictionary(
+                    x => x.Key,
+                    y => new ConnectionConfiguration(y.Key, y.Value)
                 );
 
             DbSettingProviderManager
-             .StartNewSession()
-             .UseConnectionStrings(connections)
-             .UseDefaultDbSettingProvider(Configuration.GetSection("StoredProcedurePath").Value)
-             .Run();
+                .StartNewSession()
+                .Use(connections)
+                .WithSqlServer()
+                .UseDefaultDbSettingProvider(config.GetSection("StoredProcedurePath").Value)
+                .Run();
         }
 
-        public static void RegisterInternalServices(this IServiceCollection services)
+        public static void InternalServiceRegister(this IServiceCollection services)
         {
             services.AddSingleton<IDynamicRepository, DynamicRepository>();
             services.AddSingleton<IMailService, MailService>();
@@ -94,17 +91,7 @@ namespace Fanex.MailDeliver.Service
         {
             var serviceProvider = services.BuildServiceProvider();
             AppConfigService.Bus = serviceProvider.GetRequiredService<IBus>();
-            var isConnected = AppConfigService.Bus.IsConnected;
-            var count = 10;
-            while (!isConnected && count > 0)
-            {
-                Thread.Sleep(1000);
-                AppConfigService.Bus = RabbitHutch.CreateBus(AppConfigService.Config.RabbitMQConnectionString);
-                isConnected = AppConfigService.Bus.IsConnected;
-                count--;
-            }
-
-            AppConfigService.Bus.Subscribe<MailRecord>("MailRecord", mail => HandlerMailRecord(mail, serviceProvider));
+            AppConfigService.Bus.PubSub.Subscribe<MailRecord>("MailRecord", mail => HandlerMailRecord(mail, serviceProvider));
         }
 
         private static void HandlerMailRecord(MailRecord mailRecord, IServiceProvider serviceProvider)

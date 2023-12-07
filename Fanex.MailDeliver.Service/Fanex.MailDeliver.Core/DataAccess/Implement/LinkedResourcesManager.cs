@@ -7,20 +7,19 @@
 //   <change who="Ricky.Nguyen" date="2012.9.20">Created</change>
 // </history>
 
-namespace Fanex.MailDeliver.DataAccess.Implement
-{
-    using Fanex.Data;
-    using Fanex.MailDeliver.Core.Infrastructure.Logging;
-    using Fanex.MailDeliver.Core.Infrastructure.Models;
-    using Fanex.MailDeliver.Core.Infrastructure.Services;
-    using Fanex.MailDeliver.Model;
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.Data;
-    using System.IO;
-    using System.Linq;
+using Fanex.Data;
+using Fanex.MailDeliver.Core.Infrastructure.Logging;
+using Fanex.MailDeliver.Core.Infrastructure.Models;
+using Fanex.MailDeliver.Core.Infrastructure.Services;
+using Fanex.MailDeliver.MailClient.Model;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Data;
+using System.Linq;
 
+namespace Fanex.MailDeliver.Core.DataAccess.Implement
+{
     /// <summary>
     /// Linked resource manager.
     /// </summary>
@@ -109,10 +108,8 @@ namespace Fanex.MailDeliver.DataAccess.Implement
                         param.Add("imagetype", resource.ImageType);
                         param.Add("contentcid", resource.ContentCID);
                         param.Add("streamcontent", resource.Bytes);
-                        using (ObjectDb objDb = new ObjectDb("StoreLinkedResource"))
-                        {
-                            objDb.ExecuteNonQuery(param);
-                        }
+                        using var objDb = ObjectDbFactory.CreateInstance("StoreLinkedResource", 0);
+                        objDb.ExecuteNonQuery(param);
                     }
                 }
             }
@@ -128,31 +125,28 @@ namespace Fanex.MailDeliver.DataAccess.Implement
             var resources = new List<MailLinkedResource>();
             if (mailID > 0)
             {
-                using (ObjectDb objDb = new ObjectDb("GetMailLinkedResource"))
+                using var objDb = ObjectDbFactory.CreateInstance("GetMailLinkedResource", 0);
+                var param = new Hashtable { { "mailid", mailID } };
+                var result = objDb.ExecuteDataSet(param);
+                if (result.Tables.Count > 0)
                 {
-                    var param = new Hashtable();
-                    param.Add("mailid", mailID);
-                    var result = objDb.ExecuteDataSet(param);
-                    if (result.Tables.Count > 0)
+                    var rows = result.Tables[0].Rows;
+                    foreach (DataRow row in rows)
                     {
-                        var rows = result.Tables[0].Rows;
-                        foreach (DataRow row in rows)
+                        var ext = Convert.ToString(row["imagetype"]);
+                        var item = new MailLinkedResource
                         {
-                            var ext = Convert.ToString(row["imagetype"]);
-                            var item = new MailLinkedResource
-                            {
-                                LinkedID = Convert.ToInt32(row["linkedid"]),
-                                MailID = _mailID,
-                                FileName = Convert.ToString(row["filename"]),
-                                ContentCID = Convert.ToString(row["contentcid"]),
-                                ImageType = (FileExtentions)Enum.Parse(typeof(FileExtentions), Convert.ToString(row["imagetype"]), true)
-                            };
+                            LinkedID = Convert.ToInt32(row["linkedid"]),
+                            MailID = _mailID,
+                            FileName = Convert.ToString(row["filename"]),
+                            ContentCID = Convert.ToString(row["contentcid"]),
+                            ImageType = (FileExtentions)Enum.Parse(typeof(FileExtentions), Convert.ToString(row["imagetype"]), true)
+                        };
 
-                            byte[] binary = row["streamcontent"] as byte[];
+                        byte[] binary = row["streamcontent"] as byte[];
 
-                            item.Bytes = binary;
-                            resources.Add(item);
-                        }
+                        item.Bytes = binary;
+                        resources.Add(item);
                     }
                 }
             }

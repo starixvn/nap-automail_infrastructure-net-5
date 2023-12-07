@@ -1,5 +1,5 @@
-﻿using Fanex.MailDeliver.MailClient.ParamModel;
-using Fanex.MailDeliver.Model;
+﻿using Fanex.MailDeliver.MailClient.Model;
+using Fanex.MailDeliver.MailClient.ParamModel;
 using System;
 using System.Collections.Generic;
 

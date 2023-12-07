@@ -6,13 +6,14 @@
 // <history>
 //   <change who="Ricky.Nguyen" date="2012.9.20">Created</change>
 // </history>
-namespace Fanex.MailDeliver.Business.TableCaching
-{
-    using System;
-    using System.Collections.Generic;
-    using Fanex.MailDeliver.Core.Infrastructure.Logging;
-    using Fanex.MailDeliver.Model;
 
+using Fanex.MailDeliver.Core.Infrastructure.Logging;
+using Fanex.MailDeliver.MailClient.Model;
+using System;
+using System.Collections.Generic;
+
+namespace Fanex.MailDeliver.Core.Business.TableCaching
+{
     /// <summary>
     /// Function cache.
     /// </summary>
@@ -30,11 +31,11 @@ namespace Fanex.MailDeliver.Business.TableCaching
         {
         }
 
-       /// <summary>
-       /// Indexer class.
-       /// </summary>
-       /// <param name="funcID">Function ID.</param>
-       /// <returns>Mail Function.</returns>
+        /// <summary>
+        /// Indexer class.
+        /// </summary>
+        /// <param name="funcID">Function ID.</param>
+        /// <returns>Mail Function.</returns>
         public MailFunction this[int funcID]
         {
             get
@@ -97,11 +98,11 @@ namespace Fanex.MailDeliver.Business.TableCaching
             }
         }
 
-       /// <summary>
-       /// Get Mail function from cache.
-       /// </summary>
-       /// <param name="funcID">Function id.</param>
-       /// <returns>Mail Function.</returns>
+        /// <summary>
+        /// Get Mail function from cache.
+        /// </summary>
+        /// <param name="funcID">Function id.</param>
+        /// <returns>Mail Function.</returns>
         public override object Get(int funcID)
         {
             object objData = null;

@@ -1,9 +1,10 @@
-﻿namespace Fanex.MailDeliver.Core.Business.Worker
+﻿using Fanex.MailDeliver.Core.Business.Implement;
+using Fanex.MailDeliver.MailClient.Model;
+
+namespace Fanex.MailDeliver.Core.Business.Worker
 {
-    using Fanex.MailDeliver.Business;
     using Fanex.MailDeliver.Core.Infrastructure.Logging;
     using Fanex.MailDeliver.Core.Infrastructure.Services;
-    using Fanex.MailDeliver.Model;
     using System;
     using System.Collections.Generic;
 

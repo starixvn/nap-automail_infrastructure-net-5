@@ -1,5 +1,5 @@
 ﻿using Fanex.Data;
-using Fanex.MailDeliver.Model;
+using Fanex.MailDelivery.Core.Models;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -27,14 +27,14 @@ namespace Fanex.MailDelivery.Services.Services
             {
                 foreach (var resource in resources)
                 {
-                    if (resource.Bytes != null)
+                    if (resource.FileContent != null)
                     {
                         var param = new Hashtable();
                         param.Add("mailid", mailID);
                         param.Add("filename", resource.FileName);
-                        param.Add("imagetype", resource.ImageType);
-                        param.Add("contentcid", resource.ContentCID);
-                        param.Add("streamcontent", resource.Bytes);
+                        param.Add("imagetype", resource.FileExtension);
+                        param.Add("contentcid", resource.ContentId);
+                        param.Add("streamcontent", resource.FileContent);
                         using (ObjectDb objDb = new ObjectDb("StoreLinkedResource"))
                         {
                             objDb.ExecuteNonQuery(param);

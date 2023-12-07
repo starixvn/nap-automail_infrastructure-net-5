@@ -1,8 +1,9 @@
-﻿namespace Fanex.MailDeliver.MailClient.API
+﻿using Fanex.MailDeliver.MailClient.Model;
+
+namespace Fanex.MailDeliver.MailClient.API
 {
     using System;
     using System.Collections.Generic;
-    using Fanex.MailDeliver.Model;
 
     public interface IMailDeliver
     {

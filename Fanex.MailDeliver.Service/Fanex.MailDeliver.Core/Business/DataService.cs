@@ -1,7 +1,7 @@
 ﻿using Fanex.MailDeliver.Core.Criterias;
+using Fanex.MailDeliver.Core.DataAccess.Interface;
 using Fanex.MailDeliver.Core.Infrastructure.Logging;
-using Fanex.MailDeliver.DataAccess.Interface;
-using Fanex.MailDeliver.Model;
+using Fanex.MailDeliver.MailClient.Model;
 using System;
 
 namespace Fanex.MailDeliver.Core.Business

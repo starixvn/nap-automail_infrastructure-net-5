@@ -1,7 +1,8 @@
-﻿namespace Fanex.MailDeliver.MailClient.API.WCF
+﻿using Fanex.MailDeliver.MailClient.Model;
+
+namespace Fanex.MailDeliver.MailClient.API.WCF
 {
     using Fanex.MailDeliver.MailClient.ParamModel;
-    using Fanex.MailDeliver.Model;
     using System;
     using System.Collections.Generic;
 

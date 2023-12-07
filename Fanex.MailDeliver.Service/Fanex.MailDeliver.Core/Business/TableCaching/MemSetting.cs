@@ -6,13 +6,14 @@
 // <history>
 //   <change who="Ricky.Nguyen" date="2012.9.20">Created</change>
 // </history>
-namespace Fanex.MailDeliver.Business.TableCaching
-{
-    using System;
-    using System.Collections.Generic;
-    using Fanex.MailDeliver.Core.Infrastructure.Logging;
-    using Fanex.MailDeliver.Model;
 
+using Fanex.MailDeliver.Core.Infrastructure.Logging;
+using Fanex.MailDeliver.MailClient.Model;
+using System;
+using System.Collections.Generic;
+
+namespace Fanex.MailDeliver.Core.Business.TableCaching
+{
     /// <summary>
     /// Mail Setting cache.
     /// </summary>

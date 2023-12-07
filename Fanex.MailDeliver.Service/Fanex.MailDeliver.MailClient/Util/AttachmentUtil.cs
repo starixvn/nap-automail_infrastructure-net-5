@@ -7,9 +7,10 @@
 //   <change who="Ricky.Nguyen" date="2012.9.20">Created</change>
 // </history>
 
+using Fanex.MailDeliver.MailClient.Model;
+
 namespace Fanex.MailDeliver.MailClient.Util
 {
-    using Fanex.MailDeliver.Model;
     using Fanex.MailDeliver.Utility;
 
     public class AttachmentUtil

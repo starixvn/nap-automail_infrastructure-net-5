@@ -7,18 +7,16 @@
 //   <change who="Ricky.Nguyen" date="2012.9.20">Created</change>
 // </history>
 
+using Fanex.MailDeliver.Core.Business.Implement;
+using Fanex.MailDeliver.Core.Business.Interface;
+using Fanex.MailDeliver.Core.Infrastructure.Logging;
+using Fanex.MailDeliver.MailClient.Model;
 using Newtonsoft.Json;
+using System;
+using System.Threading;
 
-namespace Fanex.MailDeliver.Business.Worker
+namespace Fanex.MailDeliver.Core.Business.Worker
 {
-    using Fanex.MailDeliver.Business;
-    using Fanex.MailDeliver.Business.Interface;
-    using Fanex.MailDeliver.Core.Business;
-    using Fanex.MailDeliver.Core.Infrastructure.Logging;
-    using Fanex.MailDeliver.Model;
-    using System;
-    using System.Threading;
-
     public interface SendMailWorker
     {
         void Run(MailRecord mailRecord);

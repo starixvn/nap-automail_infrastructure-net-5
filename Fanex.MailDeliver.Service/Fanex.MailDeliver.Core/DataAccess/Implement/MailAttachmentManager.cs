@@ -7,20 +7,18 @@
 //   <change who="Ricky.Nguyen" date="2012.9.20">Created</change>
 // </history>
 
-namespace Fanex.MailDeliver.DataAccess.Implement
-{
-    using Fanex.Data;
-    using Fanex.MailDeliver.Core.Infrastructure.Logging;
-    using Fanex.MailDeliver.Core.Infrastructure.Models;
-    using Fanex.MailDeliver.Core.Infrastructure.Services;
-    using Fanex.MailDeliver.Model;
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.Data;
-    using System.IO;
-    using System.Linq;
+using Fanex.Data;
+using Fanex.MailDeliver.Core.Infrastructure.Logging;
+using Fanex.MailDeliver.Core.Infrastructure.Models;
+using Fanex.MailDeliver.Core.Infrastructure.Services;
+using Fanex.MailDeliver.MailClient.Model;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Data;
 
+namespace Fanex.MailDeliver.Core.DataAccess.Implement
+{
     /// <summary>
     /// Storage Attachments.
     /// </summary>
@@ -103,15 +101,15 @@ namespace Fanex.MailDeliver.DataAccess.Implement
                 {
                     if (attachment.Bytes.Length > 0)
                     {
-                        var param = new Hashtable();
-                        param.Add("mailid", mailID);
-                        param.Add("filename", attachment.FileName);
-                        param.Add("contenttype", attachment.ContentType);
-                        param.Add("content", attachment.Bytes);
-                        using (ObjectDb objDb = new ObjectDb("StoreMailAttachement"))
+                        var param = new Hashtable
                         {
-                            objDb.ExecuteNonQuery(param);
-                        }
+                            { "mailid", mailID },
+                            { "filename", attachment.FileName },
+                            { "contenttype", attachment.ContentType },
+                            { "content", attachment.Bytes }
+                        };
+                        using var objDb = ObjectDbFactory.CreateInstance("StoreMailAttachement", 0);
+                        objDb.ExecuteNonQuery(param);
                     }
                 }
             }
@@ -132,24 +130,22 @@ namespace Fanex.MailDeliver.DataAccess.Implement
             {
                 var param = new Hashtable();
                 param.Add("mailid", mailID);
-                using (ObjectDb objDb = new ObjectDb("GetMailAttachement"))
+                using var objDb = ObjectDbFactory.CreateInstance("GetMailAttachement", 0);
+                var result = objDb.ExecuteDataSet(param);
+                if (result.Tables.Count > 0)
                 {
-                    var result = objDb.ExecuteDataSet(param);
-                    if (result.Tables.Count > 0)
+                    var rows = result.Tables[0].Rows;
+                    foreach (DataRow row in rows)
                     {
-                        var rows = result.Tables[0].Rows;
-                        foreach (DataRow row in rows)
+                        var item = new MailAttachment
                         {
-                            var item = new MailAttachment
-                            {
-                                MailID = _mailID,
-                                FileName = Convert.ToString(row["filename"]),
-                                ContentType = (FileExtentions)Enum.Parse(typeof(FileExtentions), Convert.ToString(row["contenttype"]), true)
-                            };
-                            byte[] binary = row["content"] as byte[];
-                            item.Bytes = binary;
-                            attachments.Add(item);
-                        }
+                            MailID = _mailID,
+                            FileName = Convert.ToString(row["filename"]),
+                            ContentType = (FileExtentions)Enum.Parse(typeof(FileExtentions), Convert.ToString(row["contenttype"]), true)
+                        };
+                        byte[] binary = row["content"] as byte[];
+                        item.Bytes = binary;
+                        attachments.Add(item);
                     }
                 }
             }

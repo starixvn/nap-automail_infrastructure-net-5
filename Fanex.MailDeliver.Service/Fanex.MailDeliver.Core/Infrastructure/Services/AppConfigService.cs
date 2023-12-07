@@ -1,6 +1,6 @@
 ﻿using EasyNetQ;
 using Fanex.MailDeliver.Core.Infrastructure.Models;
-using Fanex.MailDeliver.Model;
+using Fanex.MailDeliver.MailClient.Model;
 using System;
 using System.Collections.Generic;
 

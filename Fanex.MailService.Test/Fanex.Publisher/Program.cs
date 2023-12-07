@@ -14,7 +14,7 @@ namespace Fanex.Publisher
                 Console.WriteLine("Enter a message. 'Quit' to quit.");
                 while ((input = Console.ReadLine()) != "Quit")
                 {
-                    bus.Publish(new TextMessage { Text = input });
+                    bus.PubSub.Publish(new TextMessage { Text = input });
                     Console.WriteLine("Message published!");
                 }
             }

@@ -7,29 +7,27 @@
 //   <change who="Ricky.Nguyen" date="2012.9.20">Created</change>
 // </history>
 
+using EASendMail;
+using EasyNetQ;
+using Fanex.MailDeliver.Core.Criterias;
+using Fanex.MailDeliver.Core.DataAccess.Implement;
+using Fanex.MailDeliver.Core.Infrastructure;
+using Fanex.MailDeliver.Core.Infrastructure.Logging;
+using Fanex.MailDeliver.Core.Infrastructure.Services;
+using Fanex.MailDeliver.MailClient.Model;
 using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.IO;
+using System.Linq;
+using System.Net.Mail;
+using System.Net.Mime;
+using System.Text;
+using System.Threading;
 
-namespace Fanex.MailDeliver.Business
+namespace Fanex.MailDeliver.Core.Business.Implement
 {
-    using EASendMail;
-    using Fanex.MailDeliver.Core.Business;
-    using Fanex.MailDeliver.Core.Business.Implement;
-    using Fanex.MailDeliver.Core.Criterias;
-    using Fanex.MailDeliver.Core.Infrastructure;
-    using Fanex.MailDeliver.Core.Infrastructure.Logging;
-    using Fanex.MailDeliver.Core.Infrastructure.Services;
-    using Fanex.MailDeliver.DataAccess.Implement;
-    using Fanex.MailDeliver.Model;
-    using System;
-    using System.Collections.Generic;
-    using System.Diagnostics.CodeAnalysis;
-    using System.IO;
-    using System.Linq;
-    using System.Net.Mail;
-    using System.Net.Mime;
-    using System.Text;
-    using System.Threading;
-
     public interface MailExtension
     {
         void SendMail(MailRecord mailSend, out string message);
@@ -188,6 +186,8 @@ namespace Fanex.MailDeliver.Business
             }
             catch (Exception e)
             {
+                LogExtension.LogError(e);
+
                 try
                 {
                     mailKitService.Send(mailRecord, mailSetting, mailFrom);
@@ -195,10 +195,8 @@ namespace Fanex.MailDeliver.Business
                 }
                 catch (Exception ex)
                 {
-                    LogExtension.LogMessage("Maik kit ex..");
                     LogExtension.LogError(ex);
 
-                    LogExtension.LogError(e);
                     UpdateMailStatus(mailRecord, false, e);
                 }
             }
@@ -251,8 +249,8 @@ namespace Fanex.MailDeliver.Business
                 try
                 {
                     LogExtension.LogMessage(string.Format("\r\nPublish Email into RabbitMQ: {0}", mailRecord.Subject));
-                    AppConfigService.Bus.Publish(mailRecord);
-                    if (AppConfigService.Config.IsUsingRabbitMq)
+                    AppConfigService.Bus.PubSub.Publish(mailRecord);
+                    if (!AppConfigService.Config.IsUsingRabbitMq)
                     {
                         mailRecord.MailID = dataService.InsertMailRecord(mailRecord);
                         mailRecord.IsReady = true;

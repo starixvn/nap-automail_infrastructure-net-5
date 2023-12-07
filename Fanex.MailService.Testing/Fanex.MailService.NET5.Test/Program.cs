@@ -1,5 +1,5 @@
 ﻿using Fanex.MailDeliver.MailClient;
-using Fanex.MailDeliver.Model;
+using Fanex.MailDeliver.MailClient.Model;
 using Newtonsoft.Json;
 using System;
 using System.IO;
@@ -24,7 +24,7 @@ namespace Fanex.MailService.NET5.Test
                 var mailService = new MailDeliver.MailClient.API.MailDeliver();
                 var mail = new MailRecord
                 {
-                    MailTo = "robert.tran@starixvn.com",
+                    MailTo = "robert.tran@starixsoft.com",
                     Title = "Robert Test at Local",
                     Subject = $"Robert Test NEW lib, run on App NET5 at Local - {DateTime.Now}",
                     Body = "Robert Test at Local"

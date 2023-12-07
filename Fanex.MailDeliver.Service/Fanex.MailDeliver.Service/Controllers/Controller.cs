@@ -7,9 +7,14 @@ namespace Fanex.MailDeliver.Service.Controllers
     public class Controller : ControllerBase
     {
         [HttpGet]
-        public IActionResult Index()
+        public ContentResult Index()
         {
-            return new OkResult();
+            var text = System.IO.File.ReadAllText("wwwroot/default.htm");
+            return new ContentResult
+            {
+                ContentType = "text/html",
+                Content = text
+            };
         }
     }
 }

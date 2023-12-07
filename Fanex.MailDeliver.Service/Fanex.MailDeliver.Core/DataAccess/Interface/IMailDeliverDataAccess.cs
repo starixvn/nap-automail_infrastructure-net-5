@@ -7,13 +7,13 @@
 //   <change who="Ricky.Nguyen" date="2012.9.20">Created</change>
 // </history>
 
-namespace Fanex.MailDeliver.DataAccess.Interface
-{
-    using System;
-    using System.Collections.Generic;
-    using Fanex.MailDeliver.Core.Criterias;
-    using Fanex.MailDeliver.Model;
+using Fanex.MailDeliver.Core.Criterias;
+using Fanex.MailDeliver.MailClient.Model;
+using System;
+using System.Collections.Generic;
 
+namespace Fanex.MailDeliver.Core.DataAccess.Interface
+{
     public interface IMailDeliverDataAccess
     {
         long InsertMailRecord(MailRecord mailItem);
