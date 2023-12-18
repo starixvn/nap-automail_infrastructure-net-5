@@ -1,5 +1,5 @@
 ﻿using Fanex.Data;
-using Fanex.MailDeliver.Model;
+using Fanex.MailDeliver.MailClient.Model;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -34,10 +34,9 @@ namespace Fanex.MailDelivery.Services.Services
                         param.Add("filename", attachment.FileName);
                         param.Add("contenttype", attachment.ContentType);
                         param.Add("content", attachment.Bytes);
-                        using (ObjectDb objDb = new ObjectDb("StoreMailAttachement"))
-                        {
-                            objDb.ExecuteNonQuery(param);
-                        }
+                        using var objDb = ObjectDbFactory.CreateInstance("StoreMailAttachement");
+
+                        objDb.ExecuteNonQuery(param);
                     }
                 }
             }
@@ -55,24 +54,22 @@ namespace Fanex.MailDelivery.Services.Services
             {
                 var param = new Hashtable();
                 param.Add("mailid", mailID);
-                using (ObjectDb objDb = new ObjectDb("GetMailAttachement"))
+                using var objDb = ObjectDbFactory.CreateInstance("GetMailAttachement");
+                var result = objDb.ExecuteDataSet(param);
+                if (result.Tables.Count > 0)
                 {
-                    var result = objDb.ExecuteDataSet(param);
-                    if (result.Tables.Count > 0)
+                    var rows = result.Tables[0].Rows;
+                    foreach (DataRow row in rows)
                     {
-                        var rows = result.Tables[0].Rows;
-                        foreach (DataRow row in rows)
+                        var item = new MailAttachment
                         {
-                            var item = new MailAttachment
-                            {
-                                MailID = _mailID,
-                                FileName = Convert.ToString(row["filename"]),
-                                ContentType = (FileExtentions)Enum.Parse(typeof(FileExtentions), Convert.ToString(row["contenttype"]), true)
-                            };
-                            byte[] binary = row["content"] as byte[];
-                            item.Bytes = binary;
-                            attachments.Add(item);
-                        }
+                            MailID = _mailID,
+                            FileName = Convert.ToString(row["filename"]),
+                            ContentType = (FileExtentions)Enum.Parse(typeof(FileExtentions), Convert.ToString(row["contenttype"]), true)
+                        };
+                        byte[] binary = row["content"] as byte[];
+                        item.Bytes = binary;
+                        attachments.Add(item);
                     }
                 }
             }

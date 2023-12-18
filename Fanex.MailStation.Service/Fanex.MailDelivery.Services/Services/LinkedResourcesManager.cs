@@ -1,5 +1,5 @@
 ﻿using Fanex.Data;
-using Fanex.MailDelivery.Core.Models;
+using Fanex.MailDeliver.MailClient.Model;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -27,18 +27,17 @@ namespace Fanex.MailDelivery.Services.Services
             {
                 foreach (var resource in resources)
                 {
-                    if (resource.FileContent != null)
+                    if (resource.Bytes != null)
                     {
                         var param = new Hashtable();
                         param.Add("mailid", mailID);
                         param.Add("filename", resource.FileName);
-                        param.Add("imagetype", resource.FileExtension);
-                        param.Add("contentcid", resource.ContentId);
-                        param.Add("streamcontent", resource.FileContent);
-                        using (ObjectDb objDb = new ObjectDb("StoreLinkedResource"))
-                        {
-                            objDb.ExecuteNonQuery(param);
-                        }
+                        param.Add("imagetype", resource.ImageType);
+                        param.Add("contentcid", resource.ContentCID);
+                        param.Add("streamcontent", resource.Bytes);
+                        using var objDb = ObjectDbFactory.CreateInstance("StoreLinkedResource");
+
+                        objDb.ExecuteNonQuery(param);
                     }
                 }
             }
@@ -54,31 +53,30 @@ namespace Fanex.MailDelivery.Services.Services
             var resources = new List<MailLinkedResource>();
             if (mailID > 0)
             {
-                using (ObjectDb objDb = new ObjectDb("GetMailLinkedResource"))
+                using var objDb = ObjectDbFactory.CreateInstance("GetMailLinkedResource");
+
+                var param = new Hashtable();
+                param.Add("mailid", mailID);
+                var result = objDb.ExecuteDataSet(param);
+                if (result.Tables.Count > 0)
                 {
-                    var param = new Hashtable();
-                    param.Add("mailid", mailID);
-                    var result = objDb.ExecuteDataSet(param);
-                    if (result.Tables.Count > 0)
+                    var rows = result.Tables[0].Rows;
+                    foreach (DataRow row in rows)
                     {
-                        var rows = result.Tables[0].Rows;
-                        foreach (DataRow row in rows)
+                        var ext = Convert.ToString(row["imagetype"]);
+                        var item = new MailLinkedResource
                         {
-                            var ext = Convert.ToString(row["imagetype"]);
-                            var item = new MailLinkedResource
-                            {
-                                LinkedID = Convert.ToInt32(row["linkedid"]),
-                                MailID = _mailID,
-                                FileName = Convert.ToString(row["filename"]),
-                                ContentCID = Convert.ToString(row["contentcid"]),
-                                ImageType = (FileExtentions)Enum.Parse(typeof(FileExtentions), Convert.ToString(row["imagetype"]), true)
-                            };
+                            LinkedID = Convert.ToInt32(row["linkedid"]),
+                            MailID = _mailID,
+                            FileName = Convert.ToString(row["filename"]),
+                            ContentCID = Convert.ToString(row["contentcid"]),
+                            ImageType = (FileExtentions)Enum.Parse(typeof(FileExtentions), Convert.ToString(row["imagetype"]), true)
+                        };
 
-                            byte[] binary = row["streamcontent"] as byte[];
+                        byte[] binary = row["streamcontent"] as byte[];
 
-                            item.Bytes = binary;
-                            resources.Add(item);
-                        }
+                        item.Bytes = binary;
+                        resources.Add(item);
                     }
                 }
             }

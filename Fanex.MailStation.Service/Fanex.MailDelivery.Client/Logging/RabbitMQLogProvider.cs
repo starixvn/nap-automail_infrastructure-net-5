@@ -1,5 +1,4 @@
-﻿using EasyNetQ.Logging;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text.RegularExpressions;
@@ -36,40 +35,6 @@ namespace Fanex.MailDelivery.Client.Logging
 
             sendingMessageCount = SendingMaxTime;
         }
-    }
-
-    public class RabbitMQLogProvider : EasyNetQ.Logging.ILogProvider
-    {
-        public EasyNetQ.Logging.Logger GetLogger(string name)
-        {
-            return (logLevel, messageFunc, exception, formatParameters) =>
-            {
-                if ((logLevel == LogLevel.Error || logLevel == LogLevel.Fatal) &&
-                    messageFunc != null)
-                {
-                    var message = LogMessageFormatter.FormatStructuredMessage(messageFunc(), formatParameters);
-
-                    if (exception != null)
-                    {
-                        RabbitMQLogger.LogError(message, exception);
-                    }
-                }
-
-                return true;
-            };
-        }
-
-        #region NotImplemented
-        public IDisposable OpenMappedContext(string key, object value, bool destructure = false)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IDisposable OpenNestedContext(string message)
-        {
-            throw new NotImplementedException();
-        }
-        #endregion
     }
 
     internal static class LogMessageFormatter

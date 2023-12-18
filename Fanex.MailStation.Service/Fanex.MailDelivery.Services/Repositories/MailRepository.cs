@@ -1,5 +1,5 @@
 ﻿using Fanex.Data;
-using Fanex.MailDeliver.Model;
+using Fanex.MailDeliver.MailClient.Model;
 using Fanex.MailDelivery.Core.Models;
 using Fanex.MailDelivery.Services.Criteria;
 using Fanex.MailDelivery.Services.Criteria.Job;
@@ -46,109 +46,77 @@ namespace Fanex.MailDelivery.Services.Repositories
     {
         public Schedule GetScheduleByMailId(GetScheduleByMailIdCriteria criteria)
         {
-            using (var db = new ObjectDb(criteria.GetSettingKey()))
-            {
-                db.AssignParamValues(criteria.GetSpParams());
-
-                return db.QueryEntity<Schedule>();
-            }
+            using var db = ObjectDbFactory.CreateInstance(criteria.GetSettingKey());
+            return db.QueryEntity<Schedule>(criteria);
         }
 
         public void UpdateClientActiveTime(UpdateClientActiveTimeCriteria criteria)
         {
-            using (var db = new ObjectDb(criteria.GetSettingKey()))
-            {
-                db.ExecuteNonQuery(criteria.GetSpParams());
-            }
+            using var db = ObjectDbFactory.CreateInstance(criteria.GetSettingKey());
+            db.ExecuteNonQuery(criteria);
         }
 
         public void UpdateServiceCheckIn(ServiceMonitoringCheckInCriteria criteria)
         {
-            using (var db = new ObjectDb(criteria.GetSettingKey()))
-            {
-                db.ExecuteNonQuery(criteria.GetSpParams());
-            }
+            using var db = ObjectDbFactory.CreateInstance(criteria.GetSettingKey());
+            db.ExecuteNonQuery(criteria);
         }
 
         public void UpdateFailedForLongRunningMailTask()
         {
             var criteria = new UpdateFailedForLongRunningMailTaskCriteria();
 
-            using (var db = new ObjectDb(criteria.GetSettingKey()))
-            {
-                db.ExecuteNonQuery(criteria.GetSpParams());
-            }
+            using var db = ObjectDbFactory.CreateInstance(criteria.GetSettingKey());
+            db.ExecuteNonQuery(criteria);
         }
 
         public int AddMailTask(AddMailTaskCriteria criteria)
         {
-            Hashtable hash = criteria.GetSpParams();
-            hash = (new ResultCriteria()).AddSpParams(hash);
-            using (var db = new ObjectDb(criteria.GetSettingKey()))
-            {
-                db.ExecuteNonQuery(hash);
-                return Convert.ToInt32(db.GetParameterValue("MailTaskID"));
-            }
+            using var db = ObjectDbFactory.CreateInstance(criteria.GetSettingKey());
+            db.ExecuteNonQuery(criteria);
+            return Convert.ToInt32(db.GetParameterValue("MailTaskID"));
         }
 
         public MailTaskModel GetMailTaskById(GetMailTaskByIdCriteria criteria)
         {
-            using (var db = new ObjectDb(criteria.GetSettingKey()))
-            {
-                db.AssignParamValues(criteria.GetSpParams());
-
-                return db.QueryEntity<MailTaskModel>();
-            }
+            using var db = ObjectDbFactory.CreateInstance(criteria.GetSettingKey());
+            return db.QueryEntity<MailTaskModel>(criteria);
         }
 
         public void UpdateMailTaskStatus(UpdateMailTaskStatusCriteria criteria)
         {
-            Hashtable hash = criteria.GetSpParams();
-            hash = (new ResultCriteria()).AddSpParams(hash);
-            using (var db = new ObjectDb(criteria.GetSettingKey()))
-            {
-                db.ExecuteNonQuery(hash);
-            }
+            using var db = ObjectDbFactory.CreateInstance(criteria.GetSettingKey());
+            db.ExecuteNonQuery(criteria);
         }
 
         public void UpdateRetryCounter(UpdateTaskRetryCounterCriteria criteria)
         {
-            Hashtable hash = criteria.GetSpParams();
-            hash = (new ResultCriteria()).AddSpParams(hash);
-            using (var db = new ObjectDb(criteria.GetSettingKey()))
-            {
-                db.ExecuteNonQuery(hash);
-            }
+            using var db = ObjectDbFactory.CreateInstance(criteria.GetSettingKey());
+            db.ExecuteNonQuery(criteria);
         }
 
         public void AddMailLog(AddMailLogCriteria criteria)
         {
-            Hashtable hash = criteria.GetSpParams();
-            hash = (new ResultCriteria()).AddSpParams(hash);
-            using (var db = new ObjectDb(criteria.GetSettingKey()))
-            {
-                db.ExecuteNonQuery(hash);
-            }
+            using var db = ObjectDbFactory.CreateInstance(criteria.GetSettingKey());
+            db.ExecuteNonQuery(criteria);
         }
 
         public MailingList GetMailingList(GetMailWithEmailAddressByMailId criteria)
         {
             var result = new MailingList();
-            using (var db = new ObjectDb(criteria.GetSettingKey()))
+            using var db = ObjectDbFactory.CreateInstance(criteria.GetSettingKey());
+
+            var reader = db.ExecuteReader(criteria);
+            if (reader.Read())
             {
-                db.AssignParamValues(criteria.GetSpParams());
-                var reader = db.ExecuteReader();
-                if (reader.Read())
-                {
-                    result.Id = Convert.ToInt32(reader["MailId"]);
-                    result.Name = Convert.ToString(reader["MailName"]);
-                    result.SiteId = Convert.ToInt16(reader["SiteId"]);
-                    result.Active = Convert.ToBoolean(reader["IsActive"]);
-                    result.Group = Convert.ToInt16(reader["MailGroupID"]);
-                    result.TOs = Convert.ToString(reader["MailTo"]).Split(';').ToList();
-                    result.CCs = Convert.ToString(reader["MailCc"]).Split(';').ToList();
-                    result.BCCs = Convert.ToString(reader["MailBcc"]).Split(';').ToList();
-                }
+                result.Id = Convert.ToInt32(reader["MailId"]);
+                result.Name = Convert.ToString(reader["MailName"]);
+                result.SiteId = Convert.ToInt16(reader["SiteId"]);
+                result.Active = Convert.ToBoolean(reader["IsActive"]);
+                result.Group = Convert.ToInt16(reader["MailGroupID"]);
+                result.TOs = Convert.ToString(reader["MailTo"])!.Split(';').ToList();
+                result.CCs = Convert.ToString(reader["MailCc"])!.Split(';').ToList();
+                result.BCCs = Convert.ToString(reader["MailBcc"])!.Split(';').ToList();
             }
 
             return result;
@@ -156,37 +124,30 @@ namespace Fanex.MailDelivery.Services.Repositories
 
         public void UpdateMailTask(UpdateMailTaskMSiteMailIdCriteria criteria)
         {
-            Hashtable hash = criteria.GetSpParams();
-            hash = (new ResultCriteria()).AddSpParams(hash);
-
-            using (var db = new ObjectDb(criteria.GetSettingKey()))
-            {
-                db.ExecuteNonQuery(hash);
-            }
+            using var db = ObjectDbFactory.CreateInstance(criteria.GetSettingKey());
+            db.ExecuteNonQuery(criteria);
         }
 
         public MailRecord GetMailRecordById(int mailId)
         {
             var criteria = new MailRecorderGetMailById { MailId = mailId };
             var mailRecord = new MailRecord();
-            using (var db = new ObjectDb(criteria.GetSettingKey()))
+            using var db = ObjectDbFactory.CreateInstance(criteria.GetSettingKey());
+
+            var dataSet = db.ExecuteDataSet(criteria);
+            var dataTable = new DataTable();
+            if (dataSet != null && dataSet.Tables.Count > 0)
             {
-                db.AssignParamValues(criteria.GetSpParams());
-                var dataSet = db.ExecuteDataSet();
-                var dataTable = new DataTable();
-                if (dataSet != null && dataSet.Tables.Count > 0)
-                {
-                    dataTable = dataSet.Tables[0];
-                }
-
-                foreach (DataRow row in dataTable.Rows)
-                {
-                    mailRecord.SentSuccess = Convert.ToInt32(row["SentSuccess"]);
-                    mailRecord.SentFail = Convert.ToInt32(row["SentFail"]);
-                }
-
-                return mailRecord;
+                dataTable = dataSet.Tables[0];
             }
+
+            foreach (DataRow row in dataTable.Rows)
+            {
+                mailRecord.SentSuccess = Convert.ToInt32(row["SentSuccess"]);
+                mailRecord.SentFail = Convert.ToInt32(row["SentFail"]);
+            }
+
+            return mailRecord;
         }
 
         public long InsertMailRecord(MailRecord mailRecord)
@@ -215,17 +176,16 @@ namespace Fanex.MailDelivery.Services.Repositories
 
             Hashtable param = new Hashtable();
             param.Add("appid", appID);
-            using (ObjectDb objDb = new ObjectDb("GetConfig"))
-            {
-                var resultDataset = objDb.ExecuteDataSet(param);
-                if (resultDataset.Tables.Count > 0
-                    && resultDataset.Tables[0].Rows.Count > 0)
-                {
-                    return GetMailConfigFromDataRow(resultDataset.Tables[0].Rows[0]);
-                }
+            using var objDb = ObjectDbFactory.CreateInstance("GetConfig");
 
-                return new MailConfig();
+            var resultDataset = objDb.ExecuteDataSet(param);
+            if (resultDataset.Tables.Count > 0
+                && resultDataset.Tables[0].Rows.Count > 0)
+            {
+                return GetMailConfigFromDataRow(resultDataset.Tables[0].Rows[0]);
             }
+
+            return new MailConfig();
         }
 
         private MailConfig GetMailConfigFromDataRow(DataRow mailConfigDataRow)
@@ -276,21 +236,20 @@ namespace Fanex.MailDelivery.Services.Repositories
                 param["attachments"] = string.Join(",", fileNames);
             }
 
-            using (ObjectDb objDb = new ObjectDb("StoreMail"))
-            {
-                objDb.ExecuteNonQuery(param);
-                mailID = Math.Max(Convert.ToInt64(param["mailid"]), Convert.ToInt64(param["MAILID"]));
-                if (mailID > 0)
-                {
-                    if (mailItem.Attachments != null)
-                    {
-                        (new MailAttachmentManager()).StoreMailAttachments(mailID, mailItem.Attachments);
-                    }
+            using var objDb = ObjectDbFactory.CreateInstance("StoreMail");
 
-                    if (mailItem.AlternateView != null)
-                    {
-                        (new LinkedResourcesManager()).Insert(mailID, mailItem.AlternateView);
-                    }
+            objDb.ExecuteNonQuery(param);
+            mailID = Math.Max(Convert.ToInt64(param["mailid"]), Convert.ToInt64(param["MAILID"]));
+            if (mailID > 0)
+            {
+                if (mailItem.Attachments != null)
+                {
+                    (new MailAttachmentManager()).StoreMailAttachments(mailID, mailItem.Attachments);
+                }
+
+                if (mailItem.AlternateView != null)
+                {
+                    (new LinkedResourcesManager()).Insert(mailID, mailItem.AlternateView);
                 }
             }
 
@@ -303,32 +262,31 @@ namespace Fanex.MailDelivery.Services.Repositories
         {
             var param = new Hashtable();
             param.Add("mailid", mailID);
-            using (ObjectDb objDb = new ObjectDb("GetMail"))
+            using var objDb = ObjectDbFactory.CreateInstance("GetMail");
+
+            var result = objDb.ExecuteDataSet(param);
+            if (result.Tables.Count > 0)
             {
-                var result = objDb.ExecuteDataSet(param);
-                if (result.Tables.Count > 0)
+                var mailRecordRow = result.Tables[0].Rows[0];
+                var mailItem = GetMailRecordFromDataRow(mailRecordRow, true);
+                if (isSend)
                 {
-                    var mailRecordRow = result.Tables[0].Rows[0];
-                    var mailItem = GetMailRecordFromDataRow(mailRecordRow, true);
-                    if (isSend)
-                    {
-                        mailItem.IsReady = true;
+                    mailItem.IsReady = true;
 
-                        // get attachment file
-                        var attachments = (new MailAttachmentManager()).GetMailAttachments(mailID);
-                        mailItem.Attachments = attachments == null ? null : attachments.ToList();
+                    // get attachment file
+                    var attachments = (new MailAttachmentManager()).GetMailAttachments(mailID);
+                    mailItem.Attachments = attachments == null ? null : attachments.ToList();
 
-                        // get linked resource
-                        var resources = (new LinkedResourcesManager()).GetLinkedResources(mailID);
-                        mailItem.AlternateView = resources == null ? null : resources.ToList();
-                    }
-
-                    return mailItem;
+                    // get linked resource
+                    var resources = (new LinkedResourcesManager()).GetLinkedResources(mailID);
+                    mailItem.AlternateView = resources == null ? null : resources.ToList();
                 }
-                else
-                {
-                    return null;
-                }
+
+                return mailItem;
+            }
+            else
+            {
+                return null;
             }
         }
 

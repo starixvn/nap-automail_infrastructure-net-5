@@ -1,4 +1,4 @@
-﻿using Fanex.MailDeliver.Model;
+﻿using Fanex.MailDeliver.MailClient.Model;
 using Fanex.MailDelivery.Core;
 using Fanex.MailDelivery.Core.Messaging;
 using Fanex.MailDelivery.Core.Models;
@@ -611,7 +611,7 @@ namespace Fanex.MailDelivery.Services.Services
                 {
                     var alternativeView = sourceMail.AlternativeViews[i];
 
-                    destinationMailRecord.AlternateView.Add(new MailDeliver.Model.MailLinkedResource
+                    destinationMailRecord.AlternateView.Add(new MailDeliver.MailClient.Model.MailLinkedResource
                     {
                         ContentCID = alternativeView.ContentId,
                         FileName = alternativeView.FileName,
@@ -634,7 +634,7 @@ namespace Fanex.MailDelivery.Services.Services
                 {
                     var attach = sourceMail.Attachments[i];
 
-                    destinationMailRecord.Attachments.Add(new MailDeliver.Model.MailAttachment
+                    destinationMailRecord.Attachments.Add(new MailDeliver.MailClient.Model.MailAttachment
                     {
                         AttachmentID = attach.Id,
                         Bytes = attach.FileContent,

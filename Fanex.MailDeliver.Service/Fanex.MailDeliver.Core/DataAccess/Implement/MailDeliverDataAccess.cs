@@ -34,8 +34,8 @@ namespace Fanex.MailDeliver.Core.DataAccess.Implement
             param.Add("mailto", mailItem.IsEncrypt ? Cryptography.EncryptPassword(mailItem.MailTo ?? string.Empty) : mailItem.MailTo);
             param.Add("mailcc", mailItem.IsEncrypt ? Cryptography.EncryptPassword(mailItem.MailCc ?? string.Empty) : mailItem.MailCc);
             param.Add("mailbcc", mailItem.IsEncrypt ? Cryptography.EncryptPassword(mailItem.MailBcc ?? string.Empty) : mailItem.MailBcc);
-            param.Add("title", mailItem.Title);
-            param.Add("subject", mailItem.Subject);
+            param.Add("title", string.IsNullOrEmpty(mailItem.Title) ? "-" : mailItem.Title);
+            param.Add("subject", string.IsNullOrEmpty(mailItem.Subject) ? "-" : mailItem.Subject);
             param.Add("body", mailItem.IsEncrypt ? Cryptography.EncryptPassword(mailItem.Body ?? string.Empty) : mailItem.Body);
             param.Add("maildate", DateTime.Now);
             param.Add("attachments", string.Empty);

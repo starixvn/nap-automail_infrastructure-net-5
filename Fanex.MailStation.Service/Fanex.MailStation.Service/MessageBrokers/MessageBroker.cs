@@ -5,7 +5,6 @@ using Fanex.MailDelivery.Core.Messaging;
 using Fanex.MailDelivery.Core.Models;
 using Fanex.MailDelivery.Services.Services;
 using System;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace Fanex.MailStation.Service.MessageBrokers
@@ -43,11 +42,6 @@ namespace Fanex.MailStation.Service.MessageBrokers
         {
             bus = bus ?? RabbitHutch.CreateBus(AppConfigService.AppConfig.RabbitMQConnectionString);
 
-            while (!bus.IsConnected)
-            {
-                Thread.Sleep(waitingForRabbitMQInSeconds);
-            }
-
             SubscribeMail();
             SubscribeJobResult();
             SubscribeTaskLogMessage();
@@ -67,13 +61,13 @@ namespace Fanex.MailStation.Service.MessageBrokers
 
             try
             {
-                bus.SubscribeAsync<Mail>(
+                bus.PubSub.SubscribeAsync<Mail>(
                     MailDeliveryConstants.SendMailRoutingKey,
-                    async (mail) =>
+                     (mail) =>
                     {
-                        await umService.WaitForUMOff();
+                        umService.WaitForUMOff();
 
-                        await mailService.SendMail(mail);
+                        mailService.SendMail(mail);
                     },
                     config => config.WithTopic(MailDeliveryConstants.SendMailRoutingKey));
 
@@ -97,13 +91,11 @@ namespace Fanex.MailStation.Service.MessageBrokers
 
             try
             {
-                bus.SubscribeAsync<UpdateActiveTimeRequest>(
+                bus.PubSub.SubscribeAsync<UpdateActiveTimeRequest>(
                     MailDeliveryConstants.ClientNotificationTopic,
                     clientInfoMessage =>
                     {
                         mailService.UpdateClientActiveTime(clientInfoMessage);
-
-                        return Task.CompletedTask;
                     },
                     config => config.WithTopic(MailDeliveryConstants.ClientNotificationTopic));
 
@@ -127,13 +119,13 @@ namespace Fanex.MailStation.Service.MessageBrokers
 
             try
             {
-                bus.SubscribeAsync<JobMessage>(
+                bus.PubSub.SubscribeAsync<JobMessage>(
                     MailDeliveryConstants.JobResultRoutingKey,
-                    async (jobStatus) =>
+                     (jobStatus) =>
                     {
-                        await umService.WaitForUMOff();
+                        umService.WaitForUMOff();
 
-                        await mailService.UpdateJobStatus(jobStatus);
+                        mailService.UpdateJobStatus(jobStatus);
                     },
                     config => config.WithTopic(MailDeliveryConstants.JobResultRoutingKey));
 
@@ -157,13 +149,11 @@ namespace Fanex.MailStation.Service.MessageBrokers
 
             try
             {
-                bus.SubscribeAsync<TaskLog>(
+                bus.PubSub.SubscribeAsync<TaskLog>(
                     MailDeliveryConstants.TaskLogRoutingKey,
                     log =>
                     {
                         mailService.InsertTaskLog(log);
-
-                        return Task.CompletedTask;
                     },
                     config => config.WithTopic(MailDeliveryConstants.TaskLogRoutingKey));
 
@@ -191,7 +181,7 @@ namespace Fanex.MailStation.Service.MessageBrokers
 
             try
             {
-                bus.RespondAsync<GetScheduleListRequest, GetScheduleListResponse>(request => Task.FromResult(mailService.GetScheduleList(request)));
+                bus.Rpc.RespondAsync<GetScheduleListRequest, GetScheduleListResponse>(request => Task.FromResult(mailService.GetScheduleList(request)));
 
                 logService.LogInfo($"Registered to response schedules to clients successfully");
             }
@@ -213,7 +203,7 @@ namespace Fanex.MailStation.Service.MessageBrokers
 
             try
             {
-                bus.RespondAsync<JobMessage, JobMessage>(
+                bus.Rpc.RespondAsync<JobMessage, JobMessage>(
                     jobMessage =>
                     {
                         jobMessage.Schedule.TaskId = mailService.AddMailTaskForRunningJob(jobMessage);
@@ -241,7 +231,7 @@ namespace Fanex.MailStation.Service.MessageBrokers
 
             try
             {
-                bus.RespondAsync<UMInfoModel, UMInfoModel>(async (x) =>
+                bus.Rpc.RespondAsync<UMInfoModel, UMInfoModel>(async (x) =>
                 {
                     var umInfo = cacheService.Get<UMInfoModel>(UMInfoCacheKey);
 
@@ -281,7 +271,7 @@ namespace Fanex.MailStation.Service.MessageBrokers
 
             try
             {
-                bus.RespondAsync<GetMailTaskByIdRequest, MailTaskModel>(request => Task.FromResult(mailService.GetMailTaskById(request)));
+                bus.Rpc.RespondAsync<GetMailTaskByIdRequest, MailTaskModel>(request => Task.FromResult(mailService.GetMailTaskById(request)));
 
                 logService.LogInfo($"Registered to response mail tasks to clients successfully");
             }
