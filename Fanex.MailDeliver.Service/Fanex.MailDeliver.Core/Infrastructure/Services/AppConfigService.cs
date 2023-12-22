@@ -17,5 +17,7 @@ namespace Fanex.MailDeliver.Core.Infrastructure.Services
         public static List<MailRecord> ListMailFailed { get; set; } = new List<MailRecord>();
 
         public static List<DateTime> TimeCounter = new List<DateTime>();
+
+        public static DateTime LastTimeSendMail { get; set; } = DateTime.Now;
     }
 }

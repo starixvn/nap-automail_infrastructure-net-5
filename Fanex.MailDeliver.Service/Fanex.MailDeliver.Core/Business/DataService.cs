@@ -1,8 +1,10 @@
 ﻿using Fanex.MailDeliver.Core.Criterias;
 using Fanex.MailDeliver.Core.DataAccess.Interface;
 using Fanex.MailDeliver.Core.Infrastructure.Logging;
+using Fanex.MailDeliver.Core.Infrastructure.Services;
 using Fanex.MailDeliver.MailClient.Model;
 using System;
+using System.Threading;
 
 namespace Fanex.MailDeliver.Core.Business
 {
@@ -28,6 +30,15 @@ namespace Fanex.MailDeliver.Core.Business
         {
             try
             {
+                var now = DateTime.Now;
+                var lastTimeSendMail = AppConfigService.LastTimeSendMail;
+                var diff = lastTimeSendMail.Subtract(now).TotalMilliseconds;
+                if (diff < 1000)
+                {
+                    Thread.Sleep(1100);
+                    AppConfigService.LastTimeSendMail = DateTime.Now;
+                }
+
                 if ((mailRecord.Config != null && mailRecord.Config.AppID <= 0) && mailRecord.AppID <= 0)
                 {
                     return 0;

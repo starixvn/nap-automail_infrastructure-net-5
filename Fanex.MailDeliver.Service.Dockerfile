@@ -16,7 +16,8 @@ RUN dotnet publish -r linux-x64 --self-contained false -c Release -o /app
 
 FROM hub.nexdev.net/base/dotnet/core/aspnet:8.0-nap-mail-core
 
-ENV TZ="America/La_Paz" 
+ENV TZ="America/La_Paz"
+ENV COMPlus_EnableDiagnostics=0 
 
 WORKDIR /app
 COPY --from=builder /app .
