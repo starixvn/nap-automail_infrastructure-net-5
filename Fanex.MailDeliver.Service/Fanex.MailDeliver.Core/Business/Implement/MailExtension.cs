@@ -232,13 +232,13 @@ namespace Fanex.MailDeliver.Core.Business.Implement
                 {
                     LogExtension.LogMessage(string.Format("\r\nPublish Email into RabbitMQ: {0}", mailRecord.Subject));
                     AppConfigService.Bus.PubSub.Publish(mailRecord);
-                    if (!AppConfigService.Config.IsUsingRabbitMq)
-                    {
-                        mailRecord.MailID = dataService.InsertMailRecord(mailRecord);
-                        mailRecord.IsReady = true;
-                        var outputMessage = string.Empty;
-                        SendMail(mailRecord, out outputMessage);
-                    }
+                    //if (!AppConfigService.Config.IsUsingRabbitMq)
+                    //{
+                    //    mailRecord.MailID = dataService.InsertMailRecord(mailRecord);
+                    //    mailRecord.IsReady = true;
+                    //    var outputMessage = string.Empty;
+                    //    SendMail(mailRecord, out outputMessage);
+                    //}
                 }
                 catch (Exception ex)
                 {
