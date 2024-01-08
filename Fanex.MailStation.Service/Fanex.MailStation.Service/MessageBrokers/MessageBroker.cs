@@ -91,7 +91,7 @@ namespace Fanex.MailStation.Service.MessageBrokers
 
             try
             {
-                bus.PubSub.SubscribeAsync<UpdateActiveTimeRequest>(
+                bus.PubSub.Subscribe<UpdateActiveTimeRequest>(
                     MailDeliveryConstants.ClientNotificationTopic,
                     clientInfoMessage =>
                     {

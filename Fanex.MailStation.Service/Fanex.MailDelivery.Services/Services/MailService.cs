@@ -406,6 +406,10 @@ namespace Fanex.MailDelivery.Services.Services
 
                 using (var mailService = new Fanex.MailDeliver.MailClient.API.MailDeliver())
                 {
+                    if (string.IsNullOrEmpty(record.Title))
+                    {
+                        record.Title = "-";
+                    }
                     mailService.SendMail(record);
                 }
 
