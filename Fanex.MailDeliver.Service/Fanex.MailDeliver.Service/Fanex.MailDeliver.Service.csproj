@@ -7,8 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="App_Data\DBMA.bodb_Maintenance.bodbAdminNet.xml" />
+    <None Remove="App_Data\DBMA.bodb_Maintenance.wsv_nap.xml" />
     <None Remove="index.html" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="App_Data\DBMA.bodb_Maintenance.wsv_nap.xml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -16,7 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="App_Data\DBMA.bodb_Maintenance.bodbAdminNet.xml">
+    <Content Include="App_Data\DBMA.bodb_Maintenance.wsv_nap.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Properties\launchSettings.json" />
