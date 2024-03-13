@@ -27,6 +27,12 @@ namespace Fanex.MailDeliver.Core.Criterias
 
         public DateTime ErrorTime { get; set; }
 
+        public int ErrorId { get; set; }
+
+        public int ErrCode { get; set; }
+
+        public string ErrorMsg { get; set; }
+
         public override string GetSettingKey()
         {
             return "MailRecorder_InsError";

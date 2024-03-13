@@ -1,10 +1,10 @@
-﻿using Fanex.MailDeliver.Business;
-using Fanex.MailDeliver.Business.Interface;
-using Fanex.MailDeliver.Business.Worker;
+﻿using Fanex.MailDeliver.Core.Business.Implement;
+using Fanex.MailDeliver.Core.Business.Interface;
+using Fanex.MailDeliver.Core.Business.Worker;
 using Fanex.MailDeliver.Core.Infrastructure.Logging;
 using Fanex.MailDeliver.Core.Infrastructure.Services;
+using Fanex.MailDeliver.MailClient.Model;
 using Fanex.MailDeliver.MailClient.ParamModel;
-using Fanex.MailDeliver.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;

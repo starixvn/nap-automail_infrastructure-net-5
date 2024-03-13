@@ -7,10 +7,10 @@
 //   <change who="Ricky.Nguyen" date="2013.7.10">Created</change>
 // </history>
 
-namespace Fanex.MailDeliver.Model
-{
-    using System;
+using System;
 
+namespace Fanex.MailDeliver.MailClient.Model
+{
     [Serializable]
     public class MailError
     {

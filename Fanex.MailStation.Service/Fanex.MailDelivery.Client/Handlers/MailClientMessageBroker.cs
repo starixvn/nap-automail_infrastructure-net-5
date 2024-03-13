@@ -1,5 +1,4 @@
 ﻿using EasyNetQ;
-using EasyNetQ.Logging;
 using Fanex.Caching;
 using Fanex.MailDelivery.Client.Configurations;
 using Fanex.MailDelivery.Client.Logging;
@@ -66,8 +65,6 @@ namespace Fanex.MailDelivery.Client.Handlers
 
         public MailClientMessageBroker(IJobHandler jobHandler, IBus bus, ICacheService cacheService, MailStationSetting mailStationSetting)
         {
-            LogProvider.SetCurrentLogProvider(new RabbitMQLogProvider());
-
             this.mailStationSetting = mailStationSetting;
             this.jobHandler = jobHandler ?? new JobHandler(mailStationSetting);
             this.bus = bus ?? RabbitHutch.CreateBus(mailStationSetting.RabbitMQConnectionString);
@@ -85,11 +82,6 @@ namespace Fanex.MailDelivery.Client.Handlers
         public async Task StartAsync()
         {
             await jobHandler.InitializeSchedulerAsync();
-
-            while (!bus.IsConnected)
-            {
-                await Task.Delay(TimeSpan.FromSeconds(waitingForRabbitMQInSeconds));
-            }
 
             if (mailStationSetting.HasSchedule())
             {
@@ -110,6 +102,7 @@ namespace Fanex.MailDelivery.Client.Handlers
         }
 
         #region PublishAsync
+
         public async Task SendFunctionMailAsync(Mail mail)
         {
             if (mail.ApplicationSendMailId == 0)
@@ -127,7 +120,7 @@ namespace Fanex.MailDelivery.Client.Handlers
             var schedules = mailStationSetting.Schedules;
             string mailIds = string.Join(",", schedules.Select(x => x.Id));
 
-            await bus.PublishAsync(new UpdateActiveTimeRequest { MailIds = mailIds }, MailDeliveryConstants.ClientNotificationTopic);
+            await bus.PubSub.PublishAsync(new UpdateActiveTimeRequest { MailIds = mailIds }, MailDeliveryConstants.ClientNotificationTopic);
         }
 
         public async Task ReportJobAsync(JobMessage jobMessage)
@@ -146,7 +139,7 @@ namespace Fanex.MailDelivery.Client.Handlers
 
             try
             {
-                await bus.PublishAsync(mail, MailDeliveryConstants.SendMailRoutingKey);
+                await bus.PubSub.PublishAsync(mail, MailDeliveryConstants.SendMailRoutingKey);
             }
             catch (Exception ex)
             {
@@ -170,13 +163,11 @@ namespace Fanex.MailDelivery.Client.Handlers
 
             try
             {
-                await bus.PublishAsync(jobMessage, MailDeliveryConstants.JobResultRoutingKey);
+                await bus.PubSub.PublishAsync(jobMessage, MailDeliveryConstants.JobResultRoutingKey);
             }
             catch (Exception ex)
             {
-                LogService.LogError($@"There is an error while reporting the status of the scheduled mail to Mail Station server. Retrying in {
-                                        waitingForRabbitMQInSeconds
-                                        } seconds...", jobMessage.Schedule, ex);
+                LogService.LogError($@"There is an error while reporting the status of the scheduled mail to Mail Station server. Retrying in {waitingForRabbitMQInSeconds} seconds...", jobMessage.Schedule, ex);
                 isFailed = true;
             }
 
@@ -196,7 +187,7 @@ namespace Fanex.MailDelivery.Client.Handlers
 
             try
             {
-                await bus.PublishAsync(schedule, runAfterUMJobSubscriptionId);
+                await bus.PubSub.PublishAsync(schedule, runAfterUMJobSubscriptionId);
             }
             catch (Exception ex)
             {
@@ -220,7 +211,7 @@ namespace Fanex.MailDelivery.Client.Handlers
 
             try
             {
-                await bus.PublishAsync(taskLog, MailDeliveryConstants.TaskLogRoutingKey);
+                await bus.PubSub.PublishAsync(taskLog, MailDeliveryConstants.TaskLogRoutingKey);
             }
             catch (Exception ex)
             {
@@ -237,9 +228,11 @@ namespace Fanex.MailDelivery.Client.Handlers
                 await PublishTaskLogAsync(taskLog, retryCount);
             }
         }
-        #endregion
+
+        #endregion PublishAsync
 
         #region RequestAsync
+
         public async Task<IList<Schedule>> GetSchedulesAsync()
         {
             var schedules = mailStationSetting.Schedules;
@@ -271,7 +264,7 @@ namespace Fanex.MailDelivery.Client.Handlers
 
             try
             {
-                result = await bus.RequestAsync<JobMessage, JobMessage>(jobMessage);
+                result = await bus.Rpc.RequestAsync<JobMessage, JobMessage>(jobMessage);
             }
             catch (Exception ex)
             {
@@ -296,7 +289,7 @@ namespace Fanex.MailDelivery.Client.Handlers
 
             try
             {
-                result = await bus.RequestAsync<GetMailTaskByIdRequest, MailTaskModel>(request);
+                result = await bus.Rpc.RequestAsync<GetMailTaskByIdRequest, MailTaskModel>(request);
             }
             catch (Exception ex)
             {
@@ -321,7 +314,7 @@ namespace Fanex.MailDelivery.Client.Handlers
 
             try
             {
-                result = await bus.RequestAsync<UMInfoModel, UMInfoModel>(new UMInfoModel());
+                result = await bus.Rpc.RequestAsync<UMInfoModel, UMInfoModel>(new UMInfoModel());
             }
             catch (Exception ex)
             {
@@ -346,7 +339,7 @@ namespace Fanex.MailDelivery.Client.Handlers
 
             try
             {
-                response = await bus.RequestAsync<GetScheduleListRequest, GetScheduleListResponse>(request);
+                response = await bus.Rpc.RequestAsync<GetScheduleListRequest, GetScheduleListResponse>(request);
             }
             catch (Exception ex)
             {
@@ -363,16 +356,18 @@ namespace Fanex.MailDelivery.Client.Handlers
 
             return response;
         }
-        #endregion
+
+        #endregion RequestAsync
 
         #region Subscribe
+
         public async Task SubscribeScheduleChangeAsync(int retryCount = 0)
         {
             bool isFailed = false;
 
             try
             {
-                bus.SubscribeAsync<Schedule>(
+                await bus.PubSub.SubscribeAsync<Schedule>(
                     GetSubscriptionIdKey(updateScheduleSubscriptionId),
                     schedule => jobHandler.UpdateScheduleAsync(schedule),
                     config => config.WithTopic(updateScheduleSubscriptionId));
@@ -399,7 +394,7 @@ namespace Fanex.MailDelivery.Client.Handlers
 
             try
             {
-                bus.SubscribeAsync<Schedule>(
+                await bus.PubSub.SubscribeAsync<Schedule>(
                     GetSubscriptionIdKey(runNowJobSubscriptionId),
                     schedule => RetryAllProcessAsync(schedule),
                     config => config.WithTopic(runNowJobSubscriptionId));
@@ -426,7 +421,7 @@ namespace Fanex.MailDelivery.Client.Handlers
 
             try
             {
-                bus.SubscribeAsync<Schedule>(
+                await bus.PubSub.SubscribeAsync<Schedule>(
                     GetSubscriptionIdKey(retryJobSubscriptionId),
                     schedule => RetryAllProcessAsync(schedule),
                     config => config.WithTopic(retryJobSubscriptionId));
@@ -453,7 +448,7 @@ namespace Fanex.MailDelivery.Client.Handlers
 
             try
             {
-                bus.SubscribeAsync<Schedule>(
+                await bus.PubSub.SubscribeAsync<Schedule>(
                     GetSubscriptionIdKey(runAfterUMJobSubscriptionId),
                     schedule => RunAfterUMJobAsync(schedule),
                     config => config.WithTopic(runAfterUMJobSubscriptionId).WithPrefetchCount(1));
@@ -473,9 +468,11 @@ namespace Fanex.MailDelivery.Client.Handlers
                 await SubscribeRunAfterUMJobAsync(retryCount);
             }
         }
-        #endregion
+
+        #endregion Subscribe
 
         #region Job tasks
+
         public async Task UpdateSchedulesAsync(IList<Schedule> schedules)
         {
             if (schedules != null)
@@ -486,7 +483,8 @@ namespace Fanex.MailDelivery.Client.Handlers
                 }
             }
         }
-        #endregion
+
+        #endregion Job tasks
 
         private async Task RunAfterUMJobAsync(Schedule schedule)
         {

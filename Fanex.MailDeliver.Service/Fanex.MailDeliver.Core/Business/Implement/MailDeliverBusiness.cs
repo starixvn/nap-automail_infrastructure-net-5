@@ -1,20 +1,19 @@
-﻿namespace Fanex.MailDeliver.Business.Implement
-{
-    using Fanex.Data;
-    using Fanex.Data.Repository;
-    using Fanex.MailDeliver.Business.Interface;
-    using Fanex.MailDeliver.Business.TableCaching;
-    using Fanex.MailDeliver.Core.Criterias;
-    using Fanex.MailDeliver.Core.Infrastructure.Logging;
-    using Fanex.MailDeliver.DataAccess.Interface;
-    using Fanex.MailDeliver.MailClient.Util;
-    using Fanex.MailDeliver.Model;
-    using Fanex.MailDeliver.Utility;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
+﻿using Fanex.Data;
+using Fanex.Data.Repository;
+using Fanex.MailDeliver.Core.Business.Interface;
+using Fanex.MailDeliver.Core.Business.TableCaching;
+using Fanex.MailDeliver.Core.Criterias;
+using Fanex.MailDeliver.Core.DataAccess.Interface;
+using Fanex.MailDeliver.Core.Infrastructure.Logging;
+using Fanex.MailDeliver.MailClient.Model;
+using Fanex.MailDeliver.Utility;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
+namespace Fanex.MailDeliver.Core.Business.Implement
+{
     public class MailDeliverBusiness : IMailDeliverBusiness
     {
         private readonly IMailDeliverDataAccess mailDeliverDataAccess;

@@ -7,29 +7,25 @@
 //   <change who="Ricky.Nguyen" date="2012.9.20">Created</change>
 // </history>
 
-using Newtonsoft.Json;
+using EASendMail;
+using EasyNetQ;
+using Fanex.MailDeliver.Core.Criterias;
+using Fanex.MailDeliver.Core.DataAccess.Implement;
+using Fanex.MailDeliver.Core.Infrastructure;
+using Fanex.MailDeliver.Core.Infrastructure.Logging;
+using Fanex.MailDeliver.Core.Infrastructure.Services;
+using Fanex.MailDeliver.MailClient.Model;
+using System;
+using System.Diagnostics.CodeAnalysis;
+using System.IO;
+using System.Linq;
+using System.Net.Mail;
+using System.Net.Mime;
+using System.Text;
+using System.Threading;
 
-namespace Fanex.MailDeliver.Business
+namespace Fanex.MailDeliver.Core.Business.Implement
 {
-    using EASendMail;
-    using Fanex.MailDeliver.Core.Business;
-    using Fanex.MailDeliver.Core.Business.Implement;
-    using Fanex.MailDeliver.Core.Criterias;
-    using Fanex.MailDeliver.Core.Infrastructure;
-    using Fanex.MailDeliver.Core.Infrastructure.Logging;
-    using Fanex.MailDeliver.Core.Infrastructure.Services;
-    using Fanex.MailDeliver.DataAccess.Implement;
-    using Fanex.MailDeliver.Model;
-    using System;
-    using System.Collections.Generic;
-    using System.Diagnostics.CodeAnalysis;
-    using System.IO;
-    using System.Linq;
-    using System.Net.Mail;
-    using System.Net.Mime;
-    using System.Text;
-    using System.Threading;
-
     public interface MailExtension
     {
         void SendMail(MailRecord mailSend, out string message);
@@ -169,7 +165,21 @@ namespace Fanex.MailDeliver.Business
 
                     System.Net.ServicePointManager.ServerCertificateValidationCallback += (s, cert, chain, sslPolicyErrors) => true;
 
-                    SafeSmtpClientSendMessage(client, msg, mailSend, mailSetting, mailFrom);
+                    var result = SafeSmtpClientSendMessage(client, msg, mailSend, mailSetting, mailFrom);
+                    if (!result)
+                    {
+                        Thread.Sleep(2000);
+                    }
+
+                    try
+                    {
+                        client.Dispose();
+                        msg.Dispose();
+                    }
+                    catch (Exception e)
+                    {
+                        LogExtension.LogError(e);
+                    }
                 }
             }
             catch (Exception ex)
@@ -178,16 +188,26 @@ namespace Fanex.MailDeliver.Business
             }
         }
 
-        private void SafeSmtpClientSendMessage(System.Net.Mail.SmtpClient smtpClient, MailMessage msg, MailRecord mailRecord, MailSetting mailSetting, string mailFrom)
+        private bool SafeSmtpClientSendMessage(System.Net.Mail.SmtpClient smtpClient, MailMessage msg, MailRecord mailRecord, MailSetting mailSetting, string mailFrom)
         {
+            var result = true;
             try
             {
-                CheckTimeCounter();
+                var now = DateTime.Now;
+                var lastTimeSendMail = AppConfigService.LastTimeSendMail;
+                var diff = now.Subtract(lastTimeSendMail).TotalMilliseconds;
+                if (diff < 1000)
+                {
+                    Thread.Sleep(2000);
+                }
+
                 smtpClient.Send(msg);
                 UpdateMailStatus(mailRecord, true, null);
+                AppConfigService.LastTimeSendMail = DateTime.Now;
             }
             catch (Exception e)
             {
+                LogExtension.LogError(e);
                 try
                 {
                     mailKitService.Send(mailRecord, mailSetting, mailFrom);
@@ -195,53 +215,13 @@ namespace Fanex.MailDeliver.Business
                 }
                 catch (Exception ex)
                 {
-                    LogExtension.LogMessage("Maik kit ex..");
+                    result = false;
                     LogExtension.LogError(ex);
-
-                    LogExtension.LogError(e);
                     UpdateMailStatus(mailRecord, false, e);
                 }
             }
-            finally
-            {
-                try
-                {
-                    smtpClient.Dispose();
-                    msg.Dispose();
-                }
-                catch (Exception e)
-                {
-                    LogExtension.LogError(e);
-                }
-            }
-        }
 
-        private static void CheckTimeCounter()
-        {
-            var now = DateTime.Now;
-            var timeToRemove = new List<DateTime>();
-
-            foreach (DateTime time in AppConfigService.TimeCounter)
-            {
-                var timeDiff = now.Subtract(time).Seconds;
-                if (timeDiff > ThresholdSecond)
-                {
-                    timeToRemove.Add(time);
-                }
-            }
-
-            foreach (var time in timeToRemove)
-            {
-                AppConfigService.TimeCounter.Remove(time);
-            }
-
-            AppConfigService.TimeCounter.Add(now);
-            var count = AppConfigService.TimeCounter.Count;
-            if (count > ThresholdCounter)
-            {
-                Thread.Sleep(2000);
-                LogExtension.LogMessage(string.Format($"Delay in 2 seconds, {JsonConvert.SerializeObject(AppConfigService.TimeCounter, Formatting.Indented)}"));
-            }
+            return result;
         }
 
         public void AddMailToQueueForSendingMail(MailRecord mailRecord)
@@ -251,14 +231,14 @@ namespace Fanex.MailDeliver.Business
                 try
                 {
                     LogExtension.LogMessage(string.Format("\r\nPublish Email into RabbitMQ: {0}", mailRecord.Subject));
-                    AppConfigService.Bus.Publish(mailRecord);
-                    if (AppConfigService.Config.IsUsingRabbitMq)
-                    {
-                        mailRecord.MailID = dataService.InsertMailRecord(mailRecord);
-                        mailRecord.IsReady = true;
-                        var outputMessage = string.Empty;
-                        SendMail(mailRecord, out outputMessage);
-                    }
+                    AppConfigService.Bus.PubSub.Publish(mailRecord);
+                    //if (!AppConfigService.Config.IsUsingRabbitMq)
+                    //{
+                    //    mailRecord.MailID = dataService.InsertMailRecord(mailRecord);
+                    //    mailRecord.IsReady = true;
+                    //    var outputMessage = string.Empty;
+                    //    SendMail(mailRecord, out outputMessage);
+                    //}
                 }
                 catch (Exception ex)
                 {

@@ -1,6 +1,6 @@
 ﻿using Fanex.MailDeliver.MailClient;
 using Fanex.MailDeliver.MailClient.API;
-using Fanex.MailDeliver.Model;
+using Fanex.MailDeliver.MailClient.Model;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -27,7 +27,7 @@ namespace AppNetFW
                 {
                     var mail = new MailRecord
                     {
-                        MailTo = "robert.tran@starixvn.com",
+                        MailTo = "robert.tran@starixsoft.com",
                         Title = "Robert Test at Local",
                         Subject = $"Robert Test at Local - {DateTime.Now}",
                         Body = "Robert Test at Local",

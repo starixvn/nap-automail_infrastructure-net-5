@@ -1,9 +1,9 @@
-﻿namespace Fanex.MailDeliver.Business.Interface
-{
-    using Fanex.MailDeliver.Model;
-    using System;
-    using System.Collections.Generic;
+﻿using Fanex.MailDeliver.MailClient.Model;
+using System;
+using System.Collections.Generic;
 
+namespace Fanex.MailDeliver.Core.Business.Interface
+{
     public interface IMailDeliverBusiness
     {
         byte[] SaveMailConfig(MailConfig mailConfig);

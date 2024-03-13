@@ -1,8 +1,10 @@
 ﻿using EasyNetQ;
 using Fanex.Data;
+using Fanex.Data.SqlServer;
 using Fanex.Logging;
 using Fanex.Logging.Sentry.RavenClient;
 using Fanex.MailDelivery.Core;
+using Fanex.MailDelivery.Core.Models;
 using Fanex.MailDelivery.Services.Repositories;
 using Fanex.MailDelivery.Services.Services;
 using Fanex.MailStation.Service.Jobs;
@@ -10,16 +12,30 @@ using Fanex.MailStation.Service.MessageBrokers;
 using Fanex.MailStation.Service.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json;
 using Quartz;
 using Quartz.Impl;
 using SharpRaven;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using ConnectionConfiguration = Fanex.Data.ConnectionConfiguration;
+using MailServiceAppSettings = Fanex.MailDeliver.MailClient.AppSettings;
 
 namespace Fanex.MailStation.Service
 {
     public static class ServiceCollectionExtensions
     {
+        public static void LoadConfiguration(this IServiceCollection services)
+        {
+            Directory.SetCurrentDirectory(AppDomain.CurrentDomain.BaseDirectory);
+            var text = File.ReadAllText("appsettings.json");
+            AppConfigService.AppConfig = JsonConvert.DeserializeObject<ConfigSettingModel>(text);
+            MailServiceAppSettings.AppMailId = AppConfigService.AppConfig!.AppMailId;
+            MailServiceAppSettings.AppMailAddress = AppConfigService.AppConfig.AppMailAddress;
+        }
+
         public static void SentryRegister(this IServiceCollection services)
         {
             var sentry = new SentryLogging(new SentryEngineOptions
@@ -28,11 +44,11 @@ namespace Fanex.MailStation.Service
             });
 
             LogManager
-               .SetDefaultLogCategory(AppConfigService.AppConfig.CategorySentryLog)
-               .Use(new List<ILogEngine>
-               {
+                .SetDefaultLogCategory(AppConfigService.AppConfig.CategorySentryLog)
+                .Use(new List<ILogEngine>
+                {
                     sentry
-               });
+                });
         }
 
         public static void InternalServiceRegister(this IServiceCollection services)
@@ -49,22 +65,21 @@ namespace Fanex.MailStation.Service
             OnebookUMInitializer.RegisterSimpleInjector(services);
         }
 
-        public static void FanexDataRegister(this IServiceCollection services, IConfiguration Configuration)
+        public static void FanexDataRegister(this IServiceCollection services, IConfiguration config)
         {
-            var connections = Configuration.GetSection("ConnectionStrings")
+            var connections = config.GetSection("ConnectionStrings")
                 .GetChildren()
-                .AsEnumerable()
-                .ToDictionary
-                (
-                     x => x.Key,
-                     y => y.Value
+                .ToDictionary(
+                    x => x.Key,
+                    y => new ConnectionConfiguration(y.Key, y.Value)
                 );
 
             DbSettingProviderManager
-             .StartNewSession()
-             .UseConnectionStrings(connections)
-             .UseDefaultDbSettingProvider(Configuration.GetSection("StoredProcedurePath").Value)
-             .Run();
+                .StartNewSession()
+                .Use(connections)
+                .WithSqlServer()
+                .UseDefaultDbSettingProvider(config.GetSection("StoredProcedurePath").Value)
+                .Run();
         }
 
         public static void StartMessageBroker(this IServiceCollection services)

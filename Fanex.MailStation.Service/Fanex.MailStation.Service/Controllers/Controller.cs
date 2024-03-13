@@ -7,9 +7,14 @@ namespace Fanex.MailStation.Service.Controllers
     public class Controller : ControllerBase
     {
         [HttpGet]
-        public string Index()
+        public ContentResult Index()
         {
-            return "OK";
+            var text = System.IO.File.ReadAllText("wwwroot/default.htm");
+            return new ContentResult
+            {
+                ContentType = "text/html",
+                Content = text
+            };
         }
     }
 }

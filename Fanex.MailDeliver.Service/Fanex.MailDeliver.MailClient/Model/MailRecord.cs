@@ -8,12 +8,12 @@
 //   <change who="Ricky.Nguyen" date="2012.9.24">Update MailStatus Enum for getting list MailRecord</change>
 // </history>
 
-namespace Fanex.MailDeliver.Model
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Net.Mail;
+using System;
+using System.Collections.Generic;
+using System.Net.Mail;
 
+namespace Fanex.MailDeliver.MailClient.Model
+{
     public enum MailStatus : int
     {
         /// <summary>

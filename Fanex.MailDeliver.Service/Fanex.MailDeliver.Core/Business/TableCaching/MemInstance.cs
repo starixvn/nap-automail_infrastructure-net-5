@@ -7,11 +7,11 @@
 //   <change who="Ricky.Nguyen" date="2012.9.20">Created</change>
 // </history>
 
-namespace Fanex.MailDeliver.Business.TableCaching
-{
-    using System;
-    using System.Reflection;
+using System;
+using System.Reflection;
 
+namespace Fanex.MailDeliver.Core.Business.TableCaching
+{
     /// <summary>
     /// Memory cache instance.
     /// </summary>

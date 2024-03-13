@@ -1,4 +1,4 @@
-﻿using Fanex.MailDeliver.Model;
+﻿using Fanex.MailDeliver.MailClient.Model;
 using MimeKit;
 using System.Collections.Generic;
 using System.IO;

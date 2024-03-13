@@ -1,4 +1,4 @@
-﻿using Fanex.MailDeliver.Model;
+﻿using Fanex.MailDeliver.MailClient.Model;
 using Newtonsoft.Json;
 using System;
 using System.IO;
@@ -27,8 +27,8 @@ namespace Fanex.MailService.Test
             using var mailService = new MailDeliver.MailClient.API.MailDeliver();
             var mail = new MailRecord
             {
-                MailTo = "robert.tran@starixvn.com",
-                MailBcc = "robert.tran@starixvn.com",
+                MailTo = "robert.tran@starixsoft.com",
+                MailBcc = "",
                 Title = "test mail automail ",
                 Subject = $"test mail automail  - {DateTime.Now}",
                 Body = BODY_HTML,
@@ -45,7 +45,7 @@ namespace Fanex.MailService.Test
         public void Test4_GetMail()
         {
             using var mailService = new MailDeliver.MailClient.API.MailDeliver();
-            var mailId = 1796370;
+            var mailId = 2594246;
             var mailRecord = mailService.GetMail(mailId);
         }
 

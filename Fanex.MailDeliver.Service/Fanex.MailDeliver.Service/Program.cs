@@ -1,21 +1,29 @@
-using Microsoft.AspNetCore.Hosting;
+using Fanex.MailDeliver.Service;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-namespace Fanex.MailDeliver.Service
-{
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            CreateHostBuilder(args).Build().Run();
-        }
+var builder = WebApplication.CreateBuilder(args);
 
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder =>
-                {
-                    webBuilder.UseUrls($"http://0.0.0.0:5000");
-                    webBuilder.UseStartup<Startup>();
-                });
-    }
+builder.Services.AddControllers();
+builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
+builder.Services.AddRazorPages();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+builder.Services.LoadConfiguration();
+builder.Services.SentryRegister();
+builder.Services.FanexDataRegister(builder.Configuration);
+builder.Services.InternalServiceRegister();
+builder.Services.SubcriberMailService();
+builder.Services.StartScheduler();
+
+var app = builder.Build();
+
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
+
+app.MapControllers();
+app.Run();

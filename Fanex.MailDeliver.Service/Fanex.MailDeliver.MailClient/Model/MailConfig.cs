@@ -9,7 +9,7 @@
 
 using System;
 
-namespace Fanex.MailDeliver.Model
+namespace Fanex.MailDeliver.MailClient.Model
 {
     [Serializable]
     public class MailConfig

@@ -18,7 +18,7 @@ namespace Fanex.MailService.Test
             try
             {
                 var testMailService = new TestCase();
-                for (int count = 0; count < 50; count++)
+                for (var count = 0; count < 1; count++)
                 {
                     testMailService.Test3_SendMail();
                 }

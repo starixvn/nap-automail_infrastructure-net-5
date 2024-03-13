@@ -10,6 +10,7 @@ namespace Fanex.MailDelivery.Client.Logging
     {
         public static void LogInfo(string logMessage)
         {
+            AppConfigService.AppConfig ??= new ConfigSettingModel { IsAllowWritingLog = true };
             if (AppConfigService.AppConfig.IsAllowWritingLog)
             {
                 Logger.Log.Info(logMessage);

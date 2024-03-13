@@ -1,6 +1,6 @@
 ﻿using EasyNetQ;
 using Fanex.MailDeliver.Core.Infrastructure.Models;
-using Fanex.MailDeliver.Model;
+using Fanex.MailDeliver.MailClient.Model;
 using System;
 using System.Collections.Generic;
 
@@ -17,5 +17,7 @@ namespace Fanex.MailDeliver.Core.Infrastructure.Services
         public static List<MailRecord> ListMailFailed { get; set; } = new List<MailRecord>();
 
         public static List<DateTime> TimeCounter = new List<DateTime>();
+
+        public static DateTime LastTimeSendMail { get; set; } = DateTime.Now;
     }
 }

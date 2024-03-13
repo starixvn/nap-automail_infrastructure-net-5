@@ -1,4 +1,4 @@
-﻿using Fanex.MailDeliver.Model;
+﻿using Fanex.MailDeliver.MailClient.Model;
 
 namespace Fanex.MailDelivery.Services.Models
 {

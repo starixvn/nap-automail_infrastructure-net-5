@@ -1,5 +1,5 @@
 ﻿using EasyNetQ;
-using Fanex.MailDeliver.Model;
+using Fanex.MailDeliver.MailClient.Model;
 using Fanex.Messages;
 using System;
 
