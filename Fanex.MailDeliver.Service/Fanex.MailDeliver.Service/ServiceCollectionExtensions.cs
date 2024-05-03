@@ -1,5 +1,9 @@
 ﻿using EasyNetQ;
+using Fanex.Data;
 using Fanex.Data.Repository;
+using Fanex.Data.SqlServer;
+using Fanex.Logging;
+using Fanex.Logging.Sentry.RavenClient;
 using Fanex.MailDeliver.Core.Business;
 using Fanex.MailDeliver.Core.Business.Implement;
 using Fanex.MailDeliver.Core.Business.Interface;
@@ -13,8 +17,14 @@ using Fanex.MailDeliver.Service.Service;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
+using Quartz;
+using Quartz.Impl;
+using SharpRaven;
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using ConnectionConfiguration = Fanex.Data.ConnectionConfiguration;
 
 namespace Fanex.MailDeliver.Service
 {
@@ -31,34 +41,34 @@ namespace Fanex.MailDeliver.Service
 
         public static void SentryRegister(this IServiceCollection services)
         {
-            //var sentry = new SentryLogging(new SentryEngineOptions
-            //{
-            //    Dsn = new Dsn(AppConfigService.Config.SentryClientKey)
-            //});
+            var sentry = new SentryLogging(new SentryEngineOptions
+            {
+                Dsn = new Dsn(AppConfigService.Config.SentryClientKey)
+            });
 
-            //LogManager
-            //    .SetDefaultLogCategory(AppConfigService.Config.CategorySentryLog)
-            //    .Use(new List<ILogEngine>
-            //    {
-            //        sentry
-            //    });
+            LogManager
+                .SetDefaultLogCategory(AppConfigService.Config.CategorySentryLog)
+                .Use(new List<ILogEngine>
+                {
+                    sentry
+                });
         }
 
         public static void FanexDataRegister(this IServiceCollection services, IConfiguration config)
         {
-            //var connections = config.GetSection("ConnectionStrings")
-            //    .GetChildren()
-            //    .ToDictionary(
-            //        x => x.Key,
-            //        y => new ConnectionConfiguration(y.Key, y.Value)
-            //    );
+            var connections = config.GetSection("ConnectionStrings")
+                .GetChildren()
+                .ToDictionary(
+                    x => x.Key,
+                    y => new ConnectionConfiguration(y.Key, y.Value)
+                );
 
-            //DbSettingProviderManager
-            //    .StartNewSession()
-            //    .Use(connections)
-            //    .WithSqlServer()
-            //    .UseDefaultDbSettingProvider(config.GetSection("StoredProcedurePath").Value)
-            //    .Run();
+            DbSettingProviderManager
+                .StartNewSession()
+                .Use(connections)
+                .WithSqlServer()
+                .UseDefaultDbSettingProvider(config.GetSection("StoredProcedurePath").Value)
+                .Run();
         }
 
         public static void InternalServiceRegister(this IServiceCollection services)
@@ -79,32 +89,32 @@ namespace Fanex.MailDeliver.Service
 
         public static void SubcriberMailService(this IServiceCollection services)
         {
-            //var serviceProvider = services.BuildServiceProvider();
-            //AppConfigService.Bus = serviceProvider.GetRequiredService<IBus>();
-            //AppConfigService.Bus.PubSub.Subscribe<MailRecord>("MailRecord", mail => HandlerMailRecord(mail, serviceProvider));
+            var serviceProvider = services.BuildServiceProvider();
+            AppConfigService.Bus = serviceProvider.GetRequiredService<IBus>();
+            AppConfigService.Bus.PubSub.Subscribe<MailRecord>("MailRecord", mail => HandlerMailRecord(mail, serviceProvider));
         }
 
         private static void HandlerMailRecord(MailRecord mailRecord, IServiceProvider serviceProvider)
         {
-            //var sendMailWorker = serviceProvider.GetRequiredService<SendMailWorker>();
-            //sendMailWorker.Run(mailRecord);
+            var sendMailWorker = serviceProvider.GetRequiredService<SendMailWorker>();
+            sendMailWorker.Run(mailRecord);
         }
 
         public static void StartScheduler(this IServiceCollection services)
         {
-            //var serviceProvider = services.BuildServiceProvider();
-            //var scheduler = StdSchedulerFactory.GetDefaultScheduler().Result;
-            //scheduler.JobFactory = new MailResendFactory(serviceProvider);
+            var serviceProvider = services.BuildServiceProvider();
+            var scheduler = StdSchedulerFactory.GetDefaultScheduler().Result;
+            scheduler.JobFactory = new MailResendFactory(serviceProvider);
 
-            //var job = JobBuilder.Create<MailResendJob>().Build();
-            //var trigger = TriggerBuilder.Create()
-            //    .WithIdentity("MailResend", "MailResend")
-            //    .StartNow()
-            //    .WithCronSchedule(AppConfigService.Config.CronScheduleResendMail)
-            //    .Build();
+            var job = JobBuilder.Create<MailResendJob>().Build();
+            var trigger = TriggerBuilder.Create()
+                .WithIdentity("MailResend", "MailResend")
+                .StartNow()
+                .WithCronSchedule(AppConfigService.Config.CronScheduleResendMail)
+                .Build();
 
-            //scheduler.ScheduleJob(job, trigger).Wait();
-            //scheduler.Start().Wait();
+            scheduler.ScheduleJob(job, trigger).Wait();
+            scheduler.Start().Wait();
         }
     }
 }
