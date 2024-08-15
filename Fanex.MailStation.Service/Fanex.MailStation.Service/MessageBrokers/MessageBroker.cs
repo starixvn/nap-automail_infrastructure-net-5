@@ -61,7 +61,7 @@ namespace Fanex.MailStation.Service.MessageBrokers
 
             try
             {
-                bus.PubSub.SubscribeAsync<Mail>(
+                bus.PubSub.Subscribe<Mail>(
                     MailDeliveryConstants.SendMailRoutingKey,
                      (mail) =>
                     {
@@ -119,7 +119,7 @@ namespace Fanex.MailStation.Service.MessageBrokers
 
             try
             {
-                bus.PubSub.SubscribeAsync<JobMessage>(
+                bus.PubSub.Subscribe<JobMessage>(
                     MailDeliveryConstants.JobResultRoutingKey,
                      (jobStatus) =>
                     {
@@ -149,7 +149,7 @@ namespace Fanex.MailStation.Service.MessageBrokers
 
             try
             {
-                bus.PubSub.SubscribeAsync<TaskLog>(
+                bus.PubSub.Subscribe<TaskLog>(
                     MailDeliveryConstants.TaskLogRoutingKey,
                     log =>
                     {
@@ -181,7 +181,7 @@ namespace Fanex.MailStation.Service.MessageBrokers
 
             try
             {
-                bus.Rpc.RespondAsync<GetScheduleListRequest, GetScheduleListResponse>(request => Task.FromResult(mailService.GetScheduleList(request)));
+                bus.Rpc.Respond<GetScheduleListRequest, GetScheduleListResponse>(request => Task.FromResult(mailService.GetScheduleList(request)));
 
                 logService.LogInfo($"Registered to response schedules to clients successfully");
             }
@@ -203,7 +203,7 @@ namespace Fanex.MailStation.Service.MessageBrokers
 
             try
             {
-                bus.Rpc.RespondAsync<JobMessage, JobMessage>(
+                bus.Rpc.Respond<JobMessage, JobMessage>(
                     jobMessage =>
                     {
                         jobMessage.Schedule.TaskId = mailService.AddMailTaskForRunningJob(jobMessage);
@@ -231,7 +231,7 @@ namespace Fanex.MailStation.Service.MessageBrokers
 
             try
             {
-                bus.Rpc.RespondAsync<UMInfoModel, UMInfoModel>(async (x) =>
+                bus.Rpc.Respond<UMInfoModel, UMInfoModel>(async (x) =>
                 {
                     var umInfo = cacheService.Get<UMInfoModel>(UMInfoCacheKey);
 
@@ -271,7 +271,7 @@ namespace Fanex.MailStation.Service.MessageBrokers
 
             try
             {
-                bus.Rpc.RespondAsync<GetMailTaskByIdRequest, MailTaskModel>(request => Task.FromResult(mailService.GetMailTaskById(request)));
+                bus.Rpc.Respond<GetMailTaskByIdRequest, MailTaskModel>(request => Task.FromResult(mailService.GetMailTaskById(request)));
 
                 logService.LogInfo($"Registered to response mail tasks to clients successfully");
             }
