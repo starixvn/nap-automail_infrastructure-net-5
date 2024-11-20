@@ -23,8 +23,6 @@ using SharpRaven;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using ConnectionConfiguration = Fanex.Data.ConnectionConfiguration;
 
 namespace Fanex.MailDeliver.Service
 {
@@ -56,19 +54,18 @@ namespace Fanex.MailDeliver.Service
 
         public static void FanexDataRegister(this IServiceCollection services, IConfiguration config)
         {
-            var connections = config.GetSection("ConnectionStrings")
-                .GetChildren()
-                .ToDictionary(
-                    x => x.Key,
-                    y => new ConnectionConfiguration(y.Key, y.Value)
-                );
-
-            DbSettingProviderManager
-                .StartNewSession()
-                .Use(connections)
-                .WithSqlServer()
-                .UseDefaultDbSettingProvider(config.GetSection("StoredProcedurePath").Value)
-                .Run();
+            try
+            {
+                DbSettingProviderManager.StartNewSession()
+                    .WithSqlServer(config)
+                    .UseDefaultDbSettingProvider("App_Data", true)
+                    .Run();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         }
 
         public static void InternalServiceRegister(this IServiceCollection services)
