@@ -1,17 +1,16 @@
 ﻿using System;
 
-namespace Fanex.MailDelivery.Core.Models
+namespace Fanex.MailDelivery.Core.Models;
+
+public class TaskLog
 {
-    public class TaskLog
-    {
-        public int TaskId { get; set; }
+    public int TaskId { get; set; }
 
-        public string Message { get; set; }
+    public string Message { get; set; }
 
-        public DateTime LogTime { get; set; }
+    public DateTime LogTime { get; set; }
 
-        public string StackTrace { get; set; }
+    public string StackTrace { get; set; }
 
-        public int Status { get; set; }
-    }
+    public int Status { get; set; }
 }

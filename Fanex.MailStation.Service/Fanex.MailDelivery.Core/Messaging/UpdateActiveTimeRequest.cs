@@ -1,7 +1,6 @@
-﻿namespace Fanex.MailDelivery.Core.Messaging
+﻿namespace Fanex.MailDelivery.Core.Messaging;
+
+public class UpdateActiveTimeRequest
 {
-    public class UpdateActiveTimeRequest
-    {
-        public string MailIds { get; set; }
-    }
+    public string MailIds { get; set; }
 }

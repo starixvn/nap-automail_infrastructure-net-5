@@ -6,47 +6,46 @@ using ONEbook.UM.Helpers;
 using ONEbook.UM.Services;
 using ONEbook.UM.Transport;
 
-namespace Fanex.MailStation.Service.Services
+namespace Fanex.MailStation.Service.Services;
+
+public static class OnebookUMInitializer
 {
-    public static class OnebookUMInitializer
+    public static void InitializeUMClientManager()
     {
-        public static void InitializeUMClientManager()
-        {
-            var umConfig = AppConfigService.AppConfig.UMConfig;
+        var umConfig = AppConfigService.AppConfig.UMConfig;
 
-            UMClientManager
-              .UseConfig(umConfig)
-              .UseCacheService(new UMCacheService(new CacheService()))
-              .UseRestClient(new UMRestClient(umConfig));
-        }
-
-        public static void AddOneBookUm(IServiceCollection services)
-        {
-            var umConfig = AppConfigService.AppConfig.UMConfig;
-            services.AddSingleton(umConfig);
-            services.AddSingleton<IHttpContextHelper, HttpContextHelper>();
-            services.AddSingleton<ICacheService>(new CacheService());
-            services.AddSingleton<IUMCacheService, UMCacheService>();
-            services.AddSingleton<IPHelper, IPHelperImpl>();
-            services.AddSingleton<IUMRestClient, UMRestClient>();
-            services.AddSingleton<IMaintenanceService, MaintenanceService>();
-        }
+        UMClientManager
+            .UseConfig(umConfig)
+            .UseCacheService(new UMCacheService(new CacheService()))
+            .UseRestClient(new UMRestClient(umConfig));
     }
 
-    public class HttpContextHelper : IHttpContextHelper
+    public static void AddOneBookUm(IServiceCollection services)
     {
-        public string GetSession(string key)
-        {
-            return string.Empty;
-        }
+        var umConfig = AppConfigService.AppConfig.UMConfig;
+        services.AddSingleton(umConfig);
+        services.AddSingleton<IHttpContextHelper, HttpContextHelper>();
+        services.AddSingleton<ICacheService>(new CacheService());
+        services.AddSingleton<IUMCacheService, UMCacheService>();
+        services.AddSingleton<IPHelper, IPHelperImpl>();
+        services.AddSingleton<IUMRestClient, UMRestClient>();
+        services.AddSingleton<IMaintenanceService, MaintenanceService>();
+    }
+}
 
-        public string GetValueFromQueryString(string queryKey)
-        {
-            return string.Empty;
-        }
+public class HttpContextHelper : IHttpContextHelper
+{
+    public string GetSession(string key)
+    {
+        return string.Empty;
+    }
 
-        public void SetSession(string key, string value)
-        {
-        }
+    public string GetValueFromQueryString(string queryKey)
+    {
+        return string.Empty;
+    }
+
+    public void SetSession(string key, string value)
+    {
     }
 }

@@ -1,21 +1,20 @@
 ﻿using Fanex.Data.Repository;
 
-namespace Fanex.MailDelivery.Services.Criteria
+namespace Fanex.MailDelivery.Services.Criteria;
+
+public class UpdateTaskRetryCounterCriteria : CriteriaBase
 {
-    public class UpdateTaskRetryCounterCriteria : CriteriaBase
+    public int TaskId { get; set; }
+
+    public int RetryCount { get; set; }
+
+    public override bool IsValid()
     {
-        public int TaskId { get; set; }
+        return true;
+    }
 
-        public int RetryCount { get; set; }
-
-        public override bool IsValid()
-        {
-            return true;
-        }
-
-        public override string GetSettingKey()
-        {
-            return "Mail_Core_UpdateRetry";
-        }
+    public override string GetSettingKey()
+    {
+        return "Mail_Core_UpdateRetry";
     }
 }

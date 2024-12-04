@@ -2,22 +2,14 @@
 using Quartz;
 using System.Threading.Tasks;
 
-namespace Fanex.MailStation.Service.Jobs
+namespace Fanex.MailStation.Service.Jobs;
+
+public class UpdateFailedForLongRunningTaskJob(MailService mailService) : IJob
 {
-    public class UpdateFailedForLongRunningTaskJob : IJob
+    public Task Execute(IJobExecutionContext context)
     {
-        private readonly MailService mailService;
+        mailService.UpdateFailedForLongRunningMailTask();
 
-        public UpdateFailedForLongRunningTaskJob(MailService mailService)
-        {
-            this.mailService = mailService;
-        }
-
-        public Task Execute(IJobExecutionContext context)
-        {
-            mailService.UpdateFailedForLongRunningMailTask();
-
-            return Task.CompletedTask;
-        }
+        return Task.CompletedTask;
     }
 }
