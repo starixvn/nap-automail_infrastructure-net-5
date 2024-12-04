@@ -1,21 +1,20 @@
 ﻿using Fanex.Data.Repository;
 
-namespace Fanex.MailDelivery.Services.Criteria
+namespace Fanex.MailDelivery.Services.Criteria;
+
+public class UpdateMailTaskMSiteMailIdCriteria : CriteriaBase
 {
-    public class UpdateMailTaskMSiteMailIdCriteria : CriteriaBase
+    public int TaskId { get; set; }
+
+    public int MSiteMailId { get; set; }
+
+    public override bool IsValid()
     {
-        public int TaskId { get; set; }
+        return true;
+    }
 
-        public int MSiteMailId { get; set; }
-
-        public override bool IsValid()
-        {
-            return true;
-        }
-
-        public override string GetSettingKey()
-        {
-            return "Mail_Core_UpdateMailTaskMSiteMailID";
-        }
+    public override string GetSettingKey()
+    {
+        return "Mail_Core_UpdateMailTaskMSiteMailID";
     }
 }

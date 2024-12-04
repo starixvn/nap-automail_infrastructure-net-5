@@ -3,26 +3,18 @@ using Quartz;
 using Quartz.Spi;
 using System;
 
-namespace Fanex.MailStation.Service.Jobs
+namespace Fanex.MailStation.Service.Jobs;
+
+public class UpdateFailedForLongRunningTaskJobFactory(IServiceProvider serviceProvider) : IJobFactory
 {
-    public class UpdateFailedForLongRunningTaskJobFactory : IJobFactory
+    public IJob NewJob(TriggerFiredBundle bundle, IScheduler scheduler)
     {
-        private readonly IServiceProvider serviceProvider;
+        return serviceProvider.GetService<UpdateFailedForLongRunningTaskJob>();
+    }
 
-        public UpdateFailedForLongRunningTaskJobFactory(IServiceProvider serviceProvider)
-        {
-            this.serviceProvider = serviceProvider;
-        }
-
-        public IJob NewJob(TriggerFiredBundle bundle, IScheduler scheduler)
-        {
-            return serviceProvider.GetService<UpdateFailedForLongRunningTaskJob>();
-        }
-
-        public void ReturnJob(IJob job)
-        {
-            var disposable = job as IDisposable;
-            disposable?.Dispose();
-        }
+    public void ReturnJob(IJob job)
+    {
+        var disposable = job as IDisposable;
+        disposable?.Dispose();
     }
 }

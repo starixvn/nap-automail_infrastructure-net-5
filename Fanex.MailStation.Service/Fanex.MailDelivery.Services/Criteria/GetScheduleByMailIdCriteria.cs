@@ -1,19 +1,18 @@
-﻿using Fanex.Data.Repository;
+﻿namespace Fanex.MailDelivery.Services.Criteria;
 
-namespace Fanex.MailDelivery.Services.Criteria.Job
+using Data.Repository;
+
+public class GetScheduleByMailIdCriteria : CriteriaBase
 {
-    public class GetScheduleByMailIdCriteria : CriteriaBase
+    public int MailId { get; set; }
+
+    public override bool IsValid()
     {
-        public int MailId { get; set; }
+        return true;
+    }
 
-        public override bool IsValid()
-        {
-            return true;
-        }
-
-        public override string GetSettingKey()
-        {
-            return "Mail_MailManagement_GetScheduleByMailId";
-        }
+    public override string GetSettingKey()
+    {
+        return "Mail_MailManagement_GetScheduleByMailId";
     }
 }

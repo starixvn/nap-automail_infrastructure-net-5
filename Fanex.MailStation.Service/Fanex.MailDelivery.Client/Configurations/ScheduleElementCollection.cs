@@ -1,21 +1,20 @@
-﻿namespace Fanex.MailDelivery.Client.Configurations
+﻿namespace Fanex.MailDelivery.Client.Configurations;
+
+using System.Configuration;
+
+/// <summary>
+/// TODO: Update summary.
+/// </summary>
+[ConfigurationCollection(typeof(ScheduleElement), AddItemName = "Schedule")]
+public class ScheduleElementCollection : ConfigurationElementCollection
 {
-    using System.Configuration;
-
-    /// <summary>
-    /// TODO: Update summary.
-    /// </summary>
-    [ConfigurationCollection(typeof(ScheduleElement), AddItemName = "Schedule")]
-    public class ScheduleElementCollection : ConfigurationElementCollection
+    protected override ConfigurationElement CreateNewElement()
     {
-        protected override ConfigurationElement CreateNewElement()
-        {
-            return new ScheduleElement();
-        }
+        return new ScheduleElement();
+    }
 
-        protected override object GetElementKey(ConfigurationElement element)
-        {
-            return ((ScheduleElement)element).Id;
-        }
+    protected override object GetElementKey(ConfigurationElement element)
+    {
+        return ((ScheduleElement)element).Id;
     }
 }
