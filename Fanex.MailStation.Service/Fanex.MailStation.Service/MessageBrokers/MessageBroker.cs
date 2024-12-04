@@ -71,7 +71,7 @@ namespace Fanex.MailStation.Service.MessageBrokers
                     },
                     config => config.WithTopic(MailDeliveryConstants.SendMailRoutingKey));
 
-                logService.LogInfo($"Subcribed the queue with key {MailDeliveryConstants.SendMailRoutingKey} successfully");
+                logService.LogInfo($"Subscribed the queue with key {MailDeliveryConstants.SendMailRoutingKey} successfully");
             }
             catch (Exception ex)
             {
@@ -99,7 +99,7 @@ namespace Fanex.MailStation.Service.MessageBrokers
                     },
                     config => config.WithTopic(MailDeliveryConstants.ClientNotificationTopic));
 
-                logService.LogInfo($"Subcribed the queue with key {MailDeliveryConstants.ClientNotificationTopic} successfully");
+                logService.LogInfo($"Subscribed the queue with key {MailDeliveryConstants.ClientNotificationTopic} successfully");
             }
             catch (Exception ex)
             {
@@ -129,7 +129,7 @@ namespace Fanex.MailStation.Service.MessageBrokers
                     },
                     config => config.WithTopic(MailDeliveryConstants.JobResultRoutingKey));
 
-                logService.LogInfo($"Subcribed the queue with key {MailDeliveryConstants.JobResultRoutingKey} successfully");
+                logService.LogInfo($"Subscribed the queue with key {MailDeliveryConstants.JobResultRoutingKey} successfully");
             }
             catch (Exception ex)
             {
@@ -157,7 +157,7 @@ namespace Fanex.MailStation.Service.MessageBrokers
                     },
                     config => config.WithTopic(MailDeliveryConstants.TaskLogRoutingKey));
 
-                logService.LogInfo($"Subcribed the queue with key {MailDeliveryConstants.TaskLogRoutingKey} successfully");
+                logService.LogInfo($"Subscribed the queue with key {MailDeliveryConstants.TaskLogRoutingKey} successfully");
             }
             catch (Exception ex)
             {

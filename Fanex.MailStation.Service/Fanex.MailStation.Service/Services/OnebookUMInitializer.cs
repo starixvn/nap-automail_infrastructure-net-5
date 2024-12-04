@@ -20,7 +20,7 @@ namespace Fanex.MailStation.Service.Services
               .UseRestClient(new UMRestClient(umConfig));
         }
 
-        public static void RegisterSimpleInjector(IServiceCollection services)
+        public static void AddOneBookUm(IServiceCollection services)
         {
             var umConfig = AppConfigService.AppConfig.UMConfig;
             services.AddSingleton(umConfig);

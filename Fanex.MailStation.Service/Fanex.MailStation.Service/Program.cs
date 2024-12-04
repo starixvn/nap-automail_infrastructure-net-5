@@ -1,21 +1,22 @@
+using Fanex.Data.SqlServer;
+using Fanex.Logging.Sentry.RavenClient;
 using Fanex.MailStation.Service;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
 var builder = WebApplication.CreateBuilder(args);
+var configuration = builder.Configuration;
 
 builder.Services.AddControllers();
-builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
-builder.Services.AddRazorPages();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.LoadConfiguration();
-builder.Services.SentryRegister();
-builder.Services.FanexDataRegister(builder.Configuration);
+builder.Services.AddConfiguration();
+builder.Services.AddFanexLogSentry(configuration);
+builder.Services.AddFanexSql(configuration);
 builder.Services.InternalServiceRegister();
-builder.Services.StartMessageBroker();
-builder.Services.StartScheduler();
+builder.Services.AddMessageBroker();
+builder.Services.AddScheduler();
 
 var app = builder.Build();
 
@@ -26,4 +27,4 @@ if (app.Environment.IsDevelopment())
 }
 
 app.MapControllers();
-app.Run();
+await app.RunAsync();

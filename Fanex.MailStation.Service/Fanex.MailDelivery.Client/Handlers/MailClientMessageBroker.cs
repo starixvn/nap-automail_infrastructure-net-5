@@ -372,7 +372,7 @@ namespace Fanex.MailDelivery.Client.Handlers
                     schedule => jobHandler.UpdateScheduleAsync(schedule),
                     config => config.WithTopic(updateScheduleSubscriptionId));
 
-                LogService.LogInfo($"Subcribed the queue with key {updateScheduleSubscriptionId} successfully");
+                LogService.LogInfo($"Subscribed the queue with key {updateScheduleSubscriptionId} successfully");
             }
             catch (Exception ex)
             {
@@ -396,10 +396,10 @@ namespace Fanex.MailDelivery.Client.Handlers
             {
                 await bus.PubSub.SubscribeAsync<Schedule>(
                     GetSubscriptionIdKey(runNowJobSubscriptionId),
-                    schedule => RetryAllProcessAsync(schedule),
+                     async void (schedule) => await RetryAllProcessAsync(schedule),
                     config => config.WithTopic(runNowJobSubscriptionId));
 
-                LogService.LogInfo($"Subcribed the queue with key {runNowJobSubscriptionId} successfully");
+                LogService.LogInfo($"Subscribed the queue with key {runNowJobSubscriptionId} successfully");
             }
             catch (Exception ex)
             {
@@ -426,7 +426,7 @@ namespace Fanex.MailDelivery.Client.Handlers
                     schedule => RetryAllProcessAsync(schedule),
                     config => config.WithTopic(retryJobSubscriptionId));
 
-                LogService.LogInfo($"Subcribed the queue with key {retryJobSubscriptionId} successfully");
+                LogService.LogInfo($"Subscribed the queue with key {retryJobSubscriptionId} successfully");
             }
             catch (Exception ex)
             {
@@ -453,7 +453,7 @@ namespace Fanex.MailDelivery.Client.Handlers
                     schedule => RunAfterUMJobAsync(schedule),
                     config => config.WithTopic(runAfterUMJobSubscriptionId).WithPrefetchCount(1));
 
-                LogService.LogInfo($"Subcribed the queue with key {runAfterUMJobSubscriptionId} successfully");
+                LogService.LogInfo($"Subscribed the queue with key {runAfterUMJobSubscriptionId} successfully");
             }
             catch (Exception ex)
             {

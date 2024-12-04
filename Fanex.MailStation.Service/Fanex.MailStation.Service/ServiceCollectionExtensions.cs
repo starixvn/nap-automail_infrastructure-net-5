@@ -1,8 +1,4 @@
 ﻿using EasyNetQ;
-using Fanex.Data;
-using Fanex.Data.SqlServer;
-using Fanex.Logging;
-using Fanex.Logging.Sentry.RavenClient;
 using Fanex.MailDelivery.Core;
 using Fanex.MailDelivery.Core.Models;
 using Fanex.MailDelivery.Services.Repositories;
@@ -10,14 +6,11 @@ using Fanex.MailDelivery.Services.Services;
 using Fanex.MailStation.Service.Jobs;
 using Fanex.MailStation.Service.MessageBrokers;
 using Fanex.MailStation.Service.Services;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using Quartz;
 using Quartz.Impl;
-using SharpRaven;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using MailServiceAppSettings = Fanex.MailDeliver.MailClient.AppSettings;
 
@@ -25,28 +18,13 @@ namespace Fanex.MailStation.Service
 {
     public static class ServiceCollectionExtensions
     {
-        public static void LoadConfiguration(this IServiceCollection services)
+        public static void AddConfiguration(this IServiceCollection services)
         {
             Directory.SetCurrentDirectory(AppDomain.CurrentDomain.BaseDirectory);
             var text = File.ReadAllText("appsettings.json");
             AppConfigService.AppConfig = JsonConvert.DeserializeObject<ConfigSettingModel>(text);
             MailServiceAppSettings.AppMailId = AppConfigService.AppConfig!.AppMailId;
             MailServiceAppSettings.AppMailAddress = AppConfigService.AppConfig.AppMailAddress;
-        }
-
-        public static void SentryRegister(this IServiceCollection services)
-        {
-            var sentry = new SentryLogging(new SentryEngineOptions
-            {
-                Dsn = new Dsn(AppConfigService.AppConfig.SentryClientKey)
-            });
-
-            LogManager
-                .SetDefaultLogCategory(AppConfigService.AppConfig.CategorySentryLog)
-                .Use(new List<ILogEngine>
-                {
-                    sentry
-                });
         }
 
         public static void InternalServiceRegister(this IServiceCollection services)
@@ -60,32 +38,17 @@ namespace Fanex.MailStation.Service
             services.AddSingleton<IBus>(RabbitHutch.CreateBus(AppConfigService.AppConfig.RabbitMQConnectionString));
 
             OnebookUMInitializer.InitializeUMClientManager();
-            OnebookUMInitializer.RegisterSimpleInjector(services);
+            OnebookUMInitializer.AddOneBookUm(services);
         }
 
-        public static void FanexDataRegister(this IServiceCollection services, IConfiguration config)
-        {
-            try
-            {
-                DbSettingProviderManager.StartNewSession()
-                    .WithSqlServer(config)
-                    .UseDefaultDbSettingProvider("App_Data", true)
-                    .Run();
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                throw;
-            }
-        }
-
-        public static void StartMessageBroker(this IServiceCollection services)
+       
+        public static void AddMessageBroker(this IServiceCollection services)
         {
             var messageBroker = services.BuildServiceProvider().GetRequiredService<MessageBroker>();
             messageBroker.Start();
         }
 
-        public static void StartScheduler(this IServiceCollection services)
+        public static void AddScheduler(this IServiceCollection services)
         {
             var serviceProvider = services.BuildServiceProvider();
             var scheduler = StdSchedulerFactory.GetDefaultScheduler().Result;

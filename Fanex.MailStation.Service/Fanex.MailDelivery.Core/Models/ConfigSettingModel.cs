@@ -4,10 +4,6 @@ namespace Fanex.MailDelivery.Core.Models
 {
     public class ConfigSettingModel
     {
-        public string SentryClientKey { get; set; }
-
-        public string CategorySentryLog { get; set; }
-
         public UMClientConfiguration UMConfig { get; set; }
 
         public string AppMailId { get; set; }
