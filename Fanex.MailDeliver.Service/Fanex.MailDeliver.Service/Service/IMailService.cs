@@ -3,38 +3,37 @@ using Fanex.MailDeliver.MailClient.ParamModel;
 using System;
 using System.Collections.Generic;
 
-namespace Fanex.MailDeliver.Service.Service
+namespace Fanex.MailDeliver.Service.Service;
+
+public interface IMailService
 {
-    public interface IMailService
-    {
-        void SendMail(MailRecord mailRecord);
+    void SendMail(MailRecord mailRecord);
 
-        byte[] StoreConfig(MailConfig mailConfig);
+    byte[] StoreConfig(MailConfig mailConfig);
 
-        byte[] GetMail(long mailID);
+    byte[] GetMail(long mailID);
 
-        IEnumerable<byte[]> GetListMail(GetListMailParam param);
+    IEnumerable<byte[]> GetListMail(GetListMailParam param);
 
-        Tuple<IEnumerable<byte[]>, int> GetListMailByDate(GetListMailByDateParam param);/*int appID, DateTime fromDate, DateTime toDate, ref int totalRows, int page, int counter, int status*/
+    Tuple<IEnumerable<byte[]>, int> GetListMailByDate(GetListMailByDateParam param);/*int appID, DateTime fromDate, DateTime toDate, ref int totalRows, int page, int counter, int status*/
 
-        byte[] GetConfig(int appID);
+    byte[] GetConfig(int appID);
 
-        byte[] StoreSetting(MailSetting mailSetting);
+    byte[] StoreSetting(MailSetting mailSetting);
 
-        byte[] GetSetting(int settingID);
+    byte[] GetSetting(int settingID);
 
-        void ReSendMail(long mailID);
+    void ReSendMail(long mailID);
 
-        byte[] StoreFunction(MailFunction mailFunction);
+    byte[] StoreFunction(MailFunction mailFunction);
 
-        byte[] GetFunction(int funcID);
+    byte[] GetFunction(int funcID);
 
-        IEnumerable<byte[]> GetListSetting();
+    IEnumerable<byte[]> GetListSetting();
 
-        IEnumerable<byte[]> GetListConfig(string serverIp);
+    IEnumerable<byte[]> GetListConfig(string serverIp);
 
-        IEnumerable<byte[]> GetListFuntion();
+    IEnumerable<byte[]> GetListFuntion();
 
-        IEnumerable<byte[]> GetListError(long mailID);
-    }
+    IEnumerable<byte[]> GetListError(long mailID);
 }

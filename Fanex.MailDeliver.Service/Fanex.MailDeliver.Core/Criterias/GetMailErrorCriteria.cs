@@ -9,23 +9,22 @@
 
 using Fanex.Data.Repository;
 
-namespace Fanex.MailDeliver.Core.Criterias
+namespace Fanex.MailDeliver.Core.Criterias;
+
+/// <summary>
+/// TODO: Update summary.
+/// </summary>
+public class GetMailErrorCriteria : CriteriaBase
 {
-    /// <summary>
-    /// TODO: Update summary.
-    /// </summary>
-    public class GetMailErrorCriteria : CriteriaBase
+    public long MailID { get; set; }
+
+    public override string GetSettingKey()
     {
-        public long MailID { get; set; }
+        return "MailRecorder_GetError";
+    }
 
-        public override string GetSettingKey()
-        {
-            return "MailRecorder_GetError";
-        }
-
-        public override bool IsValid()
-        {
-            return MailID > 0;
-        }
+    public override bool IsValid()
+    {
+        return MailID > 0;
     }
 }

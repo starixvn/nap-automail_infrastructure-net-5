@@ -1,60 +1,52 @@
 ﻿using Fanex.MailDeliver.Core.Business.Implement;
 using Fanex.MailDeliver.MailClient.Model;
 
-namespace Fanex.MailDeliver.Core.Business.Worker
+namespace Fanex.MailDeliver.Core.Business.Worker;
+
+using Fanex.MailDeliver.Core.Infrastructure.Logging;
+using Infrastructure.Services;
+using System;
+using System.Collections.Generic;
+
+public interface ResendMailWorker
 {
-    using Fanex.MailDeliver.Core.Infrastructure.Logging;
-    using Fanex.MailDeliver.Core.Infrastructure.Services;
-    using System;
-    using System.Collections.Generic;
+    void Run();
+}
 
-    public interface ResendMailWorker
+public class ResendMailWorkerImp(MailExtension mailExtension) : ResendMailWorker
+{
+    public void Run()
     {
-        void Run();
-    }
-
-    public class ResendMailWorkerImp : ResendMailWorker
-    {
-        private readonly MailExtension mailExtension;
-
-        public ResendMailWorkerImp(MailExtension mailExtension)
+        try
         {
-            this.mailExtension = mailExtension;
-        }
-
-        public void Run()
-        {
-            try
+            if (AppConfigService.ListMailFailed.Count > 0)
             {
-                if (AppConfigService.ListMailFailed.Count > 0)
+                List<MailRecord> listMailFailCopied = null;
+                lock (AppConfigService.ListMailLockObject)
                 {
-                    List<MailRecord> listMailFailCopied = null;
-                    lock (AppConfigService.ListMailLockObject)
-                    {
-                        listMailFailCopied = new List<MailRecord>(AppConfigService.ListMailFailed);
-                        AppConfigService.ListMailFailed.Clear();
-                    }
+                    listMailFailCopied = [..AppConfigService.ListMailFailed];
+                    AppConfigService.ListMailFailed.Clear();
+                }
 
-                    if (listMailFailCopied != null && listMailFailCopied.Count > 0)
+                if (listMailFailCopied != null && listMailFailCopied.Count > 0)
+                {
+                    for (var mailIndex = 0; mailIndex < listMailFailCopied.Count; mailIndex++)
                     {
-                        for (int mailIndex = 0; mailIndex < listMailFailCopied.Count; mailIndex++)
+                        var currentMail = listMailFailCopied[mailIndex];
+                        if (currentMail.ResentCount > 0)
                         {
-                            MailRecord currentMail = listMailFailCopied[mailIndex];
-                            if (currentMail.ResentCount > 0)
-                            {
-                                listMailFailCopied[mailIndex].ResentCount--;
-                                mailExtension.AddMailToQueueForSendingMail(currentMail);
-                            }
+                            listMailFailCopied[mailIndex].ResentCount--;
+                            mailExtension.AddMailToQueueForSendingMail(currentMail);
                         }
-
-                        listMailFailCopied = null;
                     }
+
+                    listMailFailCopied = null;
                 }
             }
-            catch (Exception ex)
-            {
-                LogExtension.LogError(ex);
-            }
+        }
+        catch (Exception ex)
+        {
+            LogExtension.LogError(ex);
         }
     }
 }

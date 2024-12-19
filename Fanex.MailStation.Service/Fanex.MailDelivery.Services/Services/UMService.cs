@@ -21,8 +21,8 @@ public class UMServiceImpl(
 
     public async Task<UMInfoModel> GetUMInfo(int retryCount = 0)
     {
-        UMInfoModel result = new UMInfoModel();
-        bool isFailed = false;
+        var result = new UMInfoModel();
+        var isFailed = false;
 
         try
         {
@@ -62,12 +62,12 @@ public class UMServiceImpl(
     public async Task WaitForUMOff()
     {
         var umInfo = await GetUMInfo();
-        bool isUM = umInfo != null && umInfo.IsUnderMaintenanceTime;
+        var isUM = umInfo != null && umInfo.IsUnderMaintenanceTime;
 
         if (isUM)
         {
             var afterUMTime = new DateTime(umInfo.To.Ticks, DateTimeKind.Utc).AddMinutes(1);
-            TimeSpan waitingTime = afterUMTime - DateTime.UtcNow;
+            var waitingTime = afterUMTime - DateTime.UtcNow;
 
             if (waitingTime.TotalSeconds > 0)
             {

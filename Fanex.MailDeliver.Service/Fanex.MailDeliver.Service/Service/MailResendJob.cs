@@ -2,21 +2,13 @@
 using Quartz;
 using System.Threading.Tasks;
 
-namespace Fanex.MailDeliver.Service.Service
+namespace Fanex.MailDeliver.Service.Service;
+
+public class MailResendJob(ResendMailWorker resendMailWorker) : IJob
 {
-    public class MailResendJob : IJob
+    public Task Execute(IJobExecutionContext context)
     {
-        private readonly ResendMailWorker resendMailWorker;
-
-        public MailResendJob(ResendMailWorker resendMailWorker)
-        {
-            this.resendMailWorker = resendMailWorker;
-        }
-
-        public Task Execute(IJobExecutionContext context)
-        {
-            resendMailWorker.Run();
-            return Task.CompletedTask;
-        }
+        resendMailWorker.Run();
+        return Task.CompletedTask;
     }
 }

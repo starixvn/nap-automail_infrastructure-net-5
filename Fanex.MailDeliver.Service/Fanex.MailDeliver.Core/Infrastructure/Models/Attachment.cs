@@ -1,13 +1,12 @@
 ﻿using System.Collections.Generic;
 
-namespace Fanex.MailDeliver.Core.Infrastructure.Models
+namespace Fanex.MailDeliver.Core.Infrastructure.Models;
+
+public class Attachment
 {
-    public class Attachment
-    {
-        public AttachmentStoreMode StoreMode { get; set; }
+    public AttachmentStoreMode StoreMode { get; set; }
 
-        public List<FileType> Extensions = new List<FileType>();
+    public List<FileType> Extensions = [];
 
-        public string Path { get; set; }
-    }
+    public string Path { get; set; }
 }

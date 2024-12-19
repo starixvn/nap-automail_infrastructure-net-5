@@ -99,11 +99,11 @@ public abstract class JobBase : IJob
 
     private async Task<bool> CanRunAsync(Schedule schedule)
     {
-        bool canRun = true;
+        var canRun = true;
 
         if (schedule.AutoRetry && schedule.TaskId > 0)
         {
-            MailTaskModel mailTask = await MailClientHandler.RequestMailTaskByIdAsync(new GetMailTaskByIdRequest { TaskId = schedule.TaskId });
+            var mailTask = await MailClientHandler.RequestMailTaskByIdAsync(new GetMailTaskByIdRequest { TaskId = schedule.TaskId });
 
             if (mailTask != null)
             {
@@ -113,7 +113,7 @@ public abstract class JobBase : IJob
 
                 if (!canRun)
                 {
-                    string message = $"The task status of the mail #{schedule.Id} ({schedule.Name}) is {((JobStatus)mailTask.Status).ToString()} => Stop auto-retry.";
+                    var message = $"The task status of the mail #{schedule.Id} ({schedule.Name}) is {((JobStatus)mailTask.Status).ToString()} => Stop auto-retry.";
 
                     LogService.LogInfo(message);
 
@@ -127,11 +127,11 @@ public abstract class JobBase : IJob
 
     private async Task GenerateMailAsync(IJobExecutionContext context, Schedule schedule)
     {
-        string message = $"Scheduled Mail #{schedule.Id} ({schedule.Name}) is running...";
+        var message = $"Scheduled Mail #{schedule.Id} ({schedule.Name}) is running...";
         logger.AppendLine($"> {message}");
         LogService.LogInfo(message);
 
-        JobMessage jobResult = new JobMessage
+        var jobResult = new JobMessage
         {
             JobStatus = JobStatus.Running,
             ScheduledTime = schedule.CurrentFireTime ?? context.ScheduledFireTimeUtc.GetValueOrDefault().DateTime.ToLocalTime(),
@@ -202,7 +202,7 @@ public abstract class JobBase : IJob
 
     private async Task<JobMessage> HandleJob(IJobExecutionContext context, Schedule schedule, JobMessage jobMessage)
     {
-        JobMessage jobResult = jobMessage;
+        var jobResult = jobMessage;
         var message = $"Running job to generate the mail #{schedule.Id} ({schedule.Name})";
 
         logger.AppendLine($"> {message}");

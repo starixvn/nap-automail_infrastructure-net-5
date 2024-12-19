@@ -3,28 +3,26 @@ using Fanex.Logging.Sentry.RavenClient;
 using Fanex.MailStation.Service;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
+using ONEbook.UM.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
+var services = builder.Services;
 var configuration = builder.Configuration;
 
-builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-builder.Services.AddConfiguration();
-builder.Services.AddFanexLogSentry(configuration);
-builder.Services.AddFanexSql(configuration);
-builder.Services.InternalServiceRegister();
-builder.Services.AddMessageBroker();
-builder.Services.AddScheduler();
+services.AddControllers();
+services.AddEndpointsApiExplorer();
+services.AddSwaggerGen();
+services.AddConfiguration();
+services.AddFanexLogSentry(configuration);
+services.AddOneBookUm(configuration);
+services.AddFanexSql(configuration);
+services.InternalServiceRegister();
+services.AddMessageBroker();
+services.AddScheduler();
 
 var app = builder.Build();
-
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.MapControllers();
 await app.RunAsync();

@@ -1,8 +1,7 @@
-﻿namespace Fanex.MailDeliver.Core.Infrastructure.Models
+﻿namespace Fanex.MailDeliver.Core.Infrastructure.Models;
+
+public enum AttachmentStoreMode
 {
-    public enum AttachmentStoreMode
-    {
-        Binary,
-        File
-    }
+    Binary,
+    File
 }

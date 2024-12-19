@@ -1,65 +1,64 @@
 ﻿using Fanex.MailDeliver.MailClient.Model;
 
-namespace Fanex.MailDeliver.MailClient.API
+namespace Fanex.MailDeliver.MailClient.API;
+
+using System;
+using System.Collections.Generic;
+
+public interface IMailDeliver
 {
-    using System;
-    using System.Collections.Generic;
+    void SendMail(MailRecord mail, bool canRetry = true);
 
-    public interface IMailDeliver
-    {
-        void SendMail(MailRecord mail, bool canRetry = true);
+    MailRecord GetMail(long mailId);
 
-        MailRecord GetMail(long mailId);
+    IEnumerable<MailRecord> GetListMail(int appId, DateTime mailDate, int page, int counter);
 
-        IEnumerable<MailRecord> GetListMail(int appId, DateTime mailDate, int page, int counter);
+    IEnumerable<MailRecord> GetListMailByDate(int appId, DateTime fromDate, DateTime toDate, ref int totalRows, int page, int counter, MailStatus status);
 
-        IEnumerable<MailRecord> GetListMailByDate(int appId, DateTime fromDate, DateTime toDate, ref int totalRows, int page, int counter, MailStatus status);
+    MailConfig StoreConfig(MailConfig config);
 
-        MailConfig StoreConfig(MailConfig config);
+    MailConfig GetConfig(int appId);
 
-        MailConfig GetConfig(int appId);
+    MailSetting StoreSetting(MailSetting mailSetting);
 
-        MailSetting StoreSetting(MailSetting mailSetting);
+    MailSetting GetSetting(int settingID);
 
-        MailSetting GetSetting(int settingID);
+    void ReSendMail(long mailID);
 
-        void ReSendMail(long mailID);
+    MailFunction StoreFunction(MailFunction func);
 
-        MailFunction StoreFunction(MailFunction func);
+    MailFunction GetFunction(int funcID);
 
-        MailFunction GetFunction(int funcID);
+    IEnumerable<MailSetting> GetListSetting();
 
-        IEnumerable<MailSetting> GetListSetting();
+    IEnumerable<MailConfig> GetListConfig(string serverIp);
 
-        IEnumerable<MailConfig> GetListConfig(string serverIp);
+    IEnumerable<MailFunction> GetListFuntion();
 
-        IEnumerable<MailFunction> GetListFuntion();
+    // Fluent interface
+    IMailDeliver CreateMail(string mailTitle = "");
 
-        // Fluent interface
-        IMailDeliver CreateMail(string mailTitle = "");
+    IMailDeliver AddSubject(string mailSubject = "");
 
-        IMailDeliver AddSubject(string mailSubject = "");
+    IMailDeliver To(string toMail = "");
 
-        IMailDeliver To(string toMail = "");
+    IMailDeliver AddSendMailApplication(int mailApplication = 0);
 
-        IMailDeliver AddSendMailApplication(int mailApplication = 0);
+    IMailDeliver AddSendMailFunction(int mailFunction = 0);
 
-        IMailDeliver AddSendMailFunction(int mailFunction = 0);
+    IMailDeliver AddBody(string mailBody = "");
 
-        IMailDeliver AddBody(string mailBody = "");
+    IMailDeliver AddTitle(string mailTitle = "");
 
-        IMailDeliver AddTitle(string mailTitle = "");
+    IMailDeliver ToCcMails(string toCCMails = "");
 
-        IMailDeliver ToCcMails(string toCCMails = "");
+    IMailDeliver ToBccMails(string toBccMails = "");
 
-        IMailDeliver ToBccMails(string toBccMails = "");
+    IMailDeliver AddAttachments(List<MailAttachment> mailAttachments);
 
-        IMailDeliver AddAttachments(List<MailAttachment> mailAttachments);
+    IMailDeliver AddAlternativeViews(List<MailLinkedResource> mailAlternativeViews);
 
-        IMailDeliver AddAlternativeViews(List<MailLinkedResource> mailAlternativeViews);
+    IMailDeliver SendMail(bool canRetry = true);
 
-        IMailDeliver SendMail(bool canRetry = true);
-
-        IEnumerable<MailError> GetListError(long mailID);
-    }
+    IEnumerable<MailError> GetListError(long mailID);
 }

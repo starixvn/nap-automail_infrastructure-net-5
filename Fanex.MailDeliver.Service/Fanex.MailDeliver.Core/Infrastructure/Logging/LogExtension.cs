@@ -7,64 +7,63 @@
 //   <change who="Ricky.Nguyen" date="2012.9.20">Created</change>
 // </history>
 
-namespace Fanex.MailDeliver.Core.Infrastructure.Logging
-{
-    using Fanex.Logging;
-    using Fanex.Logging.Extensions;
-    using Fanex.Logging.Extensions.Database;
-    using Fanex.MailDeliver.Core.Infrastructure.Services;
-    using System;
+namespace Fanex.MailDeliver.Core.Infrastructure.Logging;
 
-    public enum LoggingMode
+using Fanex.Logging;
+using Fanex.Logging.Extensions;
+using Fanex.Logging.Extensions.Database;
+using Services;
+using System;
+
+public enum LoggingMode
+{
+    Console,
+    Service
+}
+
+public static class LogExtension
+{
+    static LogExtension()
     {
-        Console,
-        Service
+        LoggingMode = LoggingMode.Service;
     }
 
-    public static class LogExtension
+    public static LoggingMode LoggingMode { get; set; }
+
+    public static void InitLogging(LoggingMode mode)
     {
-        static LogExtension()
+        LoggingMode = mode;
+    }
+
+    public static void LogError(Exception ex)
+    {
+        if (LoggingMode.Equals(LoggingMode.Console))
         {
-            LoggingMode = LoggingMode.Service;
+            Console.WriteLine($"Error: {ex}");
         }
-
-        public static LoggingMode LoggingMode { get; set; }
-
-        public static void InitLogging(LoggingMode mode)
+        else
         {
-            LoggingMode = mode;
+            var logMessage = new LogMessage(ex.Message)
+                .AddSection("Database Info", DatabaseInfoGetters.GetDbExceptionInfo(ex))
+                .AddSection("Server Info", CommonInfoGetters.GetServerInfo())
+                .AddSection("Exception Info", CommonInfoGetters.GetExceptionInfo(ex))
+                .ToString();
+
+            LogService.Error(logMessage);
         }
+    }
 
-        public static void LogError(Exception ex)
+    public static void LogMessage(string message)
+    {
+        if (LoggingMode.Equals(LoggingMode.Console))
         {
-            if (LoggingMode.Equals(LoggingMode.Console))
-            {
-                Console.WriteLine(string.Format("Error: {0}", ex.ToString()));
-            }
-            else
-            {
-                var logMessage = new LogMessage(ex.Message)
-                      .AddSection("Database Info", DatabaseInfoGetters.GetDbExceptionInfo(ex))
-                      .AddSection("Server Info", CommonInfoGetters.GetServerInfo())
-                      .AddSection("Exception Info", CommonInfoGetters.GetExceptionInfo(ex))
-                      .ToString();
-
-                LogService.Error(logMessage);
-            }
+            Console.WriteLine($"Message: {message}");
         }
-
-        public static void LogMessage(string message)
+        else
         {
-            if (LoggingMode.Equals(LoggingMode.Console))
+            if (AppConfigService.Config.IsAllowWritingLog)
             {
-                Console.WriteLine(string.Format("Message: {0}", message));
-            }
-            else
-            {
-                if (AppConfigService.Config.IsAllowWritingLog)
-                {
-                    LogService.Info(message);
-                }
+                LogService.Info(message);
             }
         }
     }

@@ -17,140 +17,132 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 
-namespace Fanex.MailDeliver.Core.DataAccess.Implement
+namespace Fanex.MailDeliver.Core.DataAccess.Implement;
+
+/// <summary>
+/// Storage Attachments.
+/// </summary>
+public class MailAttachmentManager
 {
+    private long _mailID;
+
     /// <summary>
-    /// Storage Attachments.
+    /// Save Attachment.
     /// </summary>
-    public class MailAttachmentManager
+    /// <param name="mailID">Mail record id.</param>
+    /// <param name="attachments">List attachment files.</param>
+    public void StoreMailAttachments(
+        long mailID,
+        IEnumerable<MailAttachment> attachments)
     {
-        private long _mailID;
-
-        /// <summary>
-        /// Save Attachment.
-        /// </summary>
-        /// <param name="mailID">Mail record id.</param>
-        /// <param name="attachments">List attachment files.</param>
-        public void StoreMailAttachments(
-            long mailID,
-            IEnumerable<MailAttachment> attachments)
+        try
         {
-            try
+            _mailID = mailID;
+            var mailInfo = AppConfigService.Config.MailSection;
+            switch (mailInfo.Attachment.StoreMode)
             {
-                _mailID = mailID;
-                var mailInfo = AppConfigService.Config.MailSection;
-                switch (mailInfo.Attachment.StoreMode)
-                {
-                    case AttachmentStoreMode.Binary:
-                        StoreMailAttchmentsToDatabase(mailID, attachments);
-                        break;
-
-                    default:
-                        break;
-                }
-            }
-            catch (Exception ex)
-            {
-                LogExtension.LogError(ex);
+                case AttachmentStoreMode.Binary:
+                    StoreMailAttchmentsToDatabase(mailID, attachments);
+                    break;
             }
         }
-
-        /// <summary>
-        /// Get attachment files.
-        /// </summary>
-        /// <param name="mailID">Mail record ID.</param>
-        /// <param name="attInfo">Attachment Info.</param>
-        /// <returns>List attachment files.</returns>
-        public IEnumerable<MailAttachment> GetMailAttachments(
-            long mailID,
-            string attInfo)
+        catch (Exception ex)
         {
-            try
-            {
-                _mailID = mailID;
-                var mailInfo = AppConfigService.Config.MailSection;
-                switch (mailInfo.Attachment.StoreMode)
-                {
-                    case AttachmentStoreMode.Binary:
-                        return GetMailAttachmentsFromDatabase(mailInfo, mailID);
+            LogExtension.LogError(ex);
+        }
+    }
 
-                    default:
-                        break;
-                }
-            }
-            catch (Exception ex)
+    /// <summary>
+    /// Get attachment files.
+    /// </summary>
+    /// <param name="mailID">Mail record ID.</param>
+    /// <param name="attInfo">Attachment Info.</param>
+    /// <returns>List attachment files.</returns>
+    public IEnumerable<MailAttachment> GetMailAttachments(
+        long mailID,
+        string attInfo)
+    {
+        try
+        {
+            _mailID = mailID;
+            var mailInfo = AppConfigService.Config.MailSection;
+            switch (mailInfo.Attachment.StoreMode)
             {
-                LogExtension.LogError(ex);
+                case AttachmentStoreMode.Binary:
+                    return GetMailAttachmentsFromDatabase(mailInfo, mailID);
             }
-
-            return null;
+        }
+        catch (Exception ex)
+        {
+            LogExtension.LogError(ex);
         }
 
-        /// <summary>
-        /// Store attachment to Database.
-        /// </summary>
-        /// <param name="mailID">Mail record id.</param>
-        /// <param name="attachments">List Files.</param>
-        private void StoreMailAttchmentsToDatabase(
-            long mailID,
-            IEnumerable<MailAttachment> attachments)
+        return null;
+    }
+
+    /// <summary>
+    /// Store attachment to Database.
+    /// </summary>
+    /// <param name="mailID">Mail record id.</param>
+    /// <param name="attachments">List Files.</param>
+    private void StoreMailAttchmentsToDatabase(
+        long mailID,
+        IEnumerable<MailAttachment> attachments)
+    {
+        if (mailID > 0 && attachments != null)
         {
-            if (mailID > 0 && attachments != null)
+            foreach (var attachment in attachments)
             {
-                foreach (var attachment in attachments)
+                if (attachment.Bytes.Length > 0)
                 {
-                    if (attachment.Bytes.Length > 0)
+                    var param = new Hashtable
                     {
-                        var param = new Hashtable
-                        {
-                            { "mailid", mailID },
-                            { "filename", attachment.FileName },
-                            { "contenttype", attachment.ContentType },
-                            { "content", attachment.Bytes }
-                        };
-                        using var objDb = ObjectDbFactory.CreateInstance("StoreMailAttachement", 0);
-                        objDb.ExecuteNonQuery(param);
-                    }
+                        { "mailid", mailID },
+                        { "filename", attachment.FileName },
+                        { "contenttype", attachment.ContentType },
+                        { "content", attachment.Bytes }
+                    };
+                    using var objDb = ObjectDbFactory.CreateInstance("StoreMailAttachement", 0);
+                    objDb.ExecuteNonQuery(param);
                 }
             }
         }
+    }
 
-        /// <summary>
-        /// Get List attachment files from Database.
-        /// </summary>
-        /// <param name="mailInfo">Mail information.</param>
-        /// <param name="mailID">Mail record id.</param>
-        /// <returns>List attachment mails.</returns>
-        private IEnumerable<MailAttachment> GetMailAttachmentsFromDatabase(
-            MailSection mailInfo,
-            long mailID)
+    /// <summary>
+    /// Get List attachment files from Database.
+    /// </summary>
+    /// <param name="mailInfo">Mail information.</param>
+    /// <param name="mailID">Mail record id.</param>
+    /// <returns>List attachment mails.</returns>
+    private IEnumerable<MailAttachment> GetMailAttachmentsFromDatabase(
+        MailSection mailInfo,
+        long mailID)
+    {
+        var attachments = new List<MailAttachment>();
+        if (mailID > 0)
         {
-            var attachments = new List<MailAttachment>();
-            if (mailID > 0)
+            var param = new Hashtable { { "mailid", mailID } };
+            using var objDb = ObjectDbFactory.CreateInstance("GetMailAttachement", 0);
+            var result = objDb.ExecuteDataSet(param);
+            if (result.Tables.Count > 0)
             {
-                var param = new Hashtable();
-                param.Add("mailid", mailID);
-                using var objDb = ObjectDbFactory.CreateInstance("GetMailAttachement", 0);
-                var result = objDb.ExecuteDataSet(param);
-                if (result.Tables.Count > 0)
+                var rows = result.Tables[0].Rows;
+                foreach (DataRow row in rows)
                 {
-                    var rows = result.Tables[0].Rows;
-                    foreach (DataRow row in rows)
+                    var item = new MailAttachment
                     {
-                        var item = new MailAttachment
-                        {
-                            MailID = _mailID,
-                            FileName = Convert.ToString(row["filename"]),
-                            ContentType = (FileExtentions)Enum.Parse(typeof(FileExtentions), Convert.ToString(row["contenttype"]), true)
-                        };
-                        byte[] binary = row["content"] as byte[];
-                        item.Bytes = binary;
-                        attachments.Add(item);
-                    }
+                        MailID = _mailID,
+                        FileName = Convert.ToString(row["filename"]),
+                        ContentType = (FileExtentions)Enum.Parse(typeof(FileExtentions), Convert.ToString(row["contenttype"]), true)
+                    };
+                    var binary = row["content"] as byte[];
+                    item.Bytes = binary;
+                    attachments.Add(item);
                 }
             }
-
-            return attachments;
         }
+
+        return attachments;
     }
 }

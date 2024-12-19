@@ -24,94 +24,93 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace Fanex.MailDeliver.Service
+namespace Fanex.MailDeliver.Service;
+
+public static class ServiceCollectionExtensions
 {
-    public static class ServiceCollectionExtensions
+    public static IServiceCollection Services { get; set; }
+
+    public static void LoadConfiguration(this IServiceCollection services)
     {
-        public static IServiceCollection Services { get; set; }
+        Directory.SetCurrentDirectory(AppDomain.CurrentDomain.BaseDirectory);
+        var text = File.ReadAllText("appsettings.json");
+        AppConfigService.Config = JsonConvert.DeserializeObject<ConfigSettingModel>(text);
+    }
 
-        public static void LoadConfiguration(this IServiceCollection services)
+    public static void SentryRegister(this IServiceCollection services)
+    {
+        var sentry = new SentryLogging(new SentryEngineOptions
         {
-            Directory.SetCurrentDirectory(AppDomain.CurrentDomain.BaseDirectory);
-            var text = File.ReadAllText("appsettings.json");
-            AppConfigService.Config = JsonConvert.DeserializeObject<ConfigSettingModel>(text);
-        }
+            Dsn = new Dsn(AppConfigService.Config.SentryClientKey)
+        });
 
-        public static void SentryRegister(this IServiceCollection services)
-        {
-            var sentry = new SentryLogging(new SentryEngineOptions
+        LogManager
+            .SetDefaultLogCategory(AppConfigService.Config.CategorySentryLog)
+            .Use(new List<ILogEngine>
             {
-                Dsn = new Dsn(AppConfigService.Config.SentryClientKey)
+                sentry
             });
+    }
 
-            LogManager
-                .SetDefaultLogCategory(AppConfigService.Config.CategorySentryLog)
-                .Use(new List<ILogEngine>
-                {
-                    sentry
-                });
-        }
-
-        public static void FanexDataRegister(this IServiceCollection services, IConfiguration config)
+    public static void FanexDataRegister(this IServiceCollection services, IConfiguration config)
+    {
+        try
         {
-            try
-            {
-                DbSettingProviderManager.StartNewSession()
-                    .WithSqlServer(config)
-                    .UseDefaultDbSettingProvider("App_Data", true)
-                    .Run();
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                throw;
-            }
+            DbSettingProviderManager.StartNewSession()
+                .WithSqlServer(config)
+                .UseDefaultDbSettingProvider("App_Data", true)
+                .Run();
         }
-
-        public static void InternalServiceRegister(this IServiceCollection services)
+        catch (Exception e)
         {
-            services.AddSingleton<IDynamicRepository, DynamicRepository>();
-            services.AddSingleton<IMailService, MailService>();
-            services.AddSingleton<SendMailWorker, SendMailWorkerImp>();
-            services.AddSingleton<ResendMailWorker, ResendMailWorkerImp>();
-            services.AddSingleton<IMailDeliverBusiness, MailDeliverBusiness>();
-            services.AddSingleton<DataService, DataServiceImp>();
-            services.AddSingleton<MailExtension, MailExtensionImp>();
-            services.AddSingleton<IMailDeliverDataAccess, MailDeliverDataAccess>();
-            services.AddSingleton<MailKitService, MailKitServiceImp>();
-            services.AddSingleton<MailResendJob>();
-
-            services.AddSingleton<IBus>(RabbitHutch.CreateBus(AppConfigService.Config.RabbitMQConnectionString));
+            Console.WriteLine(e);
+            throw;
         }
+    }
 
-        public static void SubcriberMailService(this IServiceCollection services)
-        {
-            var serviceProvider = services.BuildServiceProvider();
-            AppConfigService.Bus = serviceProvider.GetRequiredService<IBus>();
-            AppConfigService.Bus.PubSub.Subscribe<MailRecord>("MailRecord", mail => HandlerMailRecord(mail, serviceProvider));
-        }
+    public static void InternalServiceRegister(this IServiceCollection services)
+    {
+        services.AddSingleton<IDynamicRepository, DynamicRepository>();
+        services.AddSingleton<IMailService, MailService>();
+        services.AddSingleton<SendMailWorker, SendMailWorkerImp>();
+        services.AddSingleton<ResendMailWorker, ResendMailWorkerImp>();
+        services.AddSingleton<IMailDeliverBusiness, MailDeliverBusiness>();
+        services.AddSingleton<DataService, DataServiceImp>();
+        services.AddSingleton<MailExtension, MailExtensionImp>();
+        services.AddSingleton<IMailDeliverDataAccess, MailDeliverDataAccess>();
+        services.AddSingleton<MailKitService, MailKitServiceImp>();
+        services.AddSingleton<MailResendJob>();
 
-        private static void HandlerMailRecord(MailRecord mailRecord, IServiceProvider serviceProvider)
-        {
-            var sendMailWorker = serviceProvider.GetRequiredService<SendMailWorker>();
-            sendMailWorker.Run(mailRecord);
-        }
+        services.AddSingleton<IBus>(RabbitHutch.CreateBus(AppConfigService.Config.RabbitMQConnectionString));
+    }
 
-        public static void StartScheduler(this IServiceCollection services)
-        {
-            var serviceProvider = services.BuildServiceProvider();
-            var scheduler = StdSchedulerFactory.GetDefaultScheduler().Result;
-            scheduler.JobFactory = new MailResendFactory(serviceProvider);
+    public static void SubcriberMailService(this IServiceCollection services)
+    {
+        var serviceProvider = services.BuildServiceProvider();
+        AppConfigService.Bus = serviceProvider.GetRequiredService<IBus>();
+        AppConfigService.Bus.PubSub.Subscribe<MailRecord>("MailRecord", mail => HandlerMailRecord(mail, serviceProvider));
+    }
 
-            var job = JobBuilder.Create<MailResendJob>().Build();
-            var trigger = TriggerBuilder.Create()
-                .WithIdentity("MailResend", "MailResend")
-                .StartNow()
-                .WithCronSchedule(AppConfigService.Config.CronScheduleResendMail)
-                .Build();
+    private static void HandlerMailRecord(MailRecord mailRecord, IServiceProvider serviceProvider)
+    {
+        var sendMailWorker = serviceProvider.GetRequiredService<SendMailWorker>();
+        sendMailWorker.Run(mailRecord);
+    }
 
-            scheduler.ScheduleJob(job, trigger).Wait();
-            scheduler.Start().Wait();
-        }
+    public static void StartScheduler(this IServiceCollection services)
+    {
+        var serviceProvider = services.BuildServiceProvider();
+        var scheduler = StdSchedulerFactory.GetDefaultScheduler().Result;
+        scheduler.JobFactory = new MailResendFactory(serviceProvider);
+
+        var job = JobBuilder.Create<MailResendJob>().Build();
+        var trigger = TriggerBuilder.Create()
+            .WithIdentity("MailResend", "MailResend")
+            .StartNow()
+            .WithCronSchedule(AppConfigService.Config.CronScheduleResendMail)
+            .Build();
+
+        scheduler.ScheduleJob(job, trigger).Wait();
+        scheduler.Start().Wait();
     }
 }

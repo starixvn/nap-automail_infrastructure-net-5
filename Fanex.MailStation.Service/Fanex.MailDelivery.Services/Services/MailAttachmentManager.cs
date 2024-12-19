@@ -29,11 +29,13 @@ public class MailAttachmentManager
             {
                 if (attachment.Bytes.Length > 0)
                 {
-                    var param = new Hashtable();
-                    param.Add("mailid", mailID);
-                    param.Add("filename", attachment.FileName);
-                    param.Add("contenttype", attachment.ContentType);
-                    param.Add("content", attachment.Bytes);
+                    var param = new Hashtable
+                    {
+                        { "mailid", mailID },
+                        { "filename", attachment.FileName },
+                        { "contenttype", attachment.ContentType },
+                        { "content", attachment.Bytes }
+                    };
                     using var objDb = ObjectDbFactory.CreateInstance("StoreMailAttachement");
 
                     objDb.ExecuteNonQuery(param);
@@ -52,8 +54,7 @@ public class MailAttachmentManager
         var attachments = new List<MailAttachment>();
         if (mailID > 0)
         {
-            var param = new Hashtable();
-            param.Add("mailid", mailID);
+            var param = new Hashtable { { "mailid", mailID } };
             using var objDb = ObjectDbFactory.CreateInstance("GetMailAttachement");
             var result = objDb.ExecuteDataSet(param);
             if (result.Tables.Count > 0)
@@ -67,7 +68,7 @@ public class MailAttachmentManager
                         FileName = Convert.ToString(row["filename"]),
                         ContentType = (FileExtentions)Enum.Parse(typeof(FileExtentions), Convert.ToString(row["contenttype"]), true)
                     };
-                    byte[] binary = row["content"] as byte[];
+                    var binary = row["content"] as byte[];
                     item.Bytes = binary;
                     attachments.Add(item);
                 }

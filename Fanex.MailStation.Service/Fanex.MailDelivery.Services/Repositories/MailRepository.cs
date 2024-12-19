@@ -156,7 +156,7 @@ public class MailRepository : IMailRepository
             return 0;
         }
 
-        var currentAppId = mailRecord.Config != null ? mailRecord.Config.AppID : mailRecord.AppID;
+        var currentAppId = mailRecord.Config?.AppID ?? mailRecord.AppID;
         var currentApp = GetMailConfig(currentAppId);
         if (currentApp != null && currentApp.IsEncrypt)
         {
@@ -173,8 +173,7 @@ public class MailRepository : IMailRepository
             return null;
         }
 
-        Hashtable param = new Hashtable();
-        param.Add("appid", appID);
+        var param = new Hashtable { { "appid", appID } };
         using var objDb = ObjectDbFactory.CreateInstance("GetConfig");
 
         var resultDataset = objDb.ExecuteDataSet(param);
@@ -212,21 +211,21 @@ public class MailRepository : IMailRepository
 
     private long InsertMailRecord2(MailRecord mailItem)
     {
-        long mailID;
-
-        var param = new Hashtable();
-        param.Add("mailid", mailItem.MailID);
-        param.Add("appid", mailItem.Config != null ? mailItem.Config.AppID : mailItem.AppID);
-        param.Add("funcid", mailItem.Function != null ? mailItem.Function.FuncID : mailItem.FuncID);
-        param.Add("mailto", mailItem.IsEncrypt ? Cryptography.EncryptPassword(mailItem.MailTo ?? string.Empty) : mailItem.MailTo);
-        param.Add("mailcc", mailItem.IsEncrypt ? Cryptography.EncryptPassword(mailItem.MailCc ?? string.Empty) : mailItem.MailCc);
-        param.Add("mailbcc", mailItem.IsEncrypt ? Cryptography.EncryptPassword(mailItem.MailBcc ?? string.Empty) : mailItem.MailBcc);
-        param.Add("title", mailItem.Title);
-        param.Add("subject", mailItem.Subject);
-        param.Add("body", mailItem.IsEncrypt ? Cryptography.EncryptPassword(mailItem.Body ?? string.Empty) : mailItem.Body);
-        param.Add("maildate", DateTime.Now);
-        param.Add("attachments", string.Empty);
-        param.Add("isencrypt", mailItem.IsEncrypt);
+        var param = new Hashtable
+        {
+            { "mailid", mailItem.MailID },
+            { "appid", mailItem.Config?.AppID ?? mailItem.AppID },
+            { "funcid", mailItem.Function?.FuncID ?? mailItem.FuncID },
+            { "mailto", mailItem.IsEncrypt ? Cryptography.EncryptPassword(mailItem.MailTo ?? string.Empty) : mailItem.MailTo },
+            { "mailcc", mailItem.IsEncrypt ? Cryptography.EncryptPassword(mailItem.MailCc ?? string.Empty) : mailItem.MailCc },
+            { "mailbcc", mailItem.IsEncrypt ? Cryptography.EncryptPassword(mailItem.MailBcc ?? string.Empty) : mailItem.MailBcc },
+            { "title", mailItem.Title },
+            { "subject", mailItem.Subject },
+            { "body", mailItem.IsEncrypt ? Cryptography.EncryptPassword(mailItem.Body ?? string.Empty) : mailItem.Body },
+            { "maildate", DateTime.Now },
+            { "attachments", string.Empty },
+            { "isencrypt", mailItem.IsEncrypt }
+        };
 
         // store attachment in local file
         if (mailItem.Attachments != null)
@@ -238,7 +237,7 @@ public class MailRepository : IMailRepository
         using var objDb = ObjectDbFactory.CreateInstance("StoreMail");
 
         objDb.ExecuteNonQuery(param);
-        mailID = Math.Max(Convert.ToInt64(param["mailid"]), Convert.ToInt64(param["MAILID"]));
+        var mailID = Math.Max(Convert.ToInt64(param["mailid"]), Convert.ToInt64(param["MAILID"]));
         if (mailID > 0)
         {
             if (mailItem.Attachments != null)
@@ -259,8 +258,7 @@ public class MailRepository : IMailRepository
         long mailID,
         bool isSend = false)
     {
-        var param = new Hashtable();
-        param.Add("mailid", mailID);
+        var param = new Hashtable { { "mailid", mailID } };
         using var objDb = ObjectDbFactory.CreateInstance("GetMail");
 
         var result = objDb.ExecuteDataSet(param);
@@ -274,11 +272,11 @@ public class MailRepository : IMailRepository
 
                 // get attachment file
                 var attachments = new MailAttachmentManager().GetMailAttachments(mailID);
-                mailItem.Attachments = attachments == null ? null : attachments.ToList();
+                mailItem.Attachments = attachments?.ToList();
 
                 // get linked resource
                 var resources = new LinkedResourcesManager().GetLinkedResources(mailID);
-                mailItem.AlternateView = resources == null ? null : resources.ToList();
+                mailItem.AlternateView = resources?.ToList();
             }
 
             return mailItem;

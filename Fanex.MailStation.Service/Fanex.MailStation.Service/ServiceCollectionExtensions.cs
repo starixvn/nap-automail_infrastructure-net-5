@@ -5,7 +5,6 @@ using Fanex.MailDelivery.Services.Repositories;
 using Fanex.MailDelivery.Services.Services;
 using Fanex.MailStation.Service.Jobs;
 using Fanex.MailStation.Service.MessageBrokers;
-using Fanex.MailStation.Service.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using Quartz;
@@ -36,9 +35,6 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<UMService, UMServiceImpl>();
         services.AddSingleton<IMailRepository, MailRepository>();
         services.AddSingleton(RabbitHutch.CreateBus(AppConfigService.AppConfig.RabbitMQConnectionString));
-
-        OnebookUMInitializer.InitializeUMClientManager();
-        OnebookUMInitializer.AddOneBookUm(services);
     }
 
        

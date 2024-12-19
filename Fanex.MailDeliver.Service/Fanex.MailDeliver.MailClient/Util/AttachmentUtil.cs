@@ -9,33 +9,32 @@
 
 using Fanex.MailDeliver.MailClient.Model;
 
-namespace Fanex.MailDeliver.MailClient.Util
-{
-    using Fanex.MailDeliver.Utility;
+namespace Fanex.MailDeliver.MailClient.Util;
 
-    public class AttachmentUtil
+using Utility;
+
+public class AttachmentUtil
+{
+    public static void Format(ref MailRecord record)
     {
-        public static void Format(ref MailRecord record)
+        if (record.Attachments != null)
         {
-            if (record.Attachments != null)
+            foreach (var attachment in record.Attachments)
             {
-                foreach (var attachment in record.Attachments)
+                if (attachment.Bytes.Length == 0)
                 {
-                    if (attachment.Bytes.Length == 0)
-                    {
-                        attachment.Bytes = FileBinaryService.ConvertFileToBinary(attachment.FileName);
-                    }
+                    attachment.Bytes = FileBinaryService.ConvertFileToBinary(attachment.FileName);
                 }
             }
+        }
 
-            if (record.AlternateView != null)
+        if (record.AlternateView != null)
+        {
+            foreach (var resource in record.AlternateView)
             {
-                foreach (var resource in record.AlternateView)
+                if (resource.Bytes.Length == 0)
                 {
-                    if (resource.Bytes.Length == 0)
-                    {
-                        resource.Bytes = FileBinaryService.ConvertFileToBinary(resource.FileName);
-                    }
+                    resource.Bytes = FileBinaryService.ConvertFileToBinary(resource.FileName);
                 }
             }
         }

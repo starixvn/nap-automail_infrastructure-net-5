@@ -76,8 +76,8 @@ public class JobHandler(ISchedulerFactory schedulerFactory, MailStationSetting m
         {
             await StopAutoRetry(schedule);
 
-            IJobDetail job = GetRetryJob(schedule);
-            ITrigger trigger = GetRetryAllProcessTrigger(schedule);
+            var job = GetRetryJob(schedule);
+            var trigger = GetRetryAllProcessTrigger(schedule);
 
             await scheduler.ScheduleJob(job, trigger);
         }
@@ -103,8 +103,8 @@ public class JobHandler(ISchedulerFactory schedulerFactory, MailStationSetting m
         {
             await StopAutoRetry(schedule);
 
-            IJobDetail job = GetRetryJob(schedule);
-            ITrigger trigger = GetAutoRetryTrigger(schedule);
+            var job = GetRetryJob(schedule);
+            var trigger = GetAutoRetryTrigger(schedule);
 
             await scheduler.ScheduleJob(job, trigger);
         }
@@ -122,7 +122,7 @@ public class JobHandler(ISchedulerFactory schedulerFactory, MailStationSetting m
             if (oldTrigger != null)
             {
                 var oldSchedule = oldTrigger.JobDataMap[MailDeliveryConstants.ScheduleJobDataKey] as Schedule;
-                bool hasChange = oldSchedule == null || !oldSchedule.RepeatExpression.Equals(schedule.RepeatExpression, StringComparison.OrdinalIgnoreCase);
+                var hasChange = oldSchedule == null || !oldSchedule.RepeatExpression.Equals(schedule.RepeatExpression, StringComparison.OrdinalIgnoreCase);
 
                 if (!schedule.Active)
                 {
@@ -140,7 +140,7 @@ public class JobHandler(ISchedulerFactory schedulerFactory, MailStationSetting m
                 {
                     LogService.LogInfo($"Mail #{schedule.Id} ({schedule.Name}) is updated the new schedule ({schedule.RepeatExpression})");
 
-                    ITrigger newTrigger = GetTrigger(schedule);
+                    var newTrigger = GetTrigger(schedule);
 
                     await scheduler.RescheduleJob(triggerKey, newTrigger);
                 }
@@ -151,8 +151,8 @@ public class JobHandler(ISchedulerFactory schedulerFactory, MailStationSetting m
                 {
                     LogService.LogInfo($"Mail #{schedule.Id} ({schedule.Name}) is enabled and triggered at the schedule ({schedule.RepeatExpression})");
 
-                    IJobDetail job = GetJobDetail(schedule);
-                    ITrigger trigger = GetTrigger(schedule);
+                    var job = GetJobDetail(schedule);
+                    var trigger = GetTrigger(schedule);
 
                     await scheduler.ScheduleJob(job, trigger);
                 }
@@ -182,8 +182,8 @@ public class JobHandler(ISchedulerFactory schedulerFactory, MailStationSetting m
                 {
                     LogService.LogInfo($"Mail #{schedule.Id} ({schedule.Name}) is triggered by the schedule ({schedule.RepeatExpression})");
 
-                    IJobDetail job = GetJobDetail(schedule);
-                    ITrigger trigger = GetTrigger(schedule);
+                    var job = GetJobDetail(schedule);
+                    var trigger = GetTrigger(schedule);
 
                     // Unscheduled all redundant job.
                     await scheduler.UnscheduleJob(trigger.Key);
@@ -196,11 +196,11 @@ public class JobHandler(ISchedulerFactory schedulerFactory, MailStationSetting m
 
     public async Task StartUpdateActiveTimeJob()
     {
-        IJobDetail job = JobBuilder.Create<ClientNotificationJob>()
+        var job = JobBuilder.Create<ClientNotificationJob>()
             .WithIdentity(MailDeliveryConstants.ClientNotificationJobName)
             .Build();
 
-        ITrigger trigger = TriggerBuilder.Create()
+        var trigger = TriggerBuilder.Create()
             .WithIdentity(MailDeliveryConstants.ClientNotificationTriggerName)
             .StartNow()
             .WithSimpleSchedule(x => x.WithIntervalInSeconds(MailDeliveryConstants.ClientNotificationIntervalTimeInSecond).RepeatForever())
@@ -214,11 +214,11 @@ public class JobHandler(ISchedulerFactory schedulerFactory, MailStationSetting m
 
     public async Task StartUpdateSchedulesJob()
     {
-        IJobDetail job = JobBuilder.Create<UpdateScheduleJob>()
+        var job = JobBuilder.Create<UpdateScheduleJob>()
             .WithIdentity(UpdateScheduleJob.JobIdentity)
             .Build();
 
-        ITrigger trigger = TriggerBuilder.Create()
+        var trigger = TriggerBuilder.Create()
             .WithIdentity(UpdateScheduleJob.TriggerIdentity)
             .StartNow()
             .WithSimpleSchedule(x => x.WithIntervalInSeconds(mailStationSetting.UpdateSchedulesIntervalInSeconds).RepeatForever())
@@ -232,11 +232,11 @@ public class JobHandler(ISchedulerFactory schedulerFactory, MailStationSetting m
 
     private IJobDetail GetJobDetail(Schedule schedule)
     {
-        string jobName = string.Format(MailDeliveryConstants.AutoMailJobNameFormat, schedule.Id);
+        var jobName = string.Format(MailDeliveryConstants.AutoMailJobNameFormat, schedule.Id);
 
         // Define the job and tie it to our JobRequest class
-        Type jobType = mailStationSetting.GetJobType(schedule.Id);
-        IJobDetail jobDetail = JobBuilder.Create(jobType)
+        var jobType = mailStationSetting.GetJobType(schedule.Id);
+        var jobDetail = JobBuilder.Create(jobType)
             .WithIdentity(jobName, MailDeliveryConstants.MailCentralizedTriggerGroup)
             .Build();
 
@@ -245,16 +245,15 @@ public class JobHandler(ISchedulerFactory schedulerFactory, MailStationSetting m
 
     private JobDataMap GetJobDataMap(Schedule schedule)
     {
-        JobDataMap jobDataMap = new JobDataMap();
-        jobDataMap.Add(MailDeliveryConstants.ScheduleJobDataKey, schedule);
+        var jobDataMap = new JobDataMap { { MailDeliveryConstants.ScheduleJobDataKey, schedule } };
 
         var schedules = mailStationSetting.Schedules;
 
-        foreach (ScheduleSetting scheduleConfig in schedules)
+        foreach (var scheduleConfig in schedules)
         {
             if (schedule.Id == scheduleConfig.Id)
             {
-                foreach (JobInputDataSetting jobData in scheduleConfig.JobInputData)
+                foreach (var jobData in scheduleConfig.JobInputData)
                 {
                     jobDataMap.Add(jobData.Name, jobData.Value);
                 }
@@ -268,12 +267,12 @@ public class JobHandler(ISchedulerFactory schedulerFactory, MailStationSetting m
     {
         schedule.ConvertToServerTime(mailStationSetting.IsDevEnvironment());
 
-        string jobName = string.Format(MailDeliveryConstants.AutoMailJobNameFormat, schedule.Id + Guid.NewGuid().ToString());
+        var jobName = string.Format(MailDeliveryConstants.AutoMailJobNameFormat, schedule.Id + Guid.NewGuid().ToString());
 
         // Define the job and tie it to our JobRequest class
-        Type jobType = mailStationSetting.GetJobType(schedule.Id);
+        var jobType = mailStationSetting.GetJobType(schedule.Id);
 
-        IJobDetail job = JobBuilder.Create(jobType)
+        var job = JobBuilder.Create(jobType)
             .WithIdentity(jobName, MailDeliveryConstants.MailCentralizedTriggerGroup)
             .Build();
 
@@ -282,9 +281,9 @@ public class JobHandler(ISchedulerFactory schedulerFactory, MailStationSetting m
 
     private ITrigger GetRetryAllProcessTrigger(Schedule schedule)
     {
-        JobDataMap jobDataMap = GetJobDataMap(schedule);
+        var jobDataMap = GetJobDataMap(schedule);
 
-        ITrigger retryTrigger = TriggerBuilder.Create()
+        var retryTrigger = TriggerBuilder.Create()
             .StartNow()
             .UsingJobData(jobDataMap)
             .Build();
@@ -295,9 +294,9 @@ public class JobHandler(ISchedulerFactory schedulerFactory, MailStationSetting m
     private ITrigger GetAutoRetryTrigger(Schedule schedule)
     {
         schedule.ConvertToServerTime(mailStationSetting.IsDevEnvironment());
-        JobDataMap jobDataMap = GetJobDataMap(schedule);
+        var jobDataMap = GetJobDataMap(schedule);
 
-        ITrigger retryTrigger = TriggerBuilder.Create()
+        var retryTrigger = TriggerBuilder.Create()
             .WithIdentity(schedule.TaskId.ToString(), MailDeliveryConstants.MailCentralizedTriggerGroup)
             .StartAt(DateTimeOffset.Now.AddMinutes(schedule.RetryInterval))
             .UsingJobData(jobDataMap)
@@ -310,9 +309,9 @@ public class JobHandler(ISchedulerFactory schedulerFactory, MailStationSetting m
     {
         schedule.ConvertToServerTime(mailStationSetting.IsDevEnvironment());
 
-        JobDataMap jobData = GetJobDataMap(schedule);
+        var jobData = GetJobDataMap(schedule);
 
-        TriggerBuilder triggerBuilder = TriggerBuilder.Create();
+        var triggerBuilder = TriggerBuilder.Create();
 
         // Start Schedule
         if (IsScheduleStartNow(schedule))
@@ -330,7 +329,7 @@ public class JobHandler(ISchedulerFactory schedulerFactory, MailStationSetting m
             triggerBuilder.EndAt(new DateTimeOffset((DateTime)schedule.EndTime));
         }
 
-        ITrigger trigger = triggerBuilder
+        var trigger = triggerBuilder
             .WithIdentity(schedule.Id.ToString(), MailDeliveryConstants.MailCentralizedTriggerGroup)
             .WithCronSchedule(schedule.RepeatExpression)
             .UsingJobData(jobData)
@@ -341,9 +340,9 @@ public class JobHandler(ISchedulerFactory schedulerFactory, MailStationSetting m
 
     private static bool IsScheduleStartNow(Schedule schedule)
     {
-        DateTimeOffset startTimeOffSet = new DateTimeOffset(schedule.StartTime);
-        DateTimeOffset currentTimeOffSet = new DateTimeOffset(DateTime.Now);
-        TimeSpan timeGap = startTimeOffSet - currentTimeOffSet;
+        var startTimeOffSet = new DateTimeOffset(schedule.StartTime);
+        var currentTimeOffSet = new DateTimeOffset(DateTime.Now);
+        var timeGap = startTimeOffSet - currentTimeOffSet;
 
         return timeGap.TotalMilliseconds <= 0;
     }

@@ -12,191 +12,184 @@ using System;
 using System.Collections.Generic;
 using System.Net.Mail;
 
-namespace Fanex.MailDeliver.MailClient.Model
+namespace Fanex.MailDeliver.MailClient.Model;
+
+public enum MailStatus : int
 {
-    public enum MailStatus : int
+    /// <summary>
+    /// All Mail Type.
+    /// </summary>
+    All = 0,
+
+    /// <summary>
+    /// Success Mail Type.
+    /// </summary>
+    Success = 1,
+
+    /// <summary>
+    /// Fail Mail Type.
+    /// </summary>
+    Fail = -1
+}
+
+[Serializable]
+public class MailRecord
+{
+    private bool _isReady;
+
+    public MailRecord()
     {
-        /// <summary>
-        /// All Mail Type.
-        /// </summary>
-        All = 0,
-
-        /// <summary>
-        /// Success Mail Type.
-        /// </summary>
-        Success = 1,
-
-        /// <summary>
-        /// Fail Mail Type.
-        /// </summary>
-        Fail = -1
+        MailID = 0;
+        Config = new MailConfig();
+        Function = new MailFunction();
+        MailTo = string.Empty;
+        Title = string.Empty;
+        Body = string.Empty;
+        Subject = string.Empty;
+        MailTo = string.Empty;
+        MailCc = string.Empty;
+        MailBcc = string.Empty;
+        Attachments = [];
+        AlternateView = [];
+        SentFail = 0;
+        SentSuccess = 0;
+        CanRetry = true;
+        MailFrom = string.Empty;
+        IsEncrypt = false;
     }
 
-    [Serializable]
-    public class MailRecord
+    public long MailID
     {
-        private bool _isReady = false;
+        get;
+        set;
+    }
 
-        public MailRecord()
-        {
-            MailID = 0;
-            Config = new MailConfig();
-            Function = new MailFunction();
-            MailTo = string.Empty;
-            Title = string.Empty;
-            Body = string.Empty;
-            Subject = string.Empty;
-            MailTo = string.Empty;
-            MailCc = string.Empty;
-            MailBcc = string.Empty;
-            Attachments = new List<MailAttachment>();
-            AlternateView = new List<MailLinkedResource>();
-            SentFail = 0;
-            SentSuccess = 0;
-            CanRetry = true;
-            MailFrom = string.Empty;
-            IsEncrypt = false;
-        }
+    public MailConfig Config
+    {
+        get;
+        set;
+    }
 
-        public long MailID
-        {
-            get;
-            set;
-        }
+    public int AppID
+    {
+        get;
+        set;
+    }
 
-        public MailConfig Config
-        {
-            get;
-            set;
-        }
+    public int FuncID
+    {
+        get;
+        set;
+    }
 
-        public int AppID
-        {
-            get;
-            set;
-        }
+    public MailFunction Function
+    {
+        get;
+        set;
+    }
 
-        public int FuncID
-        {
-            get;
-            set;
-        }
+    public string MailTo
+    {
+        get;
+        set;
+    }
 
-        public MailFunction Function
-        {
-            get;
-            set;
-        }
+    public string Title
+    {
+        get;
+        set;
+    }
 
-        public string MailTo
-        {
-            get;
-            set;
-        }
+    public string Subject
+    {
+        get;
+        set;
+    }
 
-        public string Title
-        {
-            get;
-            set;
-        }
+    public string Body
+    {
+        get;
+        set;
+    }
 
-        public string Subject
-        {
-            get;
-            set;
-        }
+    public string MailCc
+    {
+        get;
+        set;
+    }
 
-        public string Body
-        {
-            get;
-            set;
-        }
+    public string MailFrom
+    {
+        get;
+        set;
+    }
 
-        public string MailCc
-        {
-            get;
-            set;
-        }
+    public string MailBcc
+    {
+        get;
+        set;
+    }
 
-        public string MailFrom
-        {
-            get;
-            set;
-        }
+    public string FileAttachments
+    {
+        get;
+        set;
+    }
 
-        public string MailBcc
-        {
-            get;
-            set;
-        }
+    public List<MailAttachment> Attachments
+    {
+        get;
+        set;
+    }
 
-        public string FileAttachments
-        {
-            get;
-            set;
-        }
+    public string MailDate
+    {
+        get;
+        set;
+    }
 
-        public List<MailAttachment> Attachments
-        {
-            get;
-            set;
-        }
+    public string MailUpdatedDate
+    {
+        get;
+        set;
+    }
 
-        public string MailDate
-        {
-            get;
-            set;
-        }
+    public List<MailLinkedResource> AlternateView
+    {
+        get;
+        set;
+    }
 
-        public string MailUpdatedDate
-        {
-            get;
-            set;
-        }
+    public bool IsReady
+    {
+        get => _isReady;
 
-        public List<MailLinkedResource> AlternateView
-        {
-            get;
-            set;
-        }
+        set => _isReady = value;
+    }
 
-        public bool IsReady
-        {
-            get
-            {
-                return _isReady;
-            }
+    public int CountSend
+    {
+        get;
+        set;
+    }
 
-            set
-            {
-                _isReady = value;
-            }
-        }
+    public int SentSuccess { get; set; }
 
-        public int CountSend
-        {
-            get;
-            set;
-        }
+    public int SentFail { get; set; }
 
-        public int SentSuccess { get; set; }
+    public bool CanRetry { get; set; }
 
-        public int SentFail { get; set; }
+    public int ResentCount { get; set; }
 
-        public bool CanRetry { get; set; }
+    public bool IsEncrypt
+    {
+        get;
+        set;
+    }
 
-        public int ResentCount { get; set; }
-
-        public bool IsEncrypt
-        {
-            get;
-            set;
-        }
-
-        public MailPriority Priority
-        {
-            get;
-            set;
-        }
+    public MailPriority Priority
+    {
+        get;
+        set;
     }
 }

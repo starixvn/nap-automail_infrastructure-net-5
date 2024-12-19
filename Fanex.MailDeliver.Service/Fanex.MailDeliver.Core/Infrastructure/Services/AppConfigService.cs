@@ -4,20 +4,19 @@ using Fanex.MailDeliver.MailClient.Model;
 using System;
 using System.Collections.Generic;
 
-namespace Fanex.MailDeliver.Core.Infrastructure.Services
+namespace Fanex.MailDeliver.Core.Infrastructure.Services;
+
+public static class AppConfigService
 {
-    public static class AppConfigService
-    {
-        public static ConfigSettingModel Config { get; set; }
+    public static ConfigSettingModel Config { get; set; }
 
-        public static IBus Bus { get; set; }
+    public static IBus Bus { get; set; }
 
-        public static object ListMailLockObject { get; set; } = new object();
+    public static object ListMailLockObject { get; set; } = new();
 
-        public static List<MailRecord> ListMailFailed { get; set; } = new List<MailRecord>();
+    public static List<MailRecord> ListMailFailed { get; set; } = [];
 
-        public static List<DateTime> TimeCounter = new List<DateTime>();
+    public static List<DateTime> TimeCounter = [];
 
-        public static DateTime LastTimeSendMail { get; set; } = DateTime.Now;
-    }
+    public static DateTime LastTimeSendMail { get; set; } = DateTime.Now;
 }
