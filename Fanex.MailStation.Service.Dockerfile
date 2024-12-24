@@ -1,4 +1,5 @@
-FROM hub.nexdev.net/base/dotnet/core/sdk:8.0-alpine AS builder
+FROM hub.nexdev.net/base/dotnet/core/sdk:9.0-alpine AS builder
+
 WORKDIR /src
 
 COPY ./Fanex.MailStation.Service/Fanex.MailDelivery.Core ./Fanex.MailDelivery.Core
@@ -16,8 +17,9 @@ COPY ./Fanex.MailStation.Service/Fanex.MailStation.Service .
 RUN --mount=type=cache,target=/root/.nuget/packages
 RUN dotnet publish -r linux-x64 --self-contained false -c Release -o /app
 
-FROM hub.nexdev.net/base/dotnet/core/aspnet:8.0-nap-mail-core
-
+# FROM hub.nexdev.net/base/dotnet/core/aspnet:8.0-nap-mail-core
+# FROM rebuild-baseimage/dotnetcore/aspnet:9.0-nap-mail-core
+FROM hub.nexdev.net/rebuild-baseimage/dotnetcore/aspnet:9.0-nap-mail-core
 
 # Don’t run as root
 RUN adduser --disabled-password \

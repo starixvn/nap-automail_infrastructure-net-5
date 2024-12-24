@@ -1,4 +1,5 @@
 ﻿using EasyNetQ;
+using Fanex.Caching;
 using Fanex.MailDelivery.Core;
 using Fanex.MailDelivery.Core.Models;
 using Fanex.MailDelivery.Services.Repositories;
@@ -31,13 +32,13 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<UpdateFailedForLongRunningTaskJob>();
         services.AddSingleton<MessageBroker, MessageBrokerImpl>();
         services.AddSingleton<MailService, MailServiceImpl>();
+        services.AddSingleton<ICacheService, CacheService>();
         services.AddSingleton<LogService, LogServiceImpl>();
         services.AddSingleton<UMService, UMServiceImpl>();
         services.AddSingleton<IMailRepository, MailRepository>();
         services.AddSingleton(RabbitHutch.CreateBus(AppConfigService.AppConfig.RabbitMQConnectionString));
     }
 
-       
     public static void AddMessageBroker(this IServiceCollection services)
     {
         var messageBroker = services.BuildServiceProvider().GetRequiredService<MessageBroker>();
