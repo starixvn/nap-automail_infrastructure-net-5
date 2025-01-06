@@ -39,6 +39,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Fanex.MailDelivery.Core\Fanex.MailDelivery.Core.csproj" />
     <ProjectReference Include="..\Fanex.MailDelivery.Services\Fanex.MailDelivery.Services.csproj" />
+    <ProjectReference Include="..\Fanex.SimpleMailDelivery\Fanex.SimpleMailDelivery.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,0 +1,6 @@
+@TestSite_HostAddress = http://localhost:5003
+
+GET {{TestSite_HostAddress}}/
+Accept: application/json
+
+###

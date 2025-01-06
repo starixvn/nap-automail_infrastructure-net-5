@@ -4,6 +4,7 @@ using Fanex.MailDelivery.Core;
 using Fanex.MailDelivery.Core.Models;
 using Fanex.MailDelivery.Services.Repositories;
 using Fanex.MailDelivery.Services.Services;
+using Fanex.MailStation.Service.Consumers;
 using Fanex.MailStation.Service.Jobs;
 using Fanex.MailStation.Service.MessageBrokers;
 using Microsoft.Extensions.DependencyInjection;
@@ -16,6 +17,11 @@ using MailServiceAppSettings = Fanex.MailDeliver.MailClient.AppSettings;
 
 namespace Fanex.MailStation.Service;
 
+using MassTransit;
+using Microsoft.Extensions.Configuration;
+using System.Collections.Generic;
+using System.Linq;
+
 public static class ServiceCollectionExtensions
 {
     public static void AddConfiguration(this IServiceCollection services)
@@ -27,7 +33,7 @@ public static class ServiceCollectionExtensions
         MailServiceAppSettings.AppMailAddress = AppConfigService.AppConfig.AppMailAddress;
     }
 
-    public static void InternalServiceRegister(this IServiceCollection services)
+    public static void AddInternalService(this IServiceCollection services)
     {
         services.AddSingleton<UpdateFailedForLongRunningTaskJob>();
         services.AddSingleton<MessageBroker, MessageBrokerImpl>();
@@ -43,6 +49,32 @@ public static class ServiceCollectionExtensions
     {
         var messageBroker = services.BuildServiceProvider().GetRequiredService<MessageBroker>();
         messageBroker.Start();
+    }
+
+    public static void AddMassTransitForMail(this IServiceCollection services, IConfiguration configuration)
+    {
+        var connectionString = configuration.GetValue("RabbitMQConnectionString", "");
+        var map = connectionString.Split(';')
+            .Select(p => p.Split('='))
+            .ToDictionary(p => p[0].ToLower(), p => p[1]);
+
+        var host = map.GetValueOrDefault("host", string.Empty).Replace(":5672", string.Empty);
+        var virtualHost = map.GetValueOrDefault("virtualhost", string.Empty);
+        var username = map.GetValueOrDefault("username", string.Empty);
+        var password = map.GetValueOrDefault("password", string.Empty);
+        services.AddMassTransit(busConfigurator =>
+        {
+            busConfigurator.AddConsumer<SimpleMailDeliveryConsumer, SimpleMailDeliveryConsumerDefinition>();
+            busConfigurator.UsingRabbitMq((context, busFactoryConfigurator) =>
+            {
+                busFactoryConfigurator.Host(host, virtualHost, h =>
+                {
+                    h.Username(username);
+                    h.Password(password);
+                });
+                busFactoryConfigurator.ConfigureEndpoints(context);
+            });
+        });
     }
 
     public static void AddScheduler(this IServiceCollection services)
