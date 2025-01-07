@@ -1,4 +1,6 @@
-﻿namespace Fanex.SimpleMailDelivery;
+﻿using RabbitMQ.Client;
+
+namespace Fanex.SimpleMailDelivery;
 
 using MassTransit;
 using Microsoft.Extensions.Configuration;
@@ -18,12 +20,15 @@ public static class IServiceCollectionExtensions
         {
             busConfigurator.UsingRabbitMq((context, busFactoryConfigurator) =>
             {
-                busFactoryConfigurator.Host(settingModel.Hosting, settingModel.VirtualHost,h =>
+                busFactoryConfigurator.Host(settingModel.Hosting, settingModel.VirtualHost, h =>
                 {
                     h.Username(settingModel.Username ?? string.Empty);
                     h.Password(settingModel.Password ?? string.Empty);
                 });
-                busFactoryConfigurator.Publish<Mail>(x=>x.ExchangeType="topic");
+                busFactoryConfigurator.Publish<Mail>(x =>
+                {
+                    x.ExchangeType = ExchangeType.Topic;
+                });
                 busFactoryConfigurator.ConfigureEndpoints(context);
             });
         });
@@ -47,7 +52,7 @@ public static class IServiceCollectionExtensions
     private static int ReadInt(IConfiguration configuration, string key)
     {
         var value = configuration.GetSection(key).Value ?? "0";
-        
+
         return Convert.ToInt32(value);
     }
 }

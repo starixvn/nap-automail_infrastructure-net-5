@@ -1,8 +1,9 @@
 ﻿namespace Fanex.MailStation.Service.Consumers;
 
+using Fanex.MailDelivery.Services.Services;
 using Logging.Extensions;
-using MailDelivery.Services.Services;
 using MassTransit;
+using RabbitMQ.Client;
 using SimpleMailDelivery.Models;
 using System;
 using System.Collections.Generic;
@@ -63,6 +64,11 @@ public class SimpleMailDeliveryConsumerDefinition : ConsumerDefinition<SimpleMai
 
     private const int FetchItemNumber = 1;
 
+    public SimpleMailDeliveryConsumerDefinition()
+    {
+        EndpointName = "simple-mail-delivery";
+    }
+
     protected override void ConfigureConsumer(IReceiveEndpointConfigurator endpointConfigurator, IConsumerConfigurator<SimpleMailDeliveryConsumer> consumerConfigurator,
         IRegistrationContext context)
     {
@@ -72,6 +78,7 @@ public class SimpleMailDeliveryConsumerDefinition : ConsumerDefinition<SimpleMai
         }
 
         rmq.PrefetchCount = FetchItemNumber;
+        rmq.ExchangeType = ExchangeType.Topic;
         rmq.DiscardSkippedMessages();
         rmq.DiscardFaultedMessages();
         rmq.Consumer<ProcessingFaultConsumerService>();

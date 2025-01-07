@@ -11,8 +11,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using Quartz;
 using Quartz.Impl;
+using RabbitMQ.Client;
 using System;
 using System.IO;
+using Mail = Fanex.SimpleMailDelivery.Models.Mail;
 using MailServiceAppSettings = Fanex.MailDeliver.MailClient.AppSettings;
 
 namespace Fanex.MailStation.Service;
@@ -71,6 +73,11 @@ public static class ServiceCollectionExtensions
                 {
                     h.Username(username);
                     h.Password(password);
+                });
+
+                busFactoryConfigurator.Publish<Mail>(x =>
+                {
+                    x.ExchangeType = ExchangeType.Topic;
                 });
                 busFactoryConfigurator.ConfigureEndpoints(context);
             });
