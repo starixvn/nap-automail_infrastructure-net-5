@@ -1,6 +1,7 @@
 ﻿namespace Fanex.SimpleMailDelivery;
 
 using MassTransit;
+using MassTransit.DependencyInjection;
 using Models;
 
 public interface MailClient
@@ -8,7 +9,7 @@ public interface MailClient
     Task SendFunctionMailAsync(Mail mail);
 }
 
-public class MailClientImp(SettingModel settingModel,  IPublishEndpoint publishEndpoint) : MailClient
+public class MailClientImp(SettingModel settingModel, Bind<MailClientBus, IPublishEndpoint> publishEndpoint) : MailClient
 {
     public async Task SendFunctionMailAsync(Mail mail)
     {
@@ -18,6 +19,6 @@ public class MailClientImp(SettingModel settingModel,  IPublishEndpoint publishE
 
         mail.SiteId = settingModel.SiteId;
 
-        await publishEndpoint.Publish(mail);
+        await publishEndpoint.Value.Publish(mail);
     }
 }

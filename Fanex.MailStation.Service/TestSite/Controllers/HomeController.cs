@@ -15,8 +15,9 @@ namespace TestSite.Controllers
         {
             var mail = new Mail
             {
-                Title = "Test",
-                Body = "Test",
+                Title = "Simple Test",
+                Body = "Simple Test",
+                Subject = "Simple Test",
                 MailingListId = 53
             };
             await mailClient.SendFunctionMailAsync(mail);

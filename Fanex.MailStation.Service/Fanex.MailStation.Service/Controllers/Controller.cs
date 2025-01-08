@@ -1,11 +1,7 @@
 ﻿using MassTransit;
 using Microsoft.AspNetCore.Mvc;
-using System;
 
 namespace Fanex.MailStation.Service.Controllers;
-
-using SimpleMailDelivery.Models;
-using System.Threading.Tasks;
 
 [ApiController]
 [Route("[controller]")]
@@ -21,27 +17,5 @@ public class Controller(IPublishEndpoint publishEndpoint) : ControllerBase
             ContentType = "text/html",
             Content = text
         };
-    }
-
-    [HttpGet]
-    [Route("Test")]
-    public async Task<string> Test()
-    {
-        var mail = new Mail
-        {
-            Title = "Test",
-            Body = "Test"
-        };
-        try
-        {
-            await publishEndpoint.Publish<Mail>(mail);
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-            throw;
-        }
-
-        return "OK";
     }
 }

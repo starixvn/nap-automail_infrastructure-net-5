@@ -1,11 +1,10 @@
-﻿using RabbitMQ.Client;
-
-namespace Fanex.SimpleMailDelivery;
+﻿namespace Fanex.SimpleMailDelivery;
 
 using MassTransit;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Models;
+using RabbitMQ.Client;
 
 public static class IServiceCollectionExtensions
 {
@@ -16,7 +15,7 @@ public static class IServiceCollectionExtensions
         services.AddSingleton(settingModel);
         services.AddTransient<MailClient, MailClientImp>();
 
-        services.AddMassTransit(busConfigurator =>
+        services.AddMassTransit<MailClientBus> (busConfigurator =>
         {
             busConfigurator.UsingRabbitMq((context, busFactoryConfigurator) =>
             {
@@ -45,7 +44,7 @@ public static class IServiceCollectionExtensions
             Hosting = configuration.GetSection("Fanex.SimpleMailDelivery:RabbitMQ:Hosting").Value,
             VirtualHost = configuration.GetSection("Fanex.SimpleMailDelivery:RabbitMQ:VirtualHost").Value,
             Username = configuration.GetSection("Fanex.SimpleMailDelivery:RabbitMQ:Username").Value,
-            Password = configuration.GetSection("Fanex.SimpleMailDelivery:RabbitMQ:Password").Value,
+            Password = configuration.GetSection("Fanex.SimpleMailDelivery:RabbitMQ:Password").Value
         };
     }
 
