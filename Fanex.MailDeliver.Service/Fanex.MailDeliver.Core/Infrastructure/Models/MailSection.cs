@@ -1,7 +1,6 @@
-﻿namespace Fanex.MailDeliver.Core.Infrastructure.Models
+﻿namespace Fanex.MailDeliver.Core.Infrastructure.Models;
+
+public class MailSection
 {
-    public class MailSection
-    {
-        public Attachment Attachment { get; set; }
-    }
+    public Attachment Attachment { get; set; }
 }

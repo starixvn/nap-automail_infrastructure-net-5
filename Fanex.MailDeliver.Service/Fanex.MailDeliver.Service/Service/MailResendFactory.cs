@@ -3,26 +3,18 @@ using Quartz;
 using Quartz.Spi;
 using System;
 
-namespace Fanex.MailDeliver.Service.Service
+namespace Fanex.MailDeliver.Service.Service;
+
+public class MailResendFactory(IServiceProvider serviceProvider) : IJobFactory
 {
-    public class MailResendFactory : IJobFactory
+    public IJob NewJob(TriggerFiredBundle bundle, IScheduler scheduler)
     {
-        private readonly IServiceProvider serviceProvider;
+        return serviceProvider.GetService<MailResendJob>();
+    }
 
-        public MailResendFactory(IServiceProvider serviceProvider)
-        {
-            this.serviceProvider = serviceProvider;
-        }
-
-        public IJob NewJob(TriggerFiredBundle bundle, IScheduler scheduler)
-        {
-            return serviceProvider.GetService<MailResendJob>();
-        }
-
-        public void ReturnJob(IJob job)
-        {
-            var disposable = job as IDisposable;
-            disposable?.Dispose();
-        }
+    public void ReturnJob(IJob job)
+    {
+        var disposable = job as IDisposable;
+        disposable?.Dispose();
     }
 }

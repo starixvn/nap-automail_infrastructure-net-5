@@ -9,23 +9,22 @@
 
 using System;
 
-namespace Fanex.MailDeliver.MailClient.Model
+namespace Fanex.MailDeliver.MailClient.Model;
+
+[Serializable]
+public class MailError
 {
-    [Serializable]
-    public class MailError
-    {
-        public long ErrorID { get; set; }
+    public long ErrorID { get; set; }
 
-        public long MailID { get; set; }
+    public long MailID { get; set; }
 
-        public int AppID { get; set; }
+    public int AppID { get; set; }
 
-        public string Message { get; set; }
+    public string Message { get; set; }
 
-        public string StackTrace { get; set; }
+    public string StackTrace { get; set; }
 
-        public string SettingName { get; set; }
+    public string SettingName { get; set; }
 
-        public DateTime ErrorTime { get; set; }
-    }
+    public DateTime ErrorTime { get; set; }
 }

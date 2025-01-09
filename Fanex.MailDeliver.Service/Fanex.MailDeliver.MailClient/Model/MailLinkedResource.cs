@@ -9,84 +9,65 @@
 
 using System;
 
-namespace Fanex.MailDeliver.MailClient.Model
+namespace Fanex.MailDeliver.MailClient.Model;
+
+[Serializable]
+public class MailLinkedResource
 {
-    [Serializable]
-    public class MailLinkedResource
+    private string __fileName = string.Empty;
+    private FileExtentions __imageType;
+    private string __contentID = string.Empty;
+
+    public MailLinkedResource()
     {
-        private string __fileName = string.Empty;
-        private FileExtentions __imageType;
-        private string __contentID = string.Empty;
+    }
 
-        public MailLinkedResource()
-        {
-        }
+    public MailLinkedResource(string fileName, FileExtentions imageType, string contentID)
+    {
+        __fileName = fileName;
+        __imageType = imageType;
+        __contentID = contentID;
+    }
 
-        public MailLinkedResource(string fileName, FileExtentions imageType, string contentID)
-        {
-            __fileName = fileName;
-            __imageType = imageType;
-            __contentID = contentID;
-        }
+    public MailLinkedResource(System.IO.MemoryStream streamContent, FileExtentions imageType, string contentID)
+    {
+        __imageType = imageType;
+        __contentID = contentID;
+        Bytes = streamContent.ToArray();
+    }
 
-        public MailLinkedResource(System.IO.MemoryStream streamContent, FileExtentions imageType, string contentID)
-        {
-            __imageType = imageType;
-            __contentID = contentID;
-            Bytes = streamContent.ToArray();
-        }
+    public byte[] Bytes { get; set; } = [];
 
-        public byte[] Bytes { get; set; } = { };
+    public int LinkedID
+    {
+        get;
+        set;
+    }
 
-        public int LinkedID
-        {
-            get;
-            set;
-        }
+    public long MailID
+    {
+        get;
+        set;
+    }
 
-        public long MailID
-        {
-            get;
-            set;
-        }
+    public string FileName
+    {
+        get => __fileName;
 
-        public string FileName
-        {
-            get
-            {
-                return __fileName;
-            }
+        set => __fileName = value;
+    }
 
-            set
-            {
-                __fileName = value;
-            }
-        }
+    public FileExtentions ImageType
+    {
+        get => __imageType;
 
-        public FileExtentions ImageType
-        {
-            get
-            {
-                return __imageType;
-            }
+        set => __imageType = value;
+    }
 
-            set
-            {
-                __imageType = value;
-            }
-        }
+    public string ContentCID
+    {
+        get => __contentID;
 
-        public string ContentCID
-        {
-            get
-            {
-                return __contentID;
-            }
-
-            set
-            {
-                __contentID = value;
-            }
-        }
+        set => __contentID = value;
     }
 }

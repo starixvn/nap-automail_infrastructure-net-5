@@ -2,47 +2,46 @@
 using System;
 using System.Collections.Generic;
 
-namespace Fanex.MailDeliver.Core.Business.Interface
+namespace Fanex.MailDeliver.Core.Business.Interface;
+
+public interface IMailDeliverBusiness
 {
-    public interface IMailDeliverBusiness
-    {
-        byte[] SaveMailConfig(MailConfig mailConfig);
+    byte[] SaveMailConfig(MailConfig mailConfig);
 
-        byte[] GetMailRecordByStream(long mailID);
+    byte[] GetMailRecordByStream(long mailID);
 
-        MailRecord GetMailRecord(long mailID, bool isSend = false);
+    MailRecord GetMailRecord(long mailID, bool isSend = false);
 
-        IEnumerable<byte[]> GetListMailRecordByDate(int appID, DateTime mailDate, int page, int counter);
+    IEnumerable<byte[]> GetListMailRecordByDate(int appID, DateTime mailDate, int page, int counter);
 
-        IEnumerable<byte[]> GetListMailRecordByDateRange(
-            int appID,
-            DateTime fromDate,
-            DateTime toDate,
-            ref int totalRows,
-            int page,
-            int counter,
-            int status);
+    IEnumerable<byte[]> GetListMailRecordByDateRange(
+        int appID,
+        DateTime fromDate,
+        DateTime toDate,
+        ref int totalRows,
+        int page,
+        int counter,
+        int status);
 
-        byte[] GetMailConfig(int appID);
+    byte[] GetMailConfig(int appID);
 
-        byte[] SaveMailSetting(MailSetting mailSetting);
+    byte[] SaveMailSetting(MailSetting mailSetting);
 
-        byte[] GetMailSetting(int settingID);
+    byte[] GetMailSetting(int settingID);
 
-        byte[] SaveMailFunction(MailFunction mailFunction);
+    byte[] SaveMailFunction(MailFunction mailFunction);
 
-        byte[] GetMailFunction(int funcID);
+    byte[] GetMailFunction(int funcID);
 
-        IEnumerable<byte[]> GetListMailSetting();
+    IEnumerable<byte[]> GetListMailSetting();
 
-        IEnumerable<byte[]> GetListMailConfig(string serverIp = "");
+    IEnumerable<byte[]> GetListMailConfig(string serverIp = "");
 
-        IEnumerable<byte[]> GetListMailFuntion();
+    IEnumerable<byte[]> GetListMailFuntion();
 
-        void SendMail(MailRecord record);
+    void SendMail(MailRecord record);
 
-        IEnumerable<byte[]> GetListMailError(long mailID);
+    IEnumerable<byte[]> GetListMailError(long mailID);
 
-        byte[] SaveMailError(byte[] buffer);
-    }
+    byte[] SaveMailError(byte[] buffer);
 }

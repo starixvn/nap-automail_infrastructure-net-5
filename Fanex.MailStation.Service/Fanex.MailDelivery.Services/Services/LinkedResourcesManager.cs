@@ -32,12 +32,14 @@ public class LinkedResourcesManager
         {
             if (resource.Bytes != null)
             {
-                var param = new Hashtable();
-                param.Add("mailid", mailID);
-                param.Add("filename", resource.FileName);
-                param.Add("imagetype", resource.ImageType);
-                param.Add("contentcid", resource.ContentCID);
-                param.Add("streamcontent", resource.Bytes);
+                var param = new Hashtable
+                {
+                    { "mailid", mailID },
+                    { "filename", resource.FileName },
+                    { "imagetype", resource.ImageType },
+                    { "contentcid", resource.ContentCID },
+                    { "streamcontent", resource.Bytes }
+                };
                 using var objDb = ObjectDbFactory.CreateInstance("StoreLinkedResource");
 
                 objDb.ExecuteNonQuery(param);
@@ -57,8 +59,7 @@ public class LinkedResourcesManager
         {
             using var objDb = ObjectDbFactory.CreateInstance("GetMailLinkedResource");
 
-            var param = new Hashtable();
-            param.Add("mailid", mailID);
+            var param = new Hashtable { { "mailid", mailID } };
             var result = objDb.ExecuteDataSet(param);
             if (result.Tables.Count > 0)
             {
@@ -74,7 +75,7 @@ public class LinkedResourcesManager
                         ImageType = (FileExtentions)Enum.Parse(typeof(FileExtentions), Convert.ToString(row["imagetype"]), true)
                     };
 
-                    byte[] binary = row["streamcontent"] as byte[];
+                    var binary = row["streamcontent"] as byte[];
 
                     item.Bytes = binary;
                     resources.Add(item);

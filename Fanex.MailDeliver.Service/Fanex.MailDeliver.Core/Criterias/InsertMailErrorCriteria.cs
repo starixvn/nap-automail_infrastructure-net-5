@@ -7,40 +7,39 @@
 //   <change who="Ricky.Nguyen" date="2013.11.11">Created</change>
 // </history>
 
-namespace Fanex.MailDeliver.Core.Criterias
+namespace Fanex.MailDeliver.Core.Criterias;
+
+using Data.Repository;
+using System;
+
+/// <summary>
+/// TODO: Update summary.
+/// </summary>
+public class InsertMailErrorCriteria : CriteriaBase
 {
-    using Fanex.Data.Repository;
-    using System;
+    public long MailID { get; set; }
 
-    /// <summary>
-    /// TODO: Update summary.
-    /// </summary>
-    public class InsertMailErrorCriteria : CriteriaBase
+    public int AppID { get; set; }
+
+    public string Message { get; set; }
+
+    public string StackTrace { get; set; }
+
+    public DateTime ErrorTime { get; set; }
+
+    public int ErrorId { get; set; }
+
+    public int ErrCode { get; set; }
+
+    public string ErrorMsg { get; set; }
+
+    public override string GetSettingKey()
     {
-        public long MailID { get; set; }
+        return "MailRecorder_InsError";
+    }
 
-        public int AppID { get; set; }
-
-        public string Message { get; set; }
-
-        public string StackTrace { get; set; }
-
-        public DateTime ErrorTime { get; set; }
-
-        public int ErrorId { get; set; }
-
-        public int ErrCode { get; set; }
-
-        public string ErrorMsg { get; set; }
-
-        public override string GetSettingKey()
-        {
-            return "MailRecorder_InsError";
-        }
-
-        public override bool IsValid()
-        {
-            return MailID > 0;
-        }
+    public override bool IsValid()
+    {
+        return MailID > 0;
     }
 }

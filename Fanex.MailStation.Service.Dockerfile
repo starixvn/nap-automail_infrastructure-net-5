@@ -1,23 +1,27 @@
-FROM hub.nexdev.net/base/dotnet/core/sdk:8.0-alpine AS builder
+ARG CI_REGISTRY_IMAGE
+FROM $CI_REGISTRY_IMAGE:builder as deps
+RUN mkdir -p /src/packages
+
+FROM hub.nexdev.net/base/dotnet/core/sdk:9.0-alpine AS builder
+
 WORKDIR /src
 
+COPY ./Fanex.MailStation.Service/Fanex.SimpleMailDelivery ./Fanex.SimpleMailDelivery
 COPY ./Fanex.MailStation.Service/Fanex.MailDelivery.Core ./Fanex.MailDelivery.Core
 COPY ./Fanex.MailStation.Service/Fanex.MailDelivery.Services ./Fanex.MailDelivery.Services
 COPY ./Fanex.MailStation.Service/Fanex.MailStation.Service/Fanex.MailStation.Service.csproj ./Fanex.MailStation.Service/Fanex.MailStation.Service.csproj
 
-RUN ls /src -l
 WORKDIR /src/Fanex.MailStation.Service
 RUN dotnet nuget add source https://nuget.nexdev.net/api/v2
-RUN --mount=type=cache,target=/root/.nuget/packages
-RUN dotnet restore -v n
+RUN dotnet restore -v n -r linux-x64 
 
 COPY ./Fanex.MailStation.Service/Fanex.MailStation.Service .
 
-RUN --mount=type=cache,target=/root/.nuget/packages
-RUN dotnet publish -r linux-x64 --self-contained false -c Release -o /app
+RUN dotnet publish -r linux-x64 --self-contained false -o /app 
 
-FROM hub.nexdev.net/base/dotnet/core/aspnet:8.0-nap-mail-core
-
+FROM hub.nexdev.net/base/dotnet/core/aspnet:9.0-nap-mail-core
+# FROM rebuild-baseimage/dotnetcore/aspnet:9.0-nap-mail-core
+FROM hub.nexdev.net/rebuild-baseimage/dotnetcore/aspnet:9.0-nap-mail-core
 
 # Don’t run as root
 RUN adduser --disabled-password \

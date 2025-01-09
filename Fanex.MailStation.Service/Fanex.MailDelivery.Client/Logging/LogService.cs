@@ -24,7 +24,7 @@ internal static class LogService
 
     public static void LogError(string message, Exception exception)
     {
-        string errorMessage = $"{(string.IsNullOrWhiteSpace(message) ? "Error:" : $"{message} -> ")} {exception.InnerException?.Message ?? exception.Message}";
+        var errorMessage = $"{(string.IsNullOrWhiteSpace(message) ? "Error:" : $"{message} -> ")} {exception.InnerException?.Message ?? exception.Message}";
 
         var logMessage = new LogMessage(errorMessage)
             .AddSection("Server Info", CommonInfoGetters.GetServerInfo())
@@ -38,7 +38,7 @@ internal static class LogService
     {
         if (schedule != null)
         {
-            string message = $"Schedule Mail #{schedule.Id} ({schedule.Name})";
+            var message = $"Schedule Mail #{schedule.Id} ({schedule.Name})";
 
             LogError(message, ex);
         }
@@ -50,7 +50,7 @@ internal static class LogService
 
     public static void LogError(string message, Schedule schedule, Exception ex)
     {
-        string errorMessage = schedule != null
+        var errorMessage = schedule != null
             ? $"Schedule Mail #{schedule.Id} ({schedule.Name}){Environment.NewLine}Error: {message}"
             : message;
 
@@ -59,7 +59,7 @@ internal static class LogService
 
     public static void LogError(string message, string mailIds, Exception ex)
     {
-        string errorMessage = !string.IsNullOrWhiteSpace(mailIds)
+        var errorMessage = !string.IsNullOrWhiteSpace(mailIds)
             ? $"Mails #{mailIds}{Environment.NewLine}Error: {message}"
             : message;
 

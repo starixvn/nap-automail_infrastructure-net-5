@@ -50,3 +50,4 @@ Fanex.AccountingReports.sln
 /package-lock.json
 .vs/**
 *.obj/**
+/.vs/

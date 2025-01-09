@@ -9,53 +9,52 @@
 
 using System;
 
-namespace Fanex.MailDeliver.MailClient.Model
+namespace Fanex.MailDeliver.MailClient.Model;
+
+[Serializable]
+public class MailConfig
 {
-    [Serializable]
-    public class MailConfig
+    public int AppID
     {
-        public int AppID
-        {
-            get;
-            set;
-        }
-
-        public string AppName
-        {
-            get;
-            set;
-        }
-
-        public string Description
-        {
-            get;
-            set;
-        }
-
-        public MailSetting Setting
-        {
-            get;
-            set;
-        }
-
-        public int SettingID
-        {
-            get;
-            set;
-        }
-
-        public string MailFrom
-        {
-            get;
-            set;
-        }
-
-        public bool IsEncrypt
-        {
-            get;
-            set;
-        }
-
-        public int UserId { get; set; }
+        get;
+        set;
     }
+
+    public string AppName
+    {
+        get;
+        set;
+    }
+
+    public string Description
+    {
+        get;
+        set;
+    }
+
+    public MailSetting Setting
+    {
+        get;
+        set;
+    }
+
+    public int SettingID
+    {
+        get;
+        set;
+    }
+
+    public string MailFrom
+    {
+        get;
+        set;
+    }
+
+    public bool IsEncrypt
+    {
+        get;
+        set;
+    }
+
+    public int UserId { get; set; }
 }

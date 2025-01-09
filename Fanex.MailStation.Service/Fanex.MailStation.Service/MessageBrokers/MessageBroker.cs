@@ -44,7 +44,7 @@ public class MessageBrokerImpl(
 
     private void SubscribeMail()
     {
-        bool isFailed = false;
+        var isFailed = false;
 
         try
         {
@@ -74,7 +74,7 @@ public class MessageBrokerImpl(
 
     private void SubscribeClientNotificationMessage()
     {
-        bool isFailed = false;
+        var isFailed = false;
 
         try
         {
@@ -99,7 +99,7 @@ public class MessageBrokerImpl(
 
     private void SubscribeJobResult()
     {
-        bool isFailed = false;
+        var isFailed = false;
 
         try
         {
@@ -129,7 +129,7 @@ public class MessageBrokerImpl(
 
     private void SubscribeTaskLogMessage()
     {
-        bool isFailed = false;
+        var isFailed = false;
 
         try
         {
@@ -158,7 +158,7 @@ public class MessageBrokerImpl(
 
     private void ResponseGetScheduleList()
     {
-        bool isFailed = false;
+        var isFailed = false;
 
         try
         {
@@ -180,7 +180,7 @@ public class MessageBrokerImpl(
 
     private void RespondAddMailTaskForRunningJob()
     {
-        bool isFailed = false;
+        var isFailed = false;
 
         try
         {
@@ -208,7 +208,7 @@ public class MessageBrokerImpl(
 
     private void RespondUMInfo()
     {
-        bool isFailed = false;
+        var isFailed = false;
 
         try
         {
@@ -248,7 +248,7 @@ public class MessageBrokerImpl(
 
     private void RespondGetMailTaskForById()
     {
-        bool isFailed = false;
+        var isFailed = false;
 
         try
         {

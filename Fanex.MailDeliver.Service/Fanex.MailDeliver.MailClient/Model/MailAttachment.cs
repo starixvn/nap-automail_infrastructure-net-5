@@ -9,108 +9,95 @@
 
 using System;
 
-namespace Fanex.MailDeliver.MailClient.Model
+namespace Fanex.MailDeliver.MailClient.Model;
+
+[Serializable]
+public enum FileExtentions
 {
-    [Serializable]
-    public enum FileExtentions
+    /// <summary>
+    /// Excel file.
+    /// </summary>
+    MS_EXCEL,
+
+    /// <summary>
+    /// Excel file.
+    /// </summary>
+    MS_DOC,
+
+    /// <summary>
+    /// Excel file.
+    /// </summary>
+    IMG_JPG,
+
+    /// <summary>
+    /// Excel file.
+    /// </summary>
+    IMG_GIF,
+
+    /// <summary>
+    /// Excel file.
+    /// </summary>
+    IMG_PNG,
+
+    /// <summary>
+    /// Excel file.
+    /// </summary>
+    PDF,
+
+    /// <summary>
+    /// Excel file.
+    /// </summary>
+    TEXT
+}
+
+[Serializable]
+public class MailAttachment
+{
+    private string _fileName = "noname";
+    private FileExtentions __contentType;
+
+    public MailAttachment()
     {
-        /// <summary>
-        /// Excel file.
-        /// </summary>
-        MS_EXCEL,
-
-        /// <summary>
-        /// Excel file.
-        /// </summary>
-        MS_DOC,
-
-        /// <summary>
-        /// Excel file.
-        /// </summary>
-        IMG_JPG,
-
-        /// <summary>
-        /// Excel file.
-        /// </summary>
-        IMG_GIF,
-
-        /// <summary>
-        /// Excel file.
-        /// </summary>
-        IMG_PNG,
-
-        /// <summary>
-        /// Excel file.
-        /// </summary>
-        PDF,
-
-        /// <summary>
-        /// Excel file.
-        /// </summary>
-        TEXT
     }
 
-    [Serializable]
-    public class MailAttachment
+    public MailAttachment(string fileName, FileExtentions contentType)
     {
-        private string _fileName = "noname";
-        private FileExtentions __contentType;
+        _fileName = fileName;
+        __contentType = contentType;
+    }
 
-        public MailAttachment()
-        {
-        }
+    public MailAttachment(System.IO.MemoryStream content, FileExtentions contentType)
+    {
+        __contentType = contentType;
+        Bytes = content.ToArray();
+        content.Dispose();
+    }
 
-        public MailAttachment(string fileName, FileExtentions contentType)
-        {
-            _fileName = fileName;
-            __contentType = contentType;
-        }
+    public byte[] Bytes { get; set; } = [];
 
-        public MailAttachment(System.IO.MemoryStream content, FileExtentions contentType)
-        {
-            __contentType = contentType;
-            Bytes = content.ToArray();
-            content.Dispose();
-        }
+    public int AttachmentID
+    {
+        get;
+        set;
+    }
 
-        public byte[] Bytes { get; set; } = { };
+    public long MailID
+    {
+        get;
+        set;
+    }
 
-        public int AttachmentID
-        {
-            get;
-            set;
-        }
+    public string FileName
+    {
+        get => _fileName;
 
-        public long MailID
-        {
-            get;
-            set;
-        }
+        set => _fileName = value;
+    }
 
-        public string FileName
-        {
-            get
-            {
-                return _fileName;
-            }
+    public FileExtentions ContentType
+    {
+        get => __contentType;
 
-            set
-            {
-                _fileName = value;
-            }
-        }
-
-        public FileExtentions ContentType
-        {
-            get
-            {
-                return __contentType;
-            }
-
-            set
-            {
-                __contentType = value;
-            }
-        }
+        set => __contentType = value;
     }
 }

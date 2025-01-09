@@ -12,45 +12,44 @@ using Fanex.MailDeliver.MailClient.Model;
 using System;
 using System.Collections.Generic;
 
-namespace Fanex.MailDeliver.Core.DataAccess.Interface
+namespace Fanex.MailDeliver.Core.DataAccess.Interface;
+
+public interface IMailDeliverDataAccess
 {
-    public interface IMailDeliverDataAccess
-    {
-        long InsertMailRecord(MailRecord mailItem);
+    long InsertMailRecord(MailRecord mailItem);
 
-        MailConfig SaveMailConfig(MailConfig config);
+    MailConfig SaveMailConfig(MailConfig config);
 
-        MailRecord GetMailRecord(long mailID, bool isSend);
+    MailRecord GetMailRecord(long mailID, bool isSend);
 
-        IEnumerable<MailRecord> GetListMailRecordByDate(int appID, DateTime mailDate, int page = 1, int counter = 100);
+    IEnumerable<MailRecord> GetListMailRecordByDate(int appID, DateTime mailDate, int page = 1, int counter = 100);
 
-        IEnumerable<MailRecord> GetListMailRecordByDateRange(
-            int appID,
-            DateTime fromDate,
-            DateTime toDate,
-            ref int totalRows,
-            int page = 1,
-            int counter = 100,
-            int status = 0);
+    IEnumerable<MailRecord> GetListMailRecordByDateRange(
+        int appID,
+        DateTime fromDate,
+        DateTime toDate,
+        ref int totalRows,
+        int page = 1,
+        int counter = 100,
+        int status = 0);
 
-        MailConfig GetMailConfig(int appID);
+    MailConfig GetMailConfig(int appID);
 
-        MailSetting SaveMailSetting(MailSetting setting);
+    MailSetting SaveMailSetting(MailSetting setting);
 
-        MailSetting GetMailSetting(int settingID);
+    MailSetting GetMailSetting(int settingID);
 
-        MailFunction SaveMailFunction(MailFunction func);
+    MailFunction SaveMailFunction(MailFunction func);
 
-        MailFunction GetMailFunction(int funcID);
+    MailFunction GetMailFunction(int funcID);
 
-        void UpdateMailStatus(long mailID, bool status);
+    void UpdateMailStatus(long mailID, bool status);
 
-        List<MailSetting> GetListMailSetting();
+    List<MailSetting> GetListMailSetting();
 
-        List<MailConfig> GetListMailConfig(string serverIp = "");
+    List<MailConfig> GetListMailConfig(string serverIp = "");
 
-        List<MailFunction> GetListMailFuntion();
+    List<MailFunction> GetListMailFuntion();
 
-        long InsertMailError(InsertMailErrorCriteria criteria);
-    }
+    long InsertMailError(InsertMailErrorCriteria criteria);
 }

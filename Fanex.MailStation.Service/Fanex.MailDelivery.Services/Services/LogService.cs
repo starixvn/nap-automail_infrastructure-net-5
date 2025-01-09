@@ -70,8 +70,10 @@ public class LogServiceImpl(ILogger logger) : LogService
     {
         if (schedule != null)
         {
-            string message = $@"{(schedule.TriggerTypeEnum == MailType.Function ? "Function" : "Schedule")} Mail #{schedule.Id} ({schedule.Name})
-                                    {Environment.NewLine}Error: {ex.Message}";
+            var message = $"""
+                           {(schedule.TriggerTypeEnum == MailType.Function ? "Function" : "Schedule")} Mail #{schedule.Id} ({schedule.Name})
+                                                               {Environment.NewLine}Error: {ex.Message}
+                           """;
 
             LogError(message, ex);
         }
@@ -83,14 +85,14 @@ public class LogServiceImpl(ILogger logger) : LogService
 
     public void LogError(Exception ex, int mailId)
     {
-        string message = $"Schedule Mail #{mailId}{Environment.NewLine}Error: {ex.Message}";
+        var message = $"Schedule Mail #{mailId}{Environment.NewLine}Error: {ex.Message}";
 
         LogError(message, ex);
     }
 
     public void LogError(Exception ex, List<int> scheduleIds)
     {
-        string message = $"Mail #{string.Join(", ", scheduleIds)}{Environment.NewLine}Error: {ex.Message}";
+        var message = $"Mail #{string.Join(", ", scheduleIds)}{Environment.NewLine}Error: {ex.Message}";
 
         LogError(message, ex);
     }

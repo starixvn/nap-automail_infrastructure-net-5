@@ -108,7 +108,7 @@ public class MailClientMessageBroker(
     public async Task PublishClientNotifyMessageAsync()
     {
         var schedules = mailStationSetting.Schedules;
-        string mailIds = string.Join(",", schedules.Select(x => x.Id));
+        var mailIds = string.Join(",", schedules.Select(x => x.Id));
 
         await bus.PubSub.PublishAsync(new UpdateActiveTimeRequest { MailIds = mailIds }, MailDeliveryConstants.ClientNotificationTopic);
     }
@@ -125,7 +125,7 @@ public class MailClientMessageBroker(
 
     private async Task PublishMailAsync(Mail mail, int retryCount = 0)
     {
-        bool isFailed = false;
+        var isFailed = false;
 
         try
         {
@@ -149,7 +149,7 @@ public class MailClientMessageBroker(
 
     private async Task PublishJobMessageAsync(JobMessage jobMessage, int retryCount = 0)
     {
-        bool isFailed = false;
+        var isFailed = false;
 
         try
         {
@@ -173,7 +173,7 @@ public class MailClientMessageBroker(
 
     public async Task PublishRunAfterUMJobAsync(Schedule schedule, int retryCount = 0)
     {
-        bool isFailed = false;
+        var isFailed = false;
 
         try
         {
@@ -197,7 +197,7 @@ public class MailClientMessageBroker(
 
     public async Task PublishTaskLogAsync(TaskLog taskLog, int retryCount = 0)
     {
-        bool isFailed = false;
+        var isFailed = false;
 
         try
         {
@@ -228,12 +228,12 @@ public class MailClientMessageBroker(
         var schedules = mailStationSetting.Schedules;
         var request = new GetScheduleListRequest();
 
-        foreach (ScheduleSetting scheduleConfig in schedules)
+        foreach (var scheduleConfig in schedules)
         {
             request.MailIds.Add(scheduleConfig.Id);
         }
 
-        GetScheduleListResponse response = await RequestMailSchedules(request);
+        var response = await RequestMailSchedules(request);
 
         return response?.Schedules;
     }
@@ -242,7 +242,7 @@ public class MailClientMessageBroker(
     {
         var request = new GetScheduleListRequest { MailIds = [mailId] };
 
-        GetScheduleListResponse response = await RequestMailSchedules(request);
+        var response = await RequestMailSchedules(request);
 
         return response?.Schedules.FirstOrDefault();
     }
@@ -250,7 +250,7 @@ public class MailClientMessageBroker(
     public async Task<JobMessage> RequestAddMailTaskForRunningJobAsync(JobMessage jobMessage, int retryCount = 0)
     {
         JobMessage result = null;
-        bool isFailed = false;
+        var isFailed = false;
 
         try
         {
@@ -275,7 +275,7 @@ public class MailClientMessageBroker(
     public async Task<MailTaskModel> RequestMailTaskByIdAsync(GetMailTaskByIdRequest request, int retryCount = 0)
     {
         MailTaskModel result = null;
-        bool isFailed = false;
+        var isFailed = false;
 
         try
         {
@@ -300,7 +300,7 @@ public class MailClientMessageBroker(
     public async Task<UMInfoModel> GetUMInfoAsync(int retryCount = 0)
     {
         UMInfoModel result = null;
-        bool isFailed = false;
+        var isFailed = false;
 
         try
         {
@@ -325,7 +325,7 @@ public class MailClientMessageBroker(
     private async Task<GetScheduleListResponse> RequestMailSchedules(GetScheduleListRequest request, int retryCount = 0)
     {
         GetScheduleListResponse response = null;
-        bool isFailed = false;
+        var isFailed = false;
 
         try
         {
@@ -353,7 +353,7 @@ public class MailClientMessageBroker(
 
     public async Task SubscribeScheduleChangeAsync(int retryCount = 0)
     {
-        bool isFailed = false;
+        var isFailed = false;
 
         try
         {
@@ -380,7 +380,7 @@ public class MailClientMessageBroker(
 
     public async Task SubscribeRunNowJobAsync(int retryCount = 0)
     {
-        bool isFailed = false;
+        var isFailed = false;
 
         try
         {
@@ -407,7 +407,7 @@ public class MailClientMessageBroker(
 
     public async Task SubscribeRetryJobAsync(int retryCount = 0)
     {
-        bool isFailed = false;
+        var isFailed = false;
 
         try
         {
@@ -434,7 +434,7 @@ public class MailClientMessageBroker(
 
     public async Task SubscribeRunAfterUMJobAsync(int retryCount = 0)
     {
-        bool isFailed = false;
+        var isFailed = false;
 
         try
         {
@@ -488,7 +488,7 @@ public class MailClientMessageBroker(
 
                 var afterUMTime = new DateTime(umInfo.To.Ticks, DateTimeKind.Utc).AddMinutes(1);
 
-                TimeSpan waitingTime = afterUMTime - DateTime.UtcNow;
+                var waitingTime = afterUMTime - DateTime.UtcNow;
 
                 if (waitingTime.TotalSeconds > 0)
                 {
@@ -531,6 +531,6 @@ public class MailClientMessageBroker(
                 select ips)
             .FirstOrDefault();
 
-        return string.Format("{0}_{1}_{2}", topic, Process.GetProcessById(Process.GetCurrentProcess().Id).ProcessName, ip);
+        return $"{topic}_{Process.GetProcessById(Process.GetCurrentProcess().Id).ProcessName}_{ip}";
     }
 }

@@ -9,45 +9,44 @@
 
 using System;
 
-namespace Fanex.MailDeliver.MailClient.Model
+namespace Fanex.MailDeliver.MailClient.Model;
+
+[Serializable]
+public class MailFunction
 {
-    [Serializable]
-    public class MailFunction
+    public int FuncID
     {
-        public int FuncID
-        {
-            get;
-            set;
-        }
+        get;
+        set;
+    }
 
-        public int AppID
-        {
-            get;
-            set;
-        }
+    public int AppID
+    {
+        get;
+        set;
+    }
 
-        public MailConfig Config
-        {
-            get;
-            set;
-        }
+    public MailConfig Config
+    {
+        get;
+        set;
+    }
 
-        public string FuncName
-        {
-            get;
-            set;
-        }
+    public string FuncName
+    {
+        get;
+        set;
+    }
 
-        public MailSetting Setting
-        {
-            get;
-            set;
-        }
+    public MailSetting Setting
+    {
+        get;
+        set;
+    }
 
-        public int SettingID
-        {
-            get;
-            set;
-        }
+    public int SettingID
+    {
+        get;
+        set;
     }
 }

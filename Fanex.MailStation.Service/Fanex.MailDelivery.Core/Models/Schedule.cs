@@ -41,15 +41,9 @@ public class Schedule
 
     public MailType TriggerTypeEnum
     {
-        get
-        {
-            return TriggerType == 0 ? MailType.Function : MailType.Schedule;
-        }
+        get => TriggerType == 0 ? MailType.Function : MailType.Schedule;
 
-        set
-        {
-            TriggerType = (int)value;
-        }
+        set => TriggerType = (int)value;
     }
 
     public Schedule Clone()
@@ -86,7 +80,7 @@ public class Schedule
 
     public void ConvertToServerTime(bool isDevEnvironment)
     {
-        int hoursDifferent = CalculateHoursDifferentBetweenDevAndServer(isDevEnvironment);
+        var hoursDifferent = CalculateHoursDifferentBetweenDevAndServer(isDevEnvironment);
 
         StartTime = StartTime.AddHours(hoursDifferent);
 
@@ -97,8 +91,8 @@ public class Schedule
 
     private void ConvertCronExpressionToServerTime(int hoursDifferent)
     {
-        string[] cron = RepeatExpression.Split(' ');
-        int hour = int.Parse(cron[2]);
+        var cron = RepeatExpression.Split(' ');
+        var hour = int.Parse(cron[2]);
 
         hour += hoursDifferent;
 
@@ -119,8 +113,8 @@ public class Schedule
 
     private static int CalculateHoursDifferentBetweenDevAndServer(bool isDevEnvironment)
     {
-        string timezoneName = isDevEnvironment ? MailDeliveryConstants.DevServerTimeZone : MailDeliveryConstants.LiveServerTimeZone;
-        DateTime nowDate = DateTime.Now;
+        var timezoneName = isDevEnvironment ? MailDeliveryConstants.DevServerTimeZone : MailDeliveryConstants.LiveServerTimeZone;
+        var nowDate = DateTime.Now;
 
 #if !NETFRAMEWORK
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))

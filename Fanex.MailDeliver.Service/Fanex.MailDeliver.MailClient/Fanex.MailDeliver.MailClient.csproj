@@ -1,12 +1,20 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-	  <TargetFrameworks>netstandard2.0;net461;net5.0;net6.0;net7.0;net8.0</TargetFrameworks>
+	  <TargetFrameworks>net6.0;net8.0;net9.0</TargetFrameworks>
+    <PackageId>Fanex.MailDeliver.MailClient</PackageId>
+    <LangVersion>13.0</LangVersion>
+    <Version>2.1.0</Version>
+    <IsPackage>true</IsPackage>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Fanex.MailDeliver.Utility" Version="1.0.4" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Fanex.MailDeliver.Utility\Fanex.MailDeliver.Utility.csproj" />
   </ItemGroup>
 
 </Project>

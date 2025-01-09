@@ -43,11 +43,11 @@ public class MailServiceImpl(
     {
         var schedules = new List<Schedule>();
 
-        foreach (int mail in request.MailIds)
+        foreach (var mail in request.MailIds)
         {
             try
             {
-                Schedule schedule = mailRepository.GetScheduleByMailId(new GetScheduleByMailIdCriteria
+                var schedule = mailRepository.GetScheduleByMailId(new GetScheduleByMailIdCriteria
                 {
                     MailId = mail
                 });
@@ -146,7 +146,7 @@ public class MailServiceImpl(
 
     public int AddMailTaskForRunningJob(JobMessage jobMessage)
     {
-        int taskId = 0;
+        var taskId = 0;
 
         try
         {
@@ -214,7 +214,7 @@ public class MailServiceImpl(
     {
         var mailRecordId = 0;
         Schedule schedule = null;
-        int taskId = mailTaskId;
+        var taskId = mailTaskId;
         var logger = new StringBuilder($"Server Logs:{Environment.NewLine}");
 
         try
@@ -253,7 +253,7 @@ public class MailServiceImpl(
                     mailRecord.IsReady = true;
                     mailRecord.MailID = mailRecordId;
 
-                    bool isSuccessful = await SendMailRecord(retryMailRecord, mail.MailingListId, taskId, logger);
+                    var isSuccessful = await SendMailRecord(retryMailRecord, mail.MailingListId, taskId, logger);
 
                     var status = isSuccessful ? JobStatus.Success : JobStatus.JobFailed;
                     var taskLog = new TaskLog
@@ -295,7 +295,7 @@ public class MailServiceImpl(
 
     private int InsertMailTaskForFunctionMail(Mail mail, int mailRecordId)
     {
-        int taskId = mailRepository.AddMailTask(new AddMailTaskCriteria
+        var taskId = mailRepository.AddMailTask(new AddMailTaskCriteria
         {
             MailId = mail.MailingListId,
             SiteId = mail.SiteId,
@@ -317,7 +317,7 @@ public class MailServiceImpl(
     {
         try
         {
-            int taskId = mailTaskId;
+            var taskId = mailTaskId;
 
             if (taskId == 0)
             {
@@ -366,7 +366,7 @@ public class MailServiceImpl(
     private async Task<bool> SendMailRecord(RetryMailRecord retryMailRecord, int mailId, int taskId, StringBuilder logger)
     {
         bool isSuccessful;
-        string error = string.Empty;
+        var error = string.Empty;
         string message;
         var mailRecord = retryMailRecord.MailRecord;
 
@@ -527,7 +527,7 @@ public class MailServiceImpl(
         }
         else
         {
-            string message = $"Not allow to send out the mail #{jobMessage.Schedule.Id} ({jobMessage.Schedule.Name}) because it is aborted by user";
+            var message = $"Not allow to send out the mail #{jobMessage.Schedule.Id} ({jobMessage.Schedule.Name}) because it is aborted by user";
 
             logService.LogInfo(message);
         }
@@ -595,9 +595,9 @@ public class MailServiceImpl(
     {
         if (sourceMail.AlternativeViews != null && sourceMail.AlternativeViews.Count > 0)
         {
-            int alternativeViewsCount = sourceMail.AlternativeViews.Count;
+            var alternativeViewsCount = sourceMail.AlternativeViews.Count;
 
-            for (int i = 0; i < alternativeViewsCount; i++)
+            for (var i = 0; i < alternativeViewsCount; i++)
             {
                 var alternativeView = sourceMail.AlternativeViews[i];
 
@@ -618,9 +618,9 @@ public class MailServiceImpl(
     {
         if (sourceMail.Attachments != null && sourceMail.Attachments.Count > 0)
         {
-            int mailAttachCount = sourceMail.Attachments.Count;
+            var mailAttachCount = sourceMail.Attachments.Count;
 
-            for (int i = 0; i < mailAttachCount; i++)
+            for (var i = 0; i < mailAttachCount; i++)
             {
                 var attach = sourceMail.Attachments[i];
 

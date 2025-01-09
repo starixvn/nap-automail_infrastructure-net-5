@@ -6,8 +6,6 @@ using Microsoft.Extensions.Hosting;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
-builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
-builder.Services.AddRazorPages();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.LoadConfiguration();
@@ -26,4 +24,4 @@ if (app.Environment.IsDevelopment())
 }
 
 app.MapControllers();
-app.Run();
+await app.RunAsync();
