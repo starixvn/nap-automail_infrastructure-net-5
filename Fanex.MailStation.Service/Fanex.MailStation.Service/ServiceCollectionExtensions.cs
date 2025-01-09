@@ -64,6 +64,8 @@ public static class ServiceCollectionExtensions
         var virtualHost = map.GetValueOrDefault("virtualhost", string.Empty);
         var username = map.GetValueOrDefault("username", string.Empty);
         var password = map.GetValueOrDefault("password", string.Empty);
+
+        Console.WriteLine($"host:{host}\nvirtualHost:{virtualHost}\nusername:{username}\npassword:{password}");
         services.AddMassTransit(busConfigurator =>
         {
             busConfigurator.AddConsumer<SimpleMailDeliveryConsumer, SimpleMailDeliveryConsumerDefinition>();
