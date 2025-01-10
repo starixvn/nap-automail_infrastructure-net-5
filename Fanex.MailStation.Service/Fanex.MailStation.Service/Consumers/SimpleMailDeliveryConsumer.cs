@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using SimpleMailDelivery.Models;
 using FileExtension = MailDelivery.Core.Models.FileExtension;
 using LegacyAttachment = MailDelivery.Core.Models.MailAttachment;
@@ -19,6 +20,8 @@ public class SimpleMailDeliveryConsumer(MailService mailService, UMService umSer
     public async Task Consume(ConsumeContext<Mail> context)
     {
         var mail = context.Message;
+        WriteLog(mail);
+
         mail.AlternativeViews ??= [];
         mail.Attachments ??= [];
 
@@ -53,6 +56,22 @@ public class SimpleMailDeliveryConsumer(MailService mailService, UMService umSer
         };
         await umService.WaitForUMOff();
         await mailService.SendMail(legacyMail);
+    }
+
+    private static void WriteLog(Mail mail)
+    {
+        var text = JsonConvert.SerializeObject(
+            new
+            {
+                mail.ApplicationSendMailId,
+                mail.Subject,
+                mail.Body,
+                mail.Title,
+                mail.MailingListId,
+                mail.LicenseeId,
+                mail.SiteId,
+            });
+        Console.WriteLine(text);
     }
 }
 
