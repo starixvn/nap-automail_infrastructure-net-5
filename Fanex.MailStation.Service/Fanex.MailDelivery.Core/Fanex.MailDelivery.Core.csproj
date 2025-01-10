@@ -10,7 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="ONEbook.UM" Version="3.1.8" />
+    <PackageReference Include="ONEbook.UM" Version="3.2.3" />
     <PackageReference Include="TimeZoneConverter" Version="6.1.0" />
   </ItemGroup>
 

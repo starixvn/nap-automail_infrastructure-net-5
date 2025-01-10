@@ -10,7 +10,7 @@
     <PackageReference Include="Fanex.Logging" Version="2.0.2" />
     <PackageReference Include="Fanex.Logging.Extensions" Version="1.1.0" />
     <PackageReference Include="Fanex.Logging.Sentry.RavenClient" Version="2.0.2" />
-    <PackageReference Include="Fanex.MailDeliver.MailClient" Version="2.0.11" />
+    <PackageReference Include="Fanex.MailDeliver.MailClient" Version="2.1.0" />
   </ItemGroup>
 
   <ItemGroup>
