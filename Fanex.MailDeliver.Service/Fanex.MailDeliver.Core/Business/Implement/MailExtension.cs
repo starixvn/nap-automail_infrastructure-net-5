@@ -225,13 +225,13 @@ public class MailExtensionImp(DataService dataService, MailKitService mailKitSer
             {
                 LogExtension.LogMessage($"\r\nPublish Email into RabbitMQ: {mailRecord.Subject}");
                 AppConfigService.Bus.PubSub.Publish(mailRecord);
-                //if (!AppConfigService.Config.IsUsingRabbitMq)
-                //{
-                //    mailRecord.MailID = dataService.InsertMailRecord(mailRecord);
-                //    mailRecord.IsReady = true;
-                //    var outputMessage = string.Empty;
-                //    SendMail(mailRecord, out outputMessage);
-                //}
+                if (!AppConfigService.Config.IsUsingRabbitMq)
+                {
+                    mailRecord.MailID = dataService.InsertMailRecord(mailRecord);
+                    mailRecord.IsReady = true;
+                    var outputMessage = string.Empty;
+                    SendMail(mailRecord, out outputMessage);
+                }
             }
             catch (Exception ex)
             {

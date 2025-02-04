@@ -26,14 +26,15 @@ public class UMServiceImpl(
 
         try
         {
-            if (um.IsUnderMaintenance())
+            if (await um.IsUnderMaintenanceAsync())
             {
-                result.From = Convert.ToDateTime(um.GetUnderMaintenanceTime().From);
-                result.To = Convert.ToDateTime(um.GetUnderMaintenanceTime().To);
+                var umTime = await um.GetUnderMaintenanceTimeAsync();
+                result.From = Convert.ToDateTime(umTime.From);
+                result.To = Convert.ToDateTime(umTime.To);
 
                 result.From = result.From.AddHours(UMGMT * -1); //Convert to UTC
                 result.To = result.To.AddHours(UMGMT * -1);
-                result.IsUnderMaintenanceTime = um.IsUnderMaintenance();
+                result.IsUnderMaintenanceTime = await um.IsUnderMaintenanceAsync();
             }
             else
             {

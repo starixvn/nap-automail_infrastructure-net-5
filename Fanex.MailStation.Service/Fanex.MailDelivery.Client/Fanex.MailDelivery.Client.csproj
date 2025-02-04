@@ -29,7 +29,7 @@
 
   <ItemGroup>
     <PackageReference Include="EasyNetQ" Version="7.8.0" />
-    <PackageReference Include="Fanex.Caching" Version="2.2.7" />
+    <PackageReference Include="Fanex.Caching" Version="2.2.8" />
     <PackageReference Include="Fanex.Logging" Version="2.0.2" />
     <PackageReference Include="Fanex.Logging.Extensions" Version="1.1.0" />
     <PackageReference Include="Quartz" Version="3.13.1" />
