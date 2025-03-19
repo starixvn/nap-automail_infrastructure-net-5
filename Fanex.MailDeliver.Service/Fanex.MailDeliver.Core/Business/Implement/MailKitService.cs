@@ -80,16 +80,24 @@ public class MailKitServiceImp : MailKitService
         });
         message.Body = multipart;
 
+
         using var mailClient = new SmtpClient();
 
         mailClient.ServerCertificateValidationCallback += (sender, certificate, chain, errors) => true;
         mailClient.CheckCertificateRevocation = false;
 
         mailClient.Connect(mailSetting.Server, mailSetting.Port, mailSetting.IsAuth);
-        mailClient.Authenticate(mailSetting.Username, mailSetting.Password);
-
+        if (mailSetting.Username.ToLower().Equals("emailapikey") && mailSetting.Server.ToLower().Equals("smtp.zeptomail.com"))
+        {
+            mailClient.Authenticate(mailSetting.Username, "wSsVR6118hCiWqwvmzL4IuoxkVlWAwilFk1+2gGl73D5Ta+Rpsc9nxGaB1D1TvcZQjJoHGAWrLktnxYH0zEMj4h4ng5TXCiF9mqRe1U4J3x17qnvhDzJW2tUmhOMLYsAzwxtkmhmEs9u");
+        }
+        else
+        {
+            mailClient.Authenticate(mailSetting.Username, mailSetting.Password);
+        }
         mailClient.Send(message);
 
         mailClient.Disconnect(true);
+
     }
 }
