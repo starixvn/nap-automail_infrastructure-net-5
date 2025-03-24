@@ -11,6 +11,7 @@ using Fanex.MailDeliver.MailClient.Model;
 
 namespace Fanex.MailDeliver.MailClient.Util;
 
+using System.IO;
 using Utility;
 
 public class AttachmentUtil
@@ -23,7 +24,7 @@ public class AttachmentUtil
             {
                 if (attachment.Bytes.Length == 0)
                 {
-                    attachment.Bytes = FileBinaryService.ConvertFileToBinary(attachment.FileName);
+                    attachment.Bytes = File.ReadAllBytes(attachment.FileName);
                 }
             }
         }
@@ -34,7 +35,7 @@ public class AttachmentUtil
             {
                 if (resource.Bytes.Length == 0)
                 {
-                    resource.Bytes = FileBinaryService.ConvertFileToBinary(resource.FileName);
+                    resource.Bytes = File.ReadAllBytes(resource.FileName);
                 }
             }
         }
