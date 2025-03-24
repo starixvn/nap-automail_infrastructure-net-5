@@ -30,7 +30,7 @@ public static class ServiceCollectionExtensions
 {
     public static IServiceCollection Services { get; set; }
 
-    public static void LoadConfiguration(this IServiceCollection services)
+    public static void AddConfig(this IServiceCollection services)
     {
         Directory.SetCurrentDirectory(AppDomain.CurrentDomain.BaseDirectory);
         var text = File.ReadAllText("appsettings.json");
@@ -52,7 +52,7 @@ public static class ServiceCollectionExtensions
             });
     }
 
-    public static void FanexDataRegister(this IServiceCollection services, IConfiguration config)
+    public static void AddFanexSql(this IServiceCollection services, IConfiguration config)
     {
         try
         {
@@ -68,7 +68,7 @@ public static class ServiceCollectionExtensions
         }
     }
 
-    public static void InternalServiceRegister(this IServiceCollection services)
+    public static void AddInternalServices(this IServiceCollection services)
     {
         services.AddSingleton<IDynamicRepository, DynamicRepository>();
         services.AddSingleton<IMailService, MailService>();

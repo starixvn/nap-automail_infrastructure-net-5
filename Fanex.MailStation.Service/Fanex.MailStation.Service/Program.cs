@@ -15,7 +15,7 @@ services.AddEndpointsApiExplorer();
 services.AddSwaggerGen();
 services.AddConfiguration();
 services.AddFanexLogSentry(configuration);
-services.AddOneBookUm(configuration);
+services.AddOneBookUmForService(configuration);
 services.AddFanexSql(configuration);
 services.AddMemoryCache(configuration.GetSection("fanex.caching"));
 services.AddInternalService();
