@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fanex.MailDelivery.Services
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fanex.SimpleMailDelivery", "Fanex.MailStation.Service\Fanex.SimpleMailDelivery\Fanex.SimpleMailDelivery.csproj", "{489A01B0-0291-4463-B0BD-2D7C3554970C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fanex.SimpleMailDelivery.Models", "Fanex.MailStation.Service\Fanex.SimpleMailDelivery.Models\Fanex.SimpleMailDelivery.Models.csproj", "{87FC5668-5E1B-1C39-6CBC-398C8BAF83B6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{489A01B0-0291-4463-B0BD-2D7C3554970C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{489A01B0-0291-4463-B0BD-2D7C3554970C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{489A01B0-0291-4463-B0BD-2D7C3554970C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{87FC5668-5E1B-1C39-6CBC-398C8BAF83B6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{87FC5668-5E1B-1C39-6CBC-398C8BAF83B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{87FC5668-5E1B-1C39-6CBC-398C8BAF83B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{87FC5668-5E1B-1C39-6CBC-398C8BAF83B6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

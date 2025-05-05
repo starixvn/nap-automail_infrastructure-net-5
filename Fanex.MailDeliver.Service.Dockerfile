@@ -18,8 +18,7 @@ RUN --mount=type=cache,target=/root/.nuget/packages \
 	dotnet publish -r linux-x64 --self-contained false -o /app
 
 FROM hub.nexdev.net/base/dotnet/core/aspnet:9.0-nap-mail-core
-# FROM rebuild-baseimage/dotnetcore/aspnet:9.0-nap-mail-core
-FROM hub.nexdev.net/base/dotnet/core/aspnet:9.0-nap-mail-core
+
 
 ENV TZ="America/La_Paz"
 ENV COMPlus_EnableDiagnostics=0 
