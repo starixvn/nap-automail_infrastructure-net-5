@@ -118,7 +118,8 @@ public class MailExtensionImp(DataService dataService, MailKitService mailKitSer
                 {
                     foreach (var attachFile in attachments)
                     {
-                        var contType = attInfo.Extensions.FirstOrDefault(s => s.Name == attachFile.ContentType.ToString()).Type;
+                        var contType = attInfo.Extensions
+                            .FirstOrDefault(s => s.Name == attachFile.ContentType.ToString()).Type;
                         var content = new MemoryStream(attachFile.Bytes);
                         content.Seek(0, SeekOrigin.Begin);
                         var attachment = new System.Net.Mail.Attachment(content, attachFile.FileName, contType);
@@ -129,10 +130,12 @@ public class MailExtensionImp(DataService dataService, MailKitService mailKitSer
                 var alternateView = mailSend.AlternateView;
                 if (alternateView != null)
                 {
-                    var altView = AlternateView.CreateAlternateViewFromString(msg.Body, Encoding.UTF8, MediaTypeNames.Text.Html);
+                    var altView =
+                        AlternateView.CreateAlternateViewFromString(msg.Body, Encoding.UTF8, MediaTypeNames.Text.Html);
                     foreach (var resoure in alternateView)
                     {
-                        var contType = attInfo.Extensions.FirstOrDefault(s => s.Name == resoure.ImageType.ToString()).Type;
+                        var contType = attInfo.Extensions.FirstOrDefault(s => s.Name == resoure.ImageType.ToString())
+                            .Type;
                         var content = new MemoryStream(resoure.Bytes);
                         content.Seek(0, SeekOrigin.Begin);
 
@@ -156,7 +159,8 @@ public class MailExtensionImp(DataService dataService, MailKitService mailKitSer
                     client.EnableSsl = true;
                 }
 
-                System.Net.ServicePointManager.ServerCertificateValidationCallback += (s, cert, chain, sslPolicyErrors) => true;
+                System.Net.ServicePointManager.ServerCertificateValidationCallback +=
+                    (s, cert, chain, sslPolicyErrors) => true;
 
                 var result = SafeSmtpClientSendMessage(client, msg, mailSend, mailSetting, mailFrom);
                 if (!result)
@@ -181,7 +185,8 @@ public class MailExtensionImp(DataService dataService, MailKitService mailKitSer
         }
     }
 
-    private bool SafeSmtpClientSendMessage(System.Net.Mail.SmtpClient smtpClient, MailMessage msg, MailRecord mailRecord, MailSetting mailSetting, string mailFrom)
+    private bool SafeSmtpClientSendMessage(System.Net.Mail.SmtpClient smtpClient, MailMessage msg,
+        MailRecord mailRecord, MailSetting mailSetting, string mailFrom)
     {
         var result = true;
         try
@@ -224,8 +229,11 @@ public class MailExtensionImp(DataService dataService, MailKitService mailKitSer
             try
             {
                 LogExtension.LogMessage($"\r\nPublish Email into RabbitMQ: {mailRecord.Subject}");
-                AppConfigService.Bus.PubSub.Publish(mailRecord);
-                if (!AppConfigService.Config.IsUsingRabbitMq)
+                if (AppConfigService.Config.IsUsingRabbitMq)
+                {
+                    AppConfigService.Bus.PubSub.Publish(mailRecord);
+                }
+                else
                 {
                     mailRecord.MailID = dataService.InsertMailRecord(mailRecord);
                     mailRecord.IsReady = true;
@@ -266,6 +274,7 @@ public class MailExtensionImp(DataService dataService, MailKitService mailKitSer
                     settingID = funcInfo.Setting.SettingID;
                 }
             }
+
             //// Check app mail
             if (settingID == 0)
             {
@@ -275,6 +284,7 @@ public class MailExtensionImp(DataService dataService, MailKitService mailKitSer
                     settingID = appConfig.Setting.SettingID;
                 }
             }
+
             //// Get mai setting
             if (settingID > 0)
             {
@@ -305,7 +315,8 @@ public class MailExtensionImp(DataService dataService, MailKitService mailKitSer
 
                 if (error != null)
                 {
-                    var currentAppId = mailRecord.AppID > 0 ? mailRecord.AppID : mailRecord.Config != null ? mailRecord.Config.AppID : 0;
+                    var currentAppId = mailRecord.AppID > 0 ? mailRecord.AppID :
+                        mailRecord.Config != null ? mailRecord.Config.AppID : 0;
                     dataService.InsertMailError(new InsertMailErrorCriteria
                     {
                         AppID = currentAppId,
@@ -349,7 +360,8 @@ public class MailExtensionImp(DataService dataService, MailKitService mailKitSer
     /// <param name="mailConfigId">Mail config.</param>
     /// <param name="mailSetting">Mail setting.</param>
     /// <param name="mailRecord">Mail information.</param>
-    [SuppressMessage("StyleCop.CSharp.StylecopPlus.Rules", "SP2101:MethodMustNotContainMoreLinesThan", Justification = "Reviewed. Suppression is OK here.")]
+    [SuppressMessage("StyleCop.CSharp.StylecopPlus.Rules", "SP2101:MethodMustNotContainMoreLinesThan",
+        Justification = "Reviewed. Suppression is OK here.")]
     private void SendMailThroughImplicitSSL(int mailConfigId, MailSetting mailSetting, MailRecord mailRecord)
     {
         var oMail = new SmtpMail("TryIt");
