@@ -51,3 +51,6 @@ Fanex.AccountingReports.sln
 .vs/**
 *.obj/**
 /.vs/
+**/bin/**
+**/obj/**
+**/.vs/**
