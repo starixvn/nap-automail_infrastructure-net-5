@@ -58,7 +58,7 @@ public class MessageBrokerImpl(
                 },
                 config => config.WithTopic(MailDeliveryConstants.SendMailRoutingKey));
 
-            logService.LogInfo($"Subscribed the queue with key {MailDeliveryConstants.SendMailRoutingKey} successfully");
+            logService.LogInfo($"Subscribed {DateTime.Now} the queue with key {MailDeliveryConstants.SendMailRoutingKey} successfully");
         }
         catch (Exception ex)
         {
@@ -83,7 +83,7 @@ public class MessageBrokerImpl(
                 mailService.UpdateClientActiveTime,
                 config => config.WithTopic(MailDeliveryConstants.ClientNotificationTopic));
 
-            logService.LogInfo($"Subscribed the queue with key {MailDeliveryConstants.ClientNotificationTopic} successfully");
+            logService.LogInfo($"Subscribed {DateTime.Now} the queue with key {MailDeliveryConstants.ClientNotificationTopic} successfully");
         }
         catch (Exception ex)
         {
@@ -113,7 +113,7 @@ public class MessageBrokerImpl(
                 },
                 config => config.WithTopic(MailDeliveryConstants.JobResultRoutingKey));
 
-            logService.LogInfo($"Subscribed the queue with key {MailDeliveryConstants.JobResultRoutingKey} successfully");
+            logService.LogInfo($"Subscribed {DateTime.Now} the queue with key {MailDeliveryConstants.JobResultRoutingKey} successfully");
         }
         catch (Exception ex)
         {
@@ -138,7 +138,7 @@ public class MessageBrokerImpl(
                 mailService.InsertTaskLog,
                 config => config.WithTopic(MailDeliveryConstants.TaskLogRoutingKey));
 
-            logService.LogInfo($"Subscribed the queue with key {MailDeliveryConstants.TaskLogRoutingKey} successfully");
+            logService.LogInfo($"Subscribed {DateTime.Now} the queue with key {MailDeliveryConstants.TaskLogRoutingKey} successfully");
         }
         catch (Exception ex)
         {
@@ -164,7 +164,7 @@ public class MessageBrokerImpl(
         {
             bus.Rpc.Respond<GetScheduleListRequest, GetScheduleListResponse>(request => Task.FromResult(mailService.GetScheduleList(request)));
 
-            logService.LogInfo("Registered to response schedules to clients successfully");
+            logService.LogInfo($"Registered {DateTime.Now} to response schedules to clients successfully");
         }
         catch (Exception ex)
         {
@@ -192,7 +192,7 @@ public class MessageBrokerImpl(
                     return Task.FromResult(jobMessage);
                 });
 
-            logService.LogInfo("Registered to add mail tasks for running jobs successfully");
+            logService.LogInfo($"Registered {DateTime.Now} to add mail tasks for running jobs successfully");
         }
         catch (Exception ex)
         {
@@ -232,7 +232,7 @@ public class MessageBrokerImpl(
                 return umInfo;
             });
 
-            logService.LogInfo("Registered to respond the UM info to clients successfully");
+            logService.LogInfo($"Registered {DateTime.Now} to respond the UM info to clients successfully");
         }
         catch (Exception ex)
         {
@@ -254,7 +254,7 @@ public class MessageBrokerImpl(
         {
             bus.Rpc.Respond<GetMailTaskByIdRequest, MailTaskModel>(request => Task.FromResult(mailService.GetMailTaskById(request)));
 
-            logService.LogInfo("Registered to response mail tasks to clients successfully");
+            logService.LogInfo($"Registered {DateTime.Now} to response mail tasks to clients successfully");
         }
         catch (Exception ex)
         {
